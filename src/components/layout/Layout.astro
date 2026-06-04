@@ -1,0 +1,60 @@
+---
+import '../../styles/global.css';
+import { Header } from './Header';
+import { SeoFooter } from './SeoFooter';
+import { MouseGlow } from './MouseGlow';
+import { BackgroundGrid } from './BackgroundGrid';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const { 
+  title, 
+  description, 
+  ogImage = '/default-og.png',
+  canonicalUrl = Astro.url.href 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalUrl} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen flex flex-col bg-[var(--color-background-primary)] text-[var(--color-text-primary)] selection:bg-[var(--color-primary)] selection:text-white relative">
+    
+    <!-- Global Background Grid & Mouse Glow -->
+    <BackgroundGrid client:load />
+    <MouseGlow client:load />
+
+    <Header client:load />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <SeoFooter />
+  </body>
+</html>

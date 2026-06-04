@@ -1,0 +1,11 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+import { PromptMaker } from '../../components/tools/PromptMaker';
+---
+
+<Layout 
+  title="AI Prompt Generator — Create Prompts from Any Idea" 
+  description="Generate ready-to-use AI prompts from plain English descriptions. Supports image generation, text, code, marketing, and study use cases."
+>
+  <PromptMaker client:load />
+</Layout>

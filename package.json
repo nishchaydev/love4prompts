@@ -1,0 +1,44 @@
+{
+  "name": "curved-conjunction",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate-types": "wrangler types",
+    "seed": "node --env-file=.env --experimental-strip-types scripts/seed.ts",
+    "tunnel": "cloudflared tunnel --url http://localhost:4321"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^13.6.1",
+    "@astrojs/react": "^5.0.7",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.106.2",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^6.4.3",
+    "framer-motion": "^12.40.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "wrangler": "^4.97.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  },
+  "overrides": {
+    "vite": "^7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "lucide-react": "^1.17.0",
+    "tailwindcss": "^4.3.0"
+  }
+}

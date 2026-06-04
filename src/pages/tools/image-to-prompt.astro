@@ -1,0 +1,11 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+import { ImageToPrompt } from '../../components/tools/ImageToPrompt';
+---
+
+<Layout 
+  title="Image to Prompt — Reverse Engineer Any AI Image" 
+  description="Upload any AI-generated image and get the reverse-engineered prompt that could recreate it. Free image to prompt tool powered by Claude Vision."
+>
+  <ImageToPrompt client:load />
+</Layout>

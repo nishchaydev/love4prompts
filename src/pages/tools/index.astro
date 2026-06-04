@@ -1,0 +1,97 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+---
+
+<Layout 
+  title="Free AI Prompt Tools — Enhance, Generate, Translate & Reverse Engineer Prompts" 
+  description="Powerful AI prompt tools. Enhance any prompt, generate from scratch, translate between AI tools, or reverse-engineer images into prompts. All free."
+>
+  <div class="relative pt-[120px] pb-[80px] px-4 overflow-hidden">
+    <div class="container mx-auto max-w-[1000px] relative z-10">
+      
+      <!-- Hero -->
+      <div class="text-center mb-16 animate-fade-in-up">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-accent-blue)]/10 border border-[var(--color-accent-blue)]/20 text-[var(--color-accent-blue)] text-sm font-bold mb-6 tracking-wide uppercase">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent-blue)] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent-blue)]"></span>
+          </span>
+          Free AI Tools
+        </div>
+        <h1 class="text-[clamp(36px,8vw,68px)] leading-[1.1] font-black text-white tracking-tighter mb-4">
+          AI Prompt Tools
+        </h1>
+        <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-[600px] mx-auto leading-relaxed font-medium">
+          Everything you need to craft, enhance, and convert AI prompts. Powered by Claude.
+        </p>
+      </div>
+
+      <!-- Tools Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="tools-grid">
+        
+        <!-- Prompt Enhancer -->
+        <a href="/tools/prompt-enhancer" id="tool-enhancer" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-primary)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(255,42,95,0.2)] no-underline">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#ff2a5f] to-[#ff6b6b] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(255,42,95,0.3)] group-hover:shadow-[0_8px_35px_rgba(255,42,95,0.5)] group-hover:scale-110 transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-primary)] transition-colors">Prompt Enhancer</h2>
+          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Turn any basic prompt into a detailed, optimized prompt for your target AI tool.</p>
+          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-primary)] transition-colors">
+            Use tool
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Prompt Maker -->
+        <a href="/tools/prompt-maker" id="tool-maker" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-accent-blue)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(0,229,255,0.15)] no-underline">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00e5ff] to-[#0088ff] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(0,229,255,0.3)] group-hover:shadow-[0_8px_35px_rgba(0,229,255,0.5)] group-hover:scale-110 transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-accent-blue)] transition-colors">Prompt Maker</h2>
+          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Describe your idea in plain English — get a ready-to-use AI prompt instantly.</p>
+          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-accent-blue)] transition-colors">
+            Use tool
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Prompt Translator -->
+        <a href="/tools/prompt-translator" id="tool-translator" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-accent-purple)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(138,43,226,0.15)] no-underline">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#8a2be2] to-[#c060ff] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(138,43,226,0.3)] group-hover:shadow-[0_8px_35px_rgba(138,43,226,0.5)] group-hover:scale-110 transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-accent-purple)] transition-colors">Prompt Translator</h2>
+          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Convert any prompt between AI tools — Midjourney to DALL-E, ChatGPT to Claude, and more.</p>
+          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-accent-purple)] transition-colors">
+            Use tool
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Image to Prompt -->
+        <a href="/tools/image-to-prompt" id="tool-image-to-prompt" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-success-green)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.15)] no-underline">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#10b981] to-[#34d399] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(16,185,129,0.3)] group-hover:shadow-[0_8px_35px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-success-green)] transition-colors">Image to Prompt</h2>
+          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Upload any AI image and get the reverse-engineered prompt that could recreate it.</p>
+          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-success-green)] transition-colors">
+            Use tool
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Bottom CTA -->
+      <div class="text-center mt-16 animate-fade-in-up" style="animation-delay: 0.3s;">
+        <p class="text-[var(--color-text-muted)] text-sm mb-4">Looking for ready-made prompts?</p>
+        <a href="/#library" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-white/5 text-white text-sm font-bold hover:bg-white/10 hover:border-white/20 transition-all duration-300 no-underline">
+          Browse Prompt Library
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</Layout>

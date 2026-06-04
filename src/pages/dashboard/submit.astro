@@ -1,0 +1,67 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+
+const title = "Submit Reel | ViralPrompt";
+const description = "Submit your Instagram Reel to monetize your prompts.";
+---
+
+<Layout title={title} description={description}>
+  <div class="container mx-auto px-4 py-16 sm:py-24 max-w-[700px] relative z-10">
+    <div class="text-center mb-10">
+      <h1 class="text-[clamp(36px,5vw,54px)] font-black leading-tight mb-4 tracking-tighter text-white animate-fade-in-up">Submit Your Reel</h1>
+      <p class="text-lg text-gray-400 font-medium max-w-[500px] mx-auto animate-fade-in-up" style="animation-delay: 0.1s;">
+        Are you a creator with viral AI prompts? Submit your reel link below and start monetizing your reach.
+      </p>
+    </div>
+
+    <div class="bg-[var(--color-background-elevated)]/60 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 sm:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s;">
+      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[var(--color-accent-purple)] to-[var(--color-primary)] shadow-[0_0_20px_var(--color-primary-glow)]"></div>
+      
+      <form class="space-y-7 relative z-10" action="#" method="POST">
+        <div>
+          <label for="instagramUrl" class="block text-[15px] font-bold text-white mb-2">Instagram Reel URL</label>
+          <input 
+            type="url" 
+            id="instagramUrl" 
+            name="instagramUrl" 
+            placeholder="https://instagram.com/reel/..." 
+            required
+            class="w-full px-5 py-4 rounded-[16px] border border-white/10 bg-[#050508] text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all shadow-inner text-base placeholder-gray-600"
+          />
+        </div>
+
+        <div>
+          <label for="promptText" class="block text-[15px] font-bold text-white mb-2">The AI Prompt</label>
+          <textarea 
+            id="promptText" 
+            name="promptText" 
+            rows={5}
+            placeholder="Paste your exact prompt here..." 
+            required
+            class="w-full px-5 py-4 rounded-[16px] border border-white/10 bg-[#050508] text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all shadow-inner text-base resize-none placeholder-gray-600"
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="email" class="block text-[15px] font-bold text-white mb-2">Your Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="creator@example.com" 
+            required
+            class="w-full px-5 py-4 rounded-[16px] border border-white/10 bg-[#050508] text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all shadow-inner text-base placeholder-gray-600"
+          />
+        </div>
+
+        <button 
+          type="submit"
+          class="w-full py-4 bg-[var(--color-primary)] hover:bg-[#ff1a4a] active:scale-[0.97] text-white text-[16px] font-bold rounded-[16px] transition-all shadow-lg hover:shadow-[0_0_30px_var(--color-primary-glow)] mt-4 flex justify-center items-center gap-2 group"
+        >
+          Submit Application
+          <span class="transform group-hover:translate-x-1 transition-transform">→</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</Layout>

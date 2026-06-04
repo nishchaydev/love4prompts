@@ -1,0 +1,10 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: set this to true or false
+minimumReleaseAgeExclude:
+  - astro@6.4.3
+  - '@astrojs/cloudflare@13.6.1'
+  - '@astrojs/react@5.0.7'
+  - miniflare@4.20260601.0
+  - wrangler@4.97.0

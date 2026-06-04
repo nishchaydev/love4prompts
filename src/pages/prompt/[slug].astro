@@ -1,0 +1,58 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+import { PromptDetailView } from '../../components/prompt/PromptDetailView';
+import { supabase } from '../../lib/supabase';
+import type { Prompt } from '../../components/library/PromptCard';
+import { mockPrompts } from '../../lib/mock-data';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/404');
+}
+
+// Fetch prompt data
+let { data: prompt, error } = await supabase
+  .from('prompts')
+  .select('*')
+  .eq('slug', slug)
+  .single();
+
+// Fallback to mock data
+if (error || !prompt) {
+  const mockPrompt = mockPrompts.find(p => p.slug === slug);
+  if (mockPrompt) {
+    prompt = mockPrompt as any;
+    error = null;
+  }
+}
+
+if (error || !prompt) {
+  return Astro.redirect('/404');
+}
+
+// Increment view count in background (only if it has an id from db)
+if (typeof prompt.id === 'string' && !prompt.id.startsWith('mock-')) {
+  supabase.rpc('increment_view_count', { row_id: prompt.id }).then();
+}
+
+const seoTitle = `${prompt.title} - ViralPrompt`;
+const seoDescription = prompt.prompt_text.substring(0, 150) + '...';
+---
+
+<Layout 
+  title={seoTitle} 
+  description={seoDescription}
+  ogImage={prompt.image_url}
+>
+  <div class="container mx-auto px-4 py-12 sm:py-20 relative">
+    {/* Background Pattern */}
+    <div class="fixed inset-0 z-[-1] opacity-30 pointer-events-none" style="background-image: radial-gradient(#d4d4d4 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="fixed top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-[var(--color-primary)]/5 blur-[120px] z-[-1] pointer-events-none"></div>
+
+    <PromptDetailView 
+      client:load 
+      prompt={prompt as Prompt} 
+    />
+  </div>
+</Layout>

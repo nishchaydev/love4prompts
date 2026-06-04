@@ -1,0 +1,14 @@
+---
+import Layout from '../components/layout/Layout.astro';
+import { DashboardClient } from '../components/profile/DashboardClient';
+
+const title = "Dashboard - ViralPrompt";
+const description = "Manage your saved AI prompts and extract new ones from Instagram Reels.";
+---
+
+<Layout title={title} description={description}>
+  <div className="container mx-auto px-4 py-12">
+    <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-8">Dashboard</h1>
+    <DashboardClient client:only="react" />
+  </div>
+</Layout>
