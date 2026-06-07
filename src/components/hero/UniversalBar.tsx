@@ -285,6 +285,17 @@ export const UniversalBar: React.FC = () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20_000);
     try {
+      // Background save to Google Sheets webhook
+      fetch('/api/save-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: input.trim(),
+          model: selectedModel,
+          intent: intent.label
+        })
+      }).catch(err => console.error('Failed to save prompt:', err));
+
       const res = await fetch(intent.apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
