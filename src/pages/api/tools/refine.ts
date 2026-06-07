@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
 import { AI_TOOLS } from '../../../lib/constants';
+import { buildRefineSystemPrompt } from '../../../lib/promptSkills';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -28,18 +29,11 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const systemPrompt = `You are an expert prompt engineer assistant. 
-The user has an existing prompt tailored for ${targetTool}. 
-They have provided a refinement instruction to improve or change this prompt.
-
-EXISTING PROMPT:
-${currentPrompt}
-
-REFINEMENT INSTRUCTION:
-${instruction}
-
-Apply the instruction to the existing prompt. 
-Return ONLY the newly refined prompt. Do not include any explanations, preambles, or markdown wrappers. Just the raw, ready-to-use updated prompt text.`;
+    const systemPrompt = buildRefineSystemPrompt(
+      targetTool as any,
+      currentPrompt.trim(),
+      instruction.trim()
+    );
 
     const result = await callGroq({
       systemPrompt,

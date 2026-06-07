@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
 import { AI_TOOLS } from '../../../lib/constants';
+import { buildEnhanceSystemPrompt } from '../../../lib/promptSkills';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -28,7 +29,7 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const systemPrompt = `You are a prompt engineering expert. Take the user's basic prompt and enhance it for ${targetTool}. Return only the enhanced prompt, no explanation, no preamble, no markdown formatting — just the raw enhanced prompt text.`;
+    const systemPrompt = buildEnhanceSystemPrompt(targetTool as any);
 
     const result = await callGroq({
       systemPrompt,

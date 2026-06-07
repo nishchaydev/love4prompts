@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
+import { buildGenerateSystemPrompt, buildExecutionSystemPrompt } from '../../../lib/promptSkills';
 
 const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
 const USE_CASES = ['Image Generation', 'Text', 'Code', 'Marketing', 'Study'] as const;
@@ -37,24 +38,12 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // First LLM call: Determine mode (direct vs template prompt) and generate content
-    const systemPrompt = `You are a prompt engineering expert and assistant. Analyze the user's input: "${description.trim()}".
-You MUST respond with a valid JSON object in exactly this format:
-{
-  "isDirectChat": boolean,
-  "output": "string"
-}
-
-Guidelines:
-1. "isDirectChat":
-   - Set to true if the user's input is a direct conversational message, greeting, simple question, or direct request (e.g. "hi", "how are you", "who is Albert Einstein?", "write a poem about love", "make a python script to add numbers").
-   - Set to false if the user is describing a prompt they want to create or optimize (e.g. "enhance my prompt for marketing", "make a prompt for coding", "convert this prompt").
-
-2. "output":
-   - If "isDirectChat" is true: Write the direct, complete answer/response to the user's request.
-   - If "isDirectChat" is false: Write a detailed, ready-to-use prompt optimized for ${targetTool} (usecase: ${useCase}) that will get the best results. Include clear instructions, context, and format requirements.
-
-Return ONLY the raw JSON object. Do not include markdown code block wrappers (like \`\`\`json), explanations, or preambles outside the JSON.`;
+    // Build the professional system prompt using COSTAR + CoT + Few-Shot framework
+    const systemPrompt = buildGenerateSystemPrompt(
+      targetTool as any,
+      useCase as any,
+      description.trim()
+    );
 
     const firstResult = await callGroq({
       systemPrompt,
@@ -90,7 +79,7 @@ Return ONLY the raw JSON object. Do not include markdown code block wrappers (li
 
     // Second LLM call: If it's prompt engineering (not direct chat) AND not an image generator prompt, execute it
     if (!isDirectChat && !isImageGen && generatedPrompt.trim().length > 0) {
-      const executionSystemPrompt = `You are a helpful and intelligent AI assistant. Execute the user's prompt optimized for ${targetTool}. Provide only the direct final answer, output, or content requested. Do not include any meta-commentary, introductory phrases (like "Sure, here is the..."), or conversational preambles unless specifically requested by the prompt. Just output the content.`;
+      const executionSystemPrompt = buildExecutionSystemPrompt(targetTool as any);
       
       const secondResult = await callGroq({
         systemPrompt: executionSystemPrompt,
