@@ -36,13 +36,20 @@ export const POST: APIRoute = async ({ request }) => {
       userMessage: prompt.trim(),
     });
 
+    if (!result.content || typeof result.content !== 'string' || result.content.trim().length === 0) {
+      return new Response(JSON.stringify({ error: 'Model returned an empty response. Please try again.' }), {
+        status: 502,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(JSON.stringify({ enhancedPrompt: result.content }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Enhance API error:', err);
-    return new Response(JSON.stringify({ error: err.message || 'Internal server error.' }), {
+    return new Response(JSON.stringify({ error: 'Internal server error.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

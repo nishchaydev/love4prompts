@@ -295,9 +295,9 @@ export const UniversalBar: React.FC = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
       
-      const genPrompt = data.generatedPrompt || '';
-      const dirResponse = data.directResponse || '';
-      const direct = !!data.isDirectChat;
+      const genPrompt = intent.extractResult(data) || '';
+      const dirResponse = (isRecord(data) && typeof data.directResponse === 'string') ? data.directResponse : '';
+      const direct = isRecord(data) && !!data.isDirectChat;
 
       setResultPrompt(genPrompt);
       setResultOutput(dirResponse);
@@ -650,8 +650,8 @@ export const UniversalBar: React.FC = () => {
                   {!error && (activeTab === 'prompt' ? editedPrompt : resultOutput) && (
                     <span className="text-[10px] text-white/20 font-medium">
                       {activeTab === 'prompt'
-                        ? `${editedPrompt.split(/\s+/).length} words · ${editedPrompt.length} chars`
-                        : `${resultOutput.split(/\s+/).length} words · ${resultOutput.length} chars`
+                        ? `${editedPrompt.match(/\S+/g)?.length || 0} words · ${editedPrompt.length} chars`
+                        : `${resultOutput.match(/\S+/g)?.length || 0} words · ${resultOutput.length} chars`
                       }
                     </span>
                   )}
@@ -708,7 +708,7 @@ export const UniversalBar: React.FC = () => {
                     className="w-full min-h-[140px] max-h-[350px] bg-white/[0.02] border border-white/[0.06] rounded-xl p-3 text-white/90 text-[13px] md:text-[14px] leading-[1.6] outline-none focus:border-white/[0.12] transition-all scrollbar-hide resize-y font-medium"
                     placeholder="Edit your prompt here..."
                   />
-                  {intent.mode !== 'image' && (
+                  {resultIntent?.mode !== 'image' && (
                     <div className="flex justify-end">
                       <button
                         type="button"

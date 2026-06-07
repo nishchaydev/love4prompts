@@ -7,21 +7,17 @@ import type { Prompt } from '../library/PromptCard';
 const getOptimizedImageUrlDetail = (url: string | null): string => {
   if (!url) return '';
   if (url.includes('images.unsplash.com')) {
-    let optimized = url;
-    if (optimized.includes('w=')) {
-      optimized = optimized.replace(/w=\d+/, 'w=800');
-    } else {
-      optimized += '&w=800';
+    try {
+      const parsed = new URL(url);
+      parsed.searchParams.set('w', '800');
+      parsed.searchParams.set('q', '75');
+      if (!parsed.searchParams.has('auto')) {
+        parsed.searchParams.set('auto', 'format');
+      }
+      return parsed.toString();
+    } catch {
+      return url;
     }
-    if (optimized.includes('q=')) {
-      optimized = optimized.replace(/q=\d+/, 'q=75');
-    } else {
-      optimized += '&q=75';
-    }
-    if (!optimized.includes('auto=')) {
-      optimized += '&auto=format';
-    }
-    return optimized;
   }
   return url;
 };
@@ -34,6 +30,7 @@ interface PromptDetailViewProps {
 export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, initialSaved = false }) => {
   const [copied, setCopied] = useState(false);
   const [isSaved, setIsSaved] = useState(initialSaved);
+  const [isSaving, setIsSaving] = useState(false);
   const [session, setSession] = useState<any>(null);
 
   React.useEffect(() => {
@@ -60,36 +57,53 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
       alert('Please sign in to save prompts.');
       return;
     }
+    if (isSaving) return;
 
     const newSavedState = !isSaved;
     setIsSaved(newSavedState);
+    setIsSaving(true);
 
     try {
       const { supabase } = await import('../../lib/supabase');
       if (!newSavedState) {
-        await supabase
+        const { error: deleteError } = await supabase
           .from('saved_prompts')
           .delete()
           .eq('user_id', session.user.id)
           .eq('prompt_id', prompt.id);
-          
+
+        if (deleteError) throw deleteError;
         await supabase.rpc('decrement_save_count', { row_id: prompt.id });
       } else {
-        await supabase
+        const { error: insertError } = await supabase
           .from('saved_prompts')
           .insert({ user_id: session.user.id, prompt_id: prompt.id });
-          
+
+        if (insertError) throw insertError;
         await supabase.rpc('increment_save_count', { row_id: prompt.id });
       }
     } catch (err) {
       console.error('Error saving prompt:', err);
       setIsSaved(!newSavedState); // revert
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(prompt.prompt_text);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(prompt.prompt_text);
+      } else {
+        // Fallback for non-HTTPS contexts
+        const ta = document.createElement('textarea');
+        ta.value = prompt.prompt_text;
+        ta.style.cssText = 'position:fixed;left:-9999px;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -120,7 +134,7 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
 
       {/* Right Col - Details */}
       <div className="flex flex-col">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4">{prompt.title}</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">{prompt.title}</h1>
         
         <div className="flex flex-wrap items-center gap-3 mb-8">
           {prompt.model && <Badge variant="secondary">{prompt.model}</Badge>}
@@ -132,7 +146,7 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
 
         {/* Prompt Text Box */}
         <div className="bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-xl p-4 sm:p-6 mb-8 relative group">
-          <p className="text-[var(--color-text-primary)] font-mono text-sm leading-relaxed whitespace-pre-wrap">
+          <p className="text-[var(--color-text-primary)] font-mono text-sm leading-relaxed whitespace-pre-wrap break-words">
             {prompt.prompt_text}
           </p>
           <div className="absolute top-4 right-4 flex gap-2">
@@ -154,7 +168,7 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
             size="lg" 
             variant="primary" 
             className="w-full flex items-center justify-center gap-2"
-            onClick={() => window.open(`https://www.bing.com/images/create?q=${encodedPrompt}`, '_blank')}
+            onClick={() => window.open(`https://www.bing.com/images/create?q=${encodedPrompt}`, '_blank', 'noopener,noreferrer')}
           >
             <ExternalLink className="w-5 h-5" />
             Generate in Bing
@@ -164,9 +178,10 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
             variant="secondary" 
             className="w-full flex items-center justify-center gap-2"
             onClick={handleSave}
+            disabled={isSaving}
           >
             {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
-            {isSaved ? 'Saved to Library' : 'Save Prompt'}
+            {isSaving ? 'Saving...' : isSaved ? 'Saved to Library' : 'Save Prompt'}
           </Button>
         </div>
 

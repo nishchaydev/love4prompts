@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { callGroqVision } from '../../../lib/groq';
 
 const VALID_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
-const MAX_BASE64_SIZE = 5 * 1024 * 1024 * 1.37; // ~5MB file → ~6.85MB base64
+const MAX_BASE64_SIZE = 5 * 1024 * 1024 * (4 / 3); // ~5MB file → ~6.67MB base64
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -43,9 +43,9 @@ export const POST: APIRoute = async ({ request }) => {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Image-to-prompt API error:', err);
-    return new Response(JSON.stringify({ error: err.message || 'Internal server error.' }), {
+    return new Response(JSON.stringify({ error: 'Internal server error.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

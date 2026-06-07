@@ -83,7 +83,7 @@ export const FeaturesGrid: React.FC = () => {
   const [hoveredModel, setHoveredModel] = useState<string | null>(null);
 
   return (
-    <section className="py-24 border-t border-white/[0.03] relative overflow-hidden" ref={ref}>
+    <section className="py-16 sm:py-24 border-t border-white/[0.03] relative overflow-hidden" ref={ref}>
       <div className="container mx-auto px-4 max-w-[1100px]">
         {/* Section Header */}
         <motion.div
@@ -286,7 +286,7 @@ export const FeaturesGrid: React.FC = () => {
             </div>
 
             {/* Router Interactive Diagram */}
-            <div className="flex-1 w-full max-w-[400px] bg-[#0A0118]/80 border border-white/[0.03] rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[220px]">
+            <div className="flex-1 w-full max-w-[400px] bg-[#0A0118]/80 border border-white/[0.03] rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center relative min-h-[180px] sm:min-h-[220px]">
               {/* Central Input Node */}
               <div className="w-12 h-12 rounded-full bg-[var(--color-primary)]/25 border border-[var(--color-primary)]/40 flex items-center justify-center z-10 shadow-[0_0_20px_var(--color-primary-glow)]">
                 <span className="text-[11px] font-mono font-bold text-white">L4</span>

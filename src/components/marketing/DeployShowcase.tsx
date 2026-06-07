@@ -72,11 +72,13 @@ export const DeployShowcase: React.FC = () => {
     navigator.clipboard.writeText(textToCopy).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      /* Clipboard access denied — silent fallback */
     });
   };
 
   return (
-    <section className="py-24 border-t border-white/[0.03] relative overflow-hidden bg-[#0A0118]/20">
+    <section className="py-16 sm:py-24 border-t border-white/[0.03] relative overflow-hidden bg-[#0A0118]/20">
       <div className="container mx-auto px-4 max-w-[1100px]">
         {/* Tagline & Title */}
         <div className="mb-16 text-center md:text-left">

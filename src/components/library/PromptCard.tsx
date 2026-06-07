@@ -34,21 +34,17 @@ interface PromptCardProps {
 const getOptimizedImageUrl = (url: string | null): string => {
   if (!url) return '';
   if (url.includes('images.unsplash.com')) {
-    let optimized = url;
-    if (optimized.includes('w=')) {
-      optimized = optimized.replace(/w=\d+/, 'w=400');
-    } else {
-      optimized += '&w=400';
+    try {
+      const parsed = new URL(url);
+      parsed.searchParams.set('w', '400');
+      parsed.searchParams.set('q', '65');
+      if (!parsed.searchParams.has('auto')) {
+        parsed.searchParams.set('auto', 'format');
+      }
+      return parsed.toString();
+    } catch {
+      return url;
     }
-    if (optimized.includes('q=')) {
-      optimized = optimized.replace(/q=\d+/, 'q=65');
-    } else {
-      optimized += '&q=65';
-    }
-    if (!optimized.includes('auto=')) {
-      optimized += '&auto=format';
-    }
-    return optimized;
   }
   return url;
 };

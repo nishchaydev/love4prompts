@@ -2,14 +2,14 @@ import React from 'react';
 
 export const SeoFooter: React.FC = () => {
   return (
-    <footer className="relative border-t border-white/[0.05] bg-gradient-to-b from-[#120A24]/40 to-[#0A0118] py-20 mt-auto">
+    <footer className="relative border-t border-white/[0.05] bg-gradient-to-b from-[#120A24]/40 to-[#0A0118] py-12 sm:py-20 mt-auto">
       {/* Decorative background glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] rounded-full bg-[var(--color-primary)] opacity-[0.03] blur-[100px] pointer-events-none z-0" aria-hidden="true" />
       
       <div className="relative z-10 container mx-auto px-4 max-w-[1200px]">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-8 lg:gap-8 mb-12 sm:mb-16">
           {/* Column 1: Brand & Core */}
-          <div className="lg:col-span-4 flex flex-col gap-4">
+          <div className="col-span-2 sm:col-span-2 md:col-span-3 lg:col-span-4 flex flex-col gap-4">
             <div className="flex items-center gap-2.5">
               <img 
                 src="/logo-icon.png" 
