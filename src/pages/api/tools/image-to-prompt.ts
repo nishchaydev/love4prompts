@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { callClaudeVision } from '../../../lib/claude';
+import { callGroqVision } from '../../../lib/groq';
 
 const VALID_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 const MAX_BASE64_SIZE = 5 * 1024 * 1024 * 1.37; // ~5MB file → ~6.85MB base64
@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const systemPrompt = `You are an expert at analyzing AI-generated images and reverse-engineering the prompts used to create them. Analyze this image in detail and write a comprehensive AI image generation prompt that could recreate it. Include details about: subject, composition, style, lighting, colors, mood, camera angle, and technical quality modifiers. Format the prompt for Midjourney. Return only the prompt text, no explanation.`;
 
-    const result = await callClaudeVision({
+    const result = await callGroqVision({
       systemPrompt,
       imageBase64,
       mimeType: mimeType as 'image/jpeg' | 'image/png' | 'image/webp',

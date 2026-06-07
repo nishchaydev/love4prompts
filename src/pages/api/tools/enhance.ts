@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { callClaude } from '../../../lib/claude';
+import { callGroq } from '../../../lib/groq';
 
 const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
 
@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const systemPrompt = `You are a prompt engineering expert. Take the user's basic prompt and enhance it for ${targetTool}. Return only the enhanced prompt, no explanation, no preamble, no markdown formatting — just the raw enhanced prompt text.`;
 
-    const result = await callClaude({
+    const result = await callGroq({
       systemPrompt,
       userMessage: prompt.trim(),
     });

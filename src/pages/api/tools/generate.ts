@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { callClaude } from '../../../lib/claude';
+import { callGroq } from '../../../lib/groq';
 
 const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
 const USE_CASES = ['Image Generation', 'Text', 'Code', 'Marketing', 'Study'] as const;
@@ -47,7 +47,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const systemPrompt = SYSTEM_PROMPTS[useCase].replace(/TARGET_TOOL/g, targetTool);
 
-    const result = await callClaude({
+    const result = await callGroq({
       systemPrompt,
       userMessage: description.trim(),
     });

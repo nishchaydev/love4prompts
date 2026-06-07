@@ -6,7 +6,7 @@ const testimonials = [
     name: 'Sarah Jenkins',
     role: 'Digital Creator (150k followers)',
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces',
-    text: 'ViralPrompt is literally my secret weapon. I copy a prompt, tweak it slightly in Midjourney, and post. My engagement is up 300% this month.',
+    text: 'Love4Prompts is literally my secret weapon. I copy a prompt, tweak it slightly in Midjourney, and post. My engagement is up 300% this month.',
   },
   {
     name: 'Marcus Chen',

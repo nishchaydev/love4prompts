@@ -1,5 +1,5 @@
 {
-  "name": "curved-conjunction",
+  "name": "love4prompts",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -15,7 +15,6 @@
     "tunnel": "cloudflared tunnel --url http://localhost:4321"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^13.6.1",
     "@astrojs/react": "^5.0.7",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.106.2",

@@ -63,25 +63,25 @@ export const MouseGlow: React.FC = () => {
     };
   }, [mouseX, mouseY]);
 
-  if (!hasMouse) return null;
+  // Always render the effect since the user explicitly requested it
+  // if (!hasMouse) return null;
 
   // Use framer-motion template to update CSS without React re-renders for max performance
   // Make the glow tighter and brighter when clicking to simulate energy
-  const glowSize = isClicking ? 400 : 800;
-  const glowOpacity = isClicking ? 0.7 : 0.4;
-  const background = useMotionTemplate`radial-gradient(${glowSize}px circle at ${smoothX}px ${smoothY}px, var(--color-primary-glow), transparent 70%)`;
-
+  const glowSize = isClicking ? 400 : 700;
+  const glowOpacity = isClicking ? 0.8 : 0.5;
+  const background = useMotionTemplate`radial-gradient(circle at ${smoothX}px ${smoothY}px, rgba(255, 42, 95, 0.3) 0px, rgba(220, 20, 60, 0.15) ${glowSize * 0.25}px, rgba(150, 0, 24, 0.08) ${glowSize * 0.5}px, rgba(80, 0, 10, 0.03) ${glowSize * 0.75}px, transparent ${glowSize}px)`;
   return (
     <>
       {/* Primary Ambient Glow */}
       <motion.div
-        className="pointer-events-none fixed inset-0 z-0 mix-blend-screen transition-all duration-300"
+        className="pointer-events-none fixed inset-0 z-[9997] mix-blend-screen transition-all duration-300"
         style={{ background, opacity: glowOpacity }}
       />
       
       {/* Custom Trailing Cursor Ring */}
       <motion.div 
-        className="pointer-events-none fixed top-0 left-0 z-[9999] w-8 h-8 rounded-full border-[1.5px] border-[var(--color-primary)] mix-blend-screen shadow-[0_0_10px_var(--color-primary-glow)]"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] w-8 h-8 rounded-full border-[2px] border-white/80 mix-blend-screen shadow-[0_0_15px_rgba(255,42,95,0.6),inset_0_0_10px_rgba(255,42,95,0.4)]"
         style={{
           x: smoothX,
           y: smoothY,
@@ -118,7 +118,7 @@ export const MouseGlow: React.FC = () => {
             }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="pointer-events-none fixed top-0 left-0 z-[9998] w-[80px] h-[80px] rounded-full border-2 border-[var(--color-primary)] mix-blend-screen shadow-[0_0_20px_var(--color-primary-glow)]"
+            className="pointer-events-none fixed top-0 left-0 z-[9998] w-[80px] h-[80px] rounded-full border-2 border-[#ff2a5f] mix-blend-screen shadow-[0_0_20px_rgba(255,42,95,0.6)]"
           />
         ))}
       </AnimatePresence>

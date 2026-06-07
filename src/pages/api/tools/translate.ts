@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { callClaude } from '../../../lib/claude';
+import { callGroq } from '../../../lib/groq';
 
 const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
 
@@ -38,7 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const systemPrompt = `You are a prompt translation expert. The user will give you a prompt written for ${fromTool}. Rewrite and reformat it so it works optimally for ${toTool}. Adapt the syntax, modifiers, parameters, and structure to match ${toTool}'s expected format and best practices. Return only the translated prompt, no explanation, no preamble.`;
 
-    const result = await callClaude({
+    const result = await callGroq({
       systemPrompt,
       userMessage: prompt.trim(),
     });

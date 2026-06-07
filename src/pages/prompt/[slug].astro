@@ -36,7 +36,7 @@ if (typeof prompt.id === 'string' && !prompt.id.startsWith('mock-')) {
   supabase.rpc('increment_view_count', { row_id: prompt.id }).then();
 }
 
-const seoTitle = `${prompt.title} - ViralPrompt`;
+const seoTitle = `${prompt.title} - Love4Prompts`;
 const seoDescription = prompt.prompt_text.substring(0, 150) + '...';
 ---
 

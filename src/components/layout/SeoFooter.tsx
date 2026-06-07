@@ -64,7 +64,7 @@ export const SeoFooter: React.FC = () => {
         {/* Bottom Footer row */}
         <div className="border-t border-[var(--color-border)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[var(--color-text-muted)] text-sm">
-            &copy; {new Date().getFullYear()} ViralPrompt. Download Free AI Prompts.
+            &copy; {new Date().getFullYear()} Love4Prompts. Download Free AI Prompts.
           </p>
           <div className="flex gap-6">
             <a href="/privacy" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors">Privacy Policy</a>

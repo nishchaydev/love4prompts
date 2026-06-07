@@ -45,7 +45,7 @@ export const Header: React.FC = () => {
               <Sparkles className="text-white w-5 h-5" />
             </div>
             <a href="/tools" className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 font-sans">
-              ViralPrompt
+              Love4Prompts
             </a>
           </div>
 
