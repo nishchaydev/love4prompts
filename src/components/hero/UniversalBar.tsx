@@ -146,6 +146,34 @@ const detectIntent = (text: string): Intent => {
 
 const DEFAULT_INTENT = detectIntent('');
 
+// ─── Scoring & Autocomplete ───────────────────────────────────────────
+const calculateScore = (text: string): number => {
+  if (!text.trim()) return 0;
+  let score = 0;
+  const t = text.toLowerCase();
+
+  if (text.length > 20) score += 20;
+  if (/(write|generate|create|act as|translate|make|build|design|explain)/.test(t)) score += 20;
+  if (/(markdown|list|table|concise|tone|format|bullet|step-by-step)/.test(t)) score += 20;
+  if (/(for a beginner|expert|audience|specifically for|target)/.test(t)) score += 20;
+  if (/(act as|you are|persona|role|assume the role)/.test(t)) score += 20;
+
+  return Math.min(score, 100);
+};
+
+const getGhostSuggestion = (text: string): string => {
+  if (!text.trim() || text.trim().length < 4) return '';
+  const t = text.toLowerCase();
+
+  if (t.startsWith('write an article') && !t.includes('about')) return ' about [topic], optimized for SEO';
+  if (t.startsWith('act as') && !t.includes('expert')) return ' an expert in [field], and explain...';
+  if (t.startsWith('create a') && !t.includes('for')) return ' for [target audience] with a [tone] tone';
+  if (t.startsWith('generate') && !t.includes('using')) return ' using [format/framework]';
+  if (t.startsWith('translate') && !t.includes('into')) return ' this into [language/format]';
+
+  return '';
+};
+
 // ─── History persistence ─────────────────────────────────────────────
 const HISTORY_KEY = 'ilp_bar_history';
 const MAX_HISTORY = 5;
@@ -193,6 +221,14 @@ export const UniversalBar: React.FC = () => {
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
+  // Refinement state
+  const [refinementInput, setRefinementInput] = useState('');
+  const [isRefining, setIsRefining] = useState(false);
+
+  // Scoring & Ghost Text state
+  const [promptScore, setPromptScore] = useState(0);
+  const [ghostText, setGhostText] = useState('');
+
   // Keystroke reactive pulse intensity (accumulating & decaying)
   const [pulseMultiplier, setPulseMultiplier] = useState(0);
 
@@ -204,7 +240,15 @@ export const UniversalBar: React.FC = () => {
     if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'Escape', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
       triggerPulse();
     }
-  }, [triggerPulse]);
+
+    if ((e.key === 'Tab' || e.key === 'ArrowRight') && ghostText && inputRef.current?.selectionStart === input.length) {
+      e.preventDefault();
+      const newValue = input + ghostText;
+      setInput(newValue);
+      setGhostText('');
+      setPromptScore(calculateScore(newValue));
+    }
+  }, [triggerPulse, ghostText, input]);
 
   // Decay loop for the dynamic glow
   useEffect(() => {
@@ -265,6 +309,8 @@ export const UniversalBar: React.FC = () => {
     const v = e.target.value;
     setInput(v);
     setIntent(v.trim().length >= 3 ? detectIntent(v) : DEFAULT_INTENT);
+    setPromptScore(calculateScore(v));
+    setGhostText(getGhostSuggestion(v));
   }, []);
 
   // ── Execute inline ───────────────────────────────────────────────
@@ -277,6 +323,7 @@ export const UniversalBar: React.FC = () => {
     setResultPrompt('');
     setResultOutput('');
     setEditedPrompt('');
+    setRefinementInput('');
     setIsDirectChat(false);
     setResultIntent(intent);
     pushHistory(input.trim());
@@ -305,7 +352,7 @@ export const UniversalBar: React.FC = () => {
       clearTimeout(timeoutId);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
-      
+
       const genPrompt = intent.extractResult(data) || '';
       const dirResponse = (isRecord(data) && typeof data.directResponse === 'string') ? data.directResponse : '';
       const direct = isRecord(data) && !!data.isDirectChat;
@@ -340,16 +387,49 @@ export const UniversalBar: React.FC = () => {
     return ok;
   }, []);
 
+  const handleRefine = useCallback(async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!refinementInput.trim() || isRefining) return;
+
+    setIsRefining(true);
+    setError('');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20_000);
+    try {
+      const res = await fetch('/api/tools/refine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPrompt: editedPrompt, instruction: refinementInput.trim(), targetTool: selectedModel }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+
+      setEditedPrompt(data.refinedPrompt || '');
+      setRefinementInput('');
+    } catch (err: unknown) {
+      clearTimeout(timeoutId);
+      setError(err instanceof Error ? err.message : 'Something went wrong during refinement.');
+    } finally {
+      setIsRefining(false);
+    }
+  }, [editedPrompt, refinementInput, isRefining, selectedModel]);
+
   const handleReset = useCallback(() => {
     setResultPrompt('');
     setResultOutput('');
     setEditedPrompt('');
+    setRefinementInput('');
     setIsDirectChat(false);
     setActiveTab('prompt');
     setError('');
     setResultIntent(null);
     setInput('');
     setIntent(DEFAULT_INTENT);
+    setPromptScore(0);
+    setGhostText('');
     inputRef.current?.focus();
   }, []);
 
@@ -370,7 +450,7 @@ export const UniversalBar: React.FC = () => {
     // Determine target URL based on selected model
     const encoded = encodeURIComponent(prompt);
     let targetUrl = '';
-    
+
     switch (selectedModel) {
       case 'Gemini':
         targetUrl = `https://gemini.google.com/app?prompt=${encoded}`;
@@ -465,11 +545,10 @@ export const UniversalBar: React.FC = () => {
             background: 'rgba(18, 10, 36, 0.75)',
             backdropFilter: 'blur(30px)',
             WebkitBackdropFilter: 'blur(30px)',
-            border: `1px solid ${
-              isFocused || showPill || isLoading
+            border: `1px solid ${isFocused || showPill || isLoading
                 ? getHexWithOpacity(ac, 0.35 + pulseMultiplier * 0.45)
                 : getHexWithOpacity(ac, 0.15)
-            }`,
+              }`,
             boxShadow: isFocused || showPill || isLoading
               ? `0 0 ${Math.round(20 + pulseMultiplier * 25)}px ${getHexWithOpacity(ac, 0.15 + pulseMultiplier * 0.35)}, inset 0 0 ${Math.round(12 + pulseMultiplier * 8)}px ${getHexWithOpacity(ac, 0.05 + pulseMultiplier * 0.2)}`
               : `0 8px 32px rgba(0,0,0,0.6), 0 0 15px ${getHexWithOpacity(ac, 0.08)}`,
@@ -537,15 +616,22 @@ export const UniversalBar: React.FC = () => {
               onFocus={() => { setIsFocused(true); if (history.length > 0 && !input) setHistoryOpen(true); }}
               onBlur={() => { setIsFocused(false); setTimeout(() => setHistoryOpen(false), 200); }}
               disabled={isLoading}
-              className="w-full bg-transparent text-white text-[14px] md:text-[15px] font-medium outline-none placeholder:text-transparent disabled:opacity-50"
+              className="w-full bg-transparent text-white text-[14px] md:text-[15px] font-medium outline-none placeholder:text-transparent disabled:opacity-50 relative z-10"
               placeholder={PLACEHOLDERS[placeholderIdx]}
               aria-label="Universal prompt bar"
               id="universal-bar-input"
             />
             {/* Animated placeholder */}
             {!input && !isLoading && (
-              <div className="absolute inset-0 flex items-center pointer-events-none" style={{ opacity: placeholderVisible ? 0.85 : 0, transition: 'opacity 300ms' }}>
+              <div className="absolute inset-0 flex items-center pointer-events-none z-0" style={{ opacity: placeholderVisible ? 0.85 : 0, transition: 'opacity 300ms' }}>
                 <span className="text-[14px] md:text-[15px] font-medium text-white/70 truncate">{PLACEHOLDERS[placeholderIdx]}</span>
+              </div>
+            )}
+            {/* Ghost text */}
+            {input && ghostText && !isLoading && (
+              <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden whitespace-pre z-0">
+                <span className="text-[14px] md:text-[15px] font-medium text-transparent">{input}</span>
+                <span className="text-[14px] md:text-[15px] font-medium text-white/30">{ghostText}</span>
               </div>
             )}
 
@@ -577,7 +663,23 @@ export const UniversalBar: React.FC = () => {
           </div>
 
           {/* Right section: intent pill + kbd hint + submit */}
-          <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+          <div className="flex items-center gap-2 flex-shrink-0 ml-2 relative z-10">
+            {/* Score Pill */}
+            {input.trim().length > 0 && !isLoading && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="hidden md:inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold"
+                style={{
+                  backgroundColor: promptScore >= 80 ? 'rgba(16, 185, 129, 0.15)' : promptScore >= 40 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                  color: promptScore >= 80 ? '#10b981' : promptScore >= 40 ? '#f59e0b' : '#ef4444',
+                  border: `1px solid ${promptScore >= 80 ? 'rgba(16, 185, 129, 0.3)' : promptScore >= 40 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                }}
+              >
+                Score: {promptScore}
+              </motion.span>
+            )}
+
             {/* Intent pill */}
             {showPill && !isLoading && (
               <motion.span
@@ -686,22 +788,20 @@ export const UniversalBar: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setActiveTab('prompt')}
-                    className={`pb-2 text-[12px] md:text-[13px] font-semibold transition-all border-b-2 ${
-                      activeTab === 'prompt'
+                    className={`pb-2 text-[12px] md:text-[13px] font-semibold transition-all border-b-2 ${activeTab === 'prompt'
                         ? 'text-white border-[var(--color-primary)]'
                         : 'text-white/40 hover:text-white/70 border-transparent'
-                    }`}
+                      }`}
                   >
                     ✨ Optimized Prompt
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('output')}
-                    className={`pb-2 text-[12px] md:text-[13px] font-semibold transition-all border-b-2 ${
-                      activeTab === 'output'
+                    className={`pb-2 text-[12px] md:text-[13px] font-semibold transition-all border-b-2 ${activeTab === 'output'
                         ? 'text-white border-[var(--color-primary)]'
                         : 'text-white/40 hover:text-white/70 border-transparent'
-                    }`}
+                      }`}
                   >
                     ⚡ Direct Output
                   </button>
@@ -719,6 +819,26 @@ export const UniversalBar: React.FC = () => {
                     className="w-full min-h-[140px] max-h-[350px] bg-white/[0.02] border border-white/[0.06] rounded-xl p-3 text-white/90 text-[13px] md:text-[14px] leading-[1.6] outline-none focus:border-white/[0.12] transition-all scrollbar-hide resize-y font-medium"
                     placeholder="Edit your prompt here..."
                   />
+
+                  <form onSubmit={handleRefine} className="relative flex items-center w-full mt-1">
+                    <input
+                      type="text"
+                      value={refinementInput}
+                      onChange={(e) => setRefinementInput(e.target.value)}
+                      placeholder="Refine prompt (e.g., 'Make it shorter and funnier')..."
+                      disabled={isRefining}
+                      className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl pl-3 pr-10 py-2.5 text-white/90 text-[13px] outline-none focus:border-white/[0.15] focus:bg-white/[0.05] transition-all"
+                    />
+                    <button
+                      type="submit"
+                      disabled={!refinementInput.trim() || isRefining}
+                      className="absolute right-2 p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/[0.1] disabled:opacity-30 transition-all"
+                      aria-label="Refine Prompt"
+                    >
+                      {isRefining ? <Zap className="w-4 h-4 animate-pulse text-[var(--color-primary)]" /> : <Sparkles className="w-4 h-4" />}
+                    </button>
+                  </form>
+
                   {resultIntent?.mode !== 'image' && (
                     <div className="flex justify-end">
                       <button

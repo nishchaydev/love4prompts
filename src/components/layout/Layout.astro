@@ -32,13 +32,57 @@ const {
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
+    <meta property="og:site_name" content="Love4Prompts" />
+    <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site || 'https://love4prompts.com').href} />
     <meta property="og:url" content={canonicalUrl} />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site || 'https://love4prompts.com').href} />
+
+    <!-- Theme Color & PWA -->
+    <meta name="theme-color" content="#120A24" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://love4prompts.com/#website",
+          "url": "https://love4prompts.com/",
+          "name": "Love4Prompts",
+          "description": "The ultimate prompt toolkit for every AI. Generate, enhance, and translate AI prompts instantly.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Love4Prompts",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://love4prompts.com/logo-icon.png"
+            }
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://love4prompts.com/#software",
+          "name": title,
+          "description": description,
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        }
+      ]
+    })} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

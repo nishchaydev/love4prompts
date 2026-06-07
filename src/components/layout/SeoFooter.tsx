@@ -62,12 +62,14 @@ export const SeoFooter: React.FC = () => {
             <a href="/?tag=video" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">AI Video from Text</a>
           </div>
 
-          {/* Column 5: Platforms */}
+          {/* Column 5: Platforms & Socials */}
           <div className="lg:col-span-2 flex flex-col gap-3">
-            <h3 className="font-bold text-white/40 text-[11px] uppercase tracking-widest mb-2 font-mono">Platforms</h3>
+            <h3 className="font-bold text-white/40 text-[11px] uppercase tracking-widest mb-2 font-mono">Platforms & Socials</h3>
             <a href="/?tag=chatgpt" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">ChatGPT Prompts</a>
             <a href="/?tag=gemini" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">Gemini Prompts</a>
-            <a href="/?tag=builder" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">App Builder</a>
+            <a href="/linkedin-post-generator" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">LinkedIn Generator</a>
+            <a href="/instagram-caption-generator" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">Insta Caption Generator</a>
+            <a href="/coding-prompt-generator" className="text-[var(--color-text-secondary)] text-[13px] hover:text-white hover:translate-x-1 transition-all duration-200 no-underline">Coding Prompt Generator</a>
           </div>
         </div>
 
