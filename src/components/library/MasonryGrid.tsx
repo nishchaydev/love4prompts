@@ -21,7 +21,8 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
       repeated.push(
         ...prompts.map((p, i) => ({
           ...p,
-          id: `${p.id}-${repeated.length + i}`,
+          realId: p.id,
+          id: `${p.id}__dup${repeated.length + i}`,
         })),
       );
     }
@@ -78,8 +79,13 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
       return;
     }
 
-    const realId = promptId.split('-')[0]; // strip duplicate suffix
+    // Look up the original ID from the duplicated prompt
+    const prompt = infinitePrompts.find(p => p.id === promptId);
+    const realId = prompt?.realId ?? promptId;
     const isSaved = savedIds.has(promptId);
+
+    // Capture pre-operation state for rollback
+    const prevSaved = new Set(savedIds);
 
     const newSavedIds = new Set(savedIds);
     if (isSaved) {
@@ -96,18 +102,20 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
           .delete()
           .eq('user_id', session.user.id)
           .eq('prompt_id', realId);
-        await supabase.rpc('decrement_save_count', { row_id: realId }).then();
+        const { error } = await supabase.rpc('decrement_save_count', { row_id: realId });
+        if (error) throw error;
       } else {
         await supabase
           .from('saved_prompts')
           .insert({ user_id: session.user.id, prompt_id: realId });
-        await supabase.rpc('increment_save_count', { row_id: realId }).then();
+        const { error } = await supabase.rpc('increment_save_count', { row_id: realId });
+        if (error) throw error;
       }
     } catch (err) {
       console.error('Error saving prompt:', err);
-      setSavedIds(savedIds);
+      setSavedIds(prevSaved);
     }
-  }, [session, savedIds]);
+  }, [session, savedIds, infinitePrompts]);
 
   const displayedPrompts = infinitePrompts.slice(0, visibleCount);
   const hasMore = visibleCount < infinitePrompts.length;
@@ -137,7 +145,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
               style={{
                 height: `${220 + (i % 3) * 60}px`,
                 background:
-                  'linear-gradient(90deg, #13131a 25%, #1c1c26 50%, #13131a 75%)',
+                  'linear-gradient(90deg, #120A24 25%, #1d1238 50%, #120A24 75%)',
                 backgroundSize: '200% 100%',
                 animation: 'shimmer 1.5s infinite',
               }}

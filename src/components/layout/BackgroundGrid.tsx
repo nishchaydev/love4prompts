@@ -15,7 +15,7 @@ export const BackgroundGrid: React.FC = () => {
           duration: 8
         }}
         style={{
-          backgroundImage: `radial-gradient(circle, rgba(138, 43, 226, 0.6) 1px, transparent 1px)`,
+          backgroundImage: `radial-gradient(circle, rgba(var(--color-primary-rgb), 0.6) 1px, transparent 1px)`,
           backgroundSize: '32px 32px',
           maskImage: 'radial-gradient(ellipse at center, black 20%, transparent 80%)',
           WebkitMaskImage: 'radial-gradient(ellipse at center, black 20%, transparent 80%)',

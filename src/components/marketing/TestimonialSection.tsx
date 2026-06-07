@@ -27,26 +27,26 @@ export const TestimonialSection: React.FC = () => {
     <section className="py-28 relative">
       <div className="container mx-auto px-4 max-w-[1000px]">
         <div className="text-center mb-16">
-          <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3">What People Say</p>
-          <h2 className="text-3xl md:text-[44px] font-black text-white tracking-[-0.03em] leading-tight mb-3">Built for people who use AI daily</h2>
-          <p className="text-[15px] text-white/30 font-medium">From solo creators to full agencies.</p>
+          <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3 font-mono">Feedback</p>
+          <h2 className="text-3xl md:text-[44px] font-black text-white tracking-[-0.04em] leading-tight mb-3">Built for creators and teams</h2>
+          <p className="text-[15px] text-white/30 font-medium">Powering workflows from solo creators to full agencies.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="relative p-6 rounded-2xl transition-all duration-500 group"
+              className="relative p-6 rounded-3xl transition-all duration-500 group"
               style={{
-                background: 'rgba(255,255,255,0.02)',
+                background: 'rgba(18, 10, 36, 0.4)',
                 border: '1px solid rgba(255,255,255,0.04)',
               }}
             >
               <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
-                  boxShadow: '0 0 40px rgba(168,85,247,0.08)',
-                  border: '1px solid rgba(168,85,247,0.15)',
+                  boxShadow: '0 0 32px var(--color-primary-glow)',
+                  border: '1px solid rgba(113, 61, 255, 0.2)',
                   borderRadius: 'inherit',
                 }}
               />
@@ -54,10 +54,10 @@ export const TestimonialSection: React.FC = () => {
               <div className="relative z-10">
                 <div className="flex gap-0.5 mb-5">
                   {[...Array(5)].map((_, j) => (
-                    <Star key={j} className="w-3.5 h-3.5 fill-amber-400/80 text-amber-400/80" />
+                    <Star key={j} className="w-3.5 h-3.5 fill-[var(--color-primary)] text-[var(--color-primary)] opacity-80" />
                   ))}
                 </div>
-                <p className="text-white/50 leading-relaxed mb-6 text-[14px] font-medium">"{t.text}"</p>
+                <p className="text-white/60 leading-relaxed mb-6 text-[13.5px] font-medium">"{t.text}"</p>
                 <div className="flex items-center gap-3">
                   <img src={t.image} alt={t.name} className="w-9 h-9 rounded-full object-cover border border-white/10" loading="lazy" />
                   <div>

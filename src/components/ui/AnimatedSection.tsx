@@ -45,14 +45,12 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 interface GlassCardProps {
   children: React.ReactNode;
   className?: string;
-  hoverColor?: string;
   delay?: number;
 }
 
 export const GlassCard: React.FC<GlassCardProps> = ({
   children,
   className = '',
-  hoverColor = 'rgba(139, 92, 246, 0.15)',
   delay = 0,
 }) => {
   const ref = useRef<HTMLDivElement>(null);

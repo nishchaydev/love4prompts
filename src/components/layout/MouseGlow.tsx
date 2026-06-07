@@ -70,7 +70,7 @@ export const MouseGlow: React.FC = () => {
   // Make the glow tighter and brighter when clicking to simulate energy
   const glowSize = isClicking ? 400 : 700;
   const glowOpacity = isClicking ? 0.8 : 0.5;
-  const background = useMotionTemplate`radial-gradient(circle at ${smoothX}px ${smoothY}px, rgba(138, 43, 226, 0.25) 0px, rgba(100, 20, 180, 0.12) ${glowSize * 0.25}px, rgba(60, 10, 120, 0.06) ${glowSize * 0.5}px, rgba(30, 5, 60, 0.02) ${glowSize * 0.75}px, transparent ${glowSize}px)`;
+  const background = useMotionTemplate`radial-gradient(circle at ${smoothX}px ${smoothY}px, rgba(var(--color-primary-rgb), 0.25) 0px, rgba(var(--color-primary-rgb), 0.12) ${glowSize * 0.25}px, rgba(var(--color-primary-rgb), 0.06) ${glowSize * 0.5}px, rgba(var(--color-primary-rgb), 0.02) ${glowSize * 0.75}px, transparent ${glowSize}px)`;
   return (
     <>
       {/* Primary Ambient Glow */}
@@ -81,7 +81,7 @@ export const MouseGlow: React.FC = () => {
       
       {/* Custom Trailing Cursor Ring */}
       <motion.div 
-        className="pointer-events-none fixed top-0 left-0 z-[9999] w-8 h-8 rounded-full border-[2px] border-white/80 mix-blend-screen shadow-[0_0_15px_rgba(138,43,226,0.6),inset_0_0_10px_rgba(138,43,226,0.4)]"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] w-8 h-8 rounded-full border-[2px] border-white/80 mix-blend-screen shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.6),inset_0_0_10px_rgba(var(--color-primary-rgb),0.4)]"
         style={{
           x: smoothX,
           y: smoothY,
@@ -118,7 +118,7 @@ export const MouseGlow: React.FC = () => {
             }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="pointer-events-none fixed top-0 left-0 z-[9998] w-[80px] h-[80px] rounded-full border-2 border-[#8a2be2] mix-blend-screen shadow-[0_0_20px_rgba(138,43,226,0.6)]"
+            className="pointer-events-none fixed top-0 left-0 z-[9998] w-[80px] h-[80px] rounded-full border-2 border-[color:var(--color-primary)] mix-blend-screen shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.6)]"
           />
         ))}
       </AnimatePresence>

@@ -17,11 +17,11 @@ export const SeoFooter: React.FC = () => {
 
           {/* Column 1: Brand & Core */}
           <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-[var(--color-text-primary)] text-lg mb-2">Viral Prompt App</h3>
+            <h3 className="font-bold text-[var(--color-text-primary)] text-lg mb-2">Love4Prompts</h3>
             <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
-              The ultimate ai prompt app. Access our daily updated library to download free viral prompts for every use case.
+              The ultimate prompt toolkit for every AI. Access our daily updated library to discover and download free prompts for every use case.
             </p>
-            <a href="/dashboard/submit" className="text-[var(--color-primary)] font-semibold text-sm hover:underline mt-2">Submit Your Reel &rarr;</a>
+            <a href="/dashboard" className="text-[var(--color-primary)] font-semibold text-sm hover:underline mt-2">Manage Prompts &rarr;</a>
           </div>
 
           {/* Column 2: Prompt Maker Tools */}

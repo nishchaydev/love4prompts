@@ -5,7 +5,6 @@ import { TestimonialSection } from '../components/marketing/TestimonialSection';
 import { FeaturesGrid } from '../components/marketing/FeaturesGrid';
 import { HowItWorks } from '../components/marketing/HowItWorks';
 import { UniversalBar } from '../components/hero/UniversalBar';
-import { PurpleWaveBackground } from '../components/layout/PurpleWaveBackground';
 import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { supabase } from '../lib/supabase';
 import type { Prompt } from '../components/library/PromptCard';
@@ -22,93 +21,67 @@ if (error) console.error('Error fetching prompts:', error);
 const prompts = (dbPrompts && dbPrompts.length > 0) ? dbPrompts : mockPrompts;
 const styles = Array.from(new Set(prompts?.map(p => p.style).filter(Boolean) || [])) as string[];
 
-const title = "iloveprompts | All-in-One AI Prompt Platform — Enhance, Generate, Translate";
-const description = "One bar. Every AI tool. Type what you need — enhance prompts, generate images, translate between AI models. Free. No signup. Works with ChatGPT, Midjourney, Claude, DALL-E, Gemini & Flux.";
+const title = "Love4Prompts — The prompt toolkit for every AI";
+const description = "One search bar. Six AI tools. Enhance, generate, translate, and discover prompts for ChatGPT, Midjourney, Claude, DALL-E, Gemini & Flux. Free, no signup.";
 ---
 
 <Layout title={title} description={description}>
-  <div class="bg-transparent">
+  <div>
 
     {/* ═══ HERO ═══════════════════════════════════════════════════ */}
-    <section class="relative min-h-dvh flex flex-col items-center justify-center px-4 pt-[80px] pb-20 overflow-hidden">
-      <PurpleWaveBackground mode="hero" client:load />
+    <section class="flex flex-col items-center justify-center px-4 pt-28 pb-20 z-10 relative">
+      <div class="flex flex-col items-center text-center gap-5 w-full max-w-[720px] mx-auto">
 
-      <div class="relative z-10 flex flex-col items-center text-center gap-7 w-full max-w-[860px] mx-auto animate-fade-in-up">
+        {/* Tagline — small, monospace, futuristic */}
+        <p class="text-[11px] font-mono font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-2">
+          Universal Prompt Toolkit
+        </p>
 
-        {/* Badge */}
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-white/50 text-[12px] font-semibold tracking-wide"
-          style="background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);">
-          <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] shadow-[0_0_8px_var(--color-primary-glow)] animate-pulse"></span>
-          All-in-One AI Prompt Platform
-        </div>
-
-        {/* H1 */}
-        <h1 class="text-[clamp(44px,9vw,88px)] leading-[0.95] font-black tracking-[-0.04em]">
-          <span class="text-white/95 block">One Bar.</span>
-          <span class="block bg-gradient-to-r from-[#8B5CF6] via-[#D83F87] to-[#8B5CF6] bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Every AI Tool.</span>
+        {/* H1 — thin, elegant, no gradient spam, tight tracking */}
+        <h1 class="text-[clamp(36px,6vw,60px)] font-light tracking-[-0.045em] leading-[1.05] text-white">
+          Write better prompts.<br />
+          <span class="text-white/30 font-light">Ship better results.</span>
         </h1>
 
-        {/* Sub */}
-        <p class="text-[16px] sm:text-[17px] text-white/35 font-medium max-w-[460px] leading-relaxed -mt-1">
-          Enhance prompts. Generate images. Translate between models.<br class="hidden sm:block" />
-          Type what you need — we figure out the rest.
+        {/* Sub — clear, human, no jargon */}
+        <p class="text-[15.5px] text-white/45 max-w-[460px] leading-relaxed font-medium">
+          One console bar that enhances, generates, and translates prompts across every major AI model. Just type.
         </p>
 
         {/* UniversalBar */}
-        <div class="w-full mt-1">
+        <div class="w-full mt-4">
           <UniversalBar client:load />
         </div>
 
-        {/* Stats */}
-        <div class="flex flex-wrap items-center justify-center gap-6 text-[12px] font-semibold text-white/20 mt-2">
-          <div class="flex items-center gap-2">
-            <span class="w-1 h-1 rounded-full bg-emerald-400/60"></span>
-            6 AI Tools
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-1 h-1 rounded-full bg-[var(--color-primary)]/60"></span>
-            Free · No Signup
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-1 h-1 rounded-full bg-[#D83F87]/60"></span>
-            Works with 6+ AI Models
-          </div>
+        {/* Micro-stats — subtle, monospace */}
+        <div class="flex items-center gap-5 text-[11px] font-bold text-white/35 mt-2 font-mono uppercase tracking-wider">
+          <span class="tabular-nums">6 tools</span>
+          <span class="w-px h-3 bg-white/[0.06]"></span>
+          <span>Free</span>
+          <span class="w-px h-3 bg-white/[0.06]"></span>
+          <span>No signup</span>
+          <span class="w-px h-3 bg-white/[0.06]"></span>
+          <span>Works with 6+ models</span>
         </div>
       </div>
     </section>
 
-    {/* ═══ WORKS WITH ═════════════════════════════════════════════ */}
-    <div class="border-t border-b border-white/[0.04] overflow-hidden py-6"
-      style="background: rgba(255,255,255,0.01); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-      <div class="container mx-auto max-w-[1100px] px-4 flex flex-col md:flex-row items-center gap-6 justify-between">
-        <p class="text-[11px] font-bold text-white/20 uppercase tracking-[0.15em] whitespace-nowrap">Works With</p>
-        <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-30 hover:opacity-50 transition-opacity duration-500">
-          <span class="text-[14px] font-bold text-white/60">ChatGPT</span>
-          <span class="text-[14px] font-bold text-white/60">Midjourney</span>
-          <span class="text-[14px] font-bold text-white/60">DALL·E</span>
-          <span class="text-[14px] font-bold text-white/60">Claude</span>
-          <span class="text-[14px] font-bold text-white/60">Gemini</span>
-          <span class="text-[14px] font-bold text-white/60">Flux</span>
-        </div>
-      </div>
-    </div>
-
-    {/* ═══ FEATURES (Glassmorphism + Framer Motion) ═════════════ */}
+    {/* ═══ FEATURES ═════════════════════════════════════════════ */}
     <FeaturesGrid client:visible />
 
-    {/* ═══ HOW IT WORKS (Framer Motion scroll reveals) ══════════ */}
+    {/* ═══ HOW IT WORKS ═════════════════════════════════════════ */}
     <HowItWorks client:visible />
 
-    {/* ═══ TESTIMONIALS ═══════════════════════════════════════════ */}
+    {/* ═══ TESTIMONIALS ═════════════════════════════════════════ */}
     <TestimonialSection />
 
-    {/* ═══ LIBRARY ════════════════════════════════════════════════ */}
+    {/* ═══ LIBRARY ══════════════════════════════════════════════ */}
     <section class="pb-24" id="library">
-      <AnimatedSection client:visible className="container mx-auto px-4 pt-20 mb-6 border-t border-white/[0.04] text-center">
-        <p class="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3">Explore</p>
-        <h2 class="text-3xl md:text-[40px] font-black text-white tracking-[-0.03em]">The Prompt Library</h2>
-        <p class="text-white/25 font-medium mt-2 text-[14px]">
-          Curated prompts across all categories — copy any, use instantly
+      <AnimatedSection client:visible className="container mx-auto px-4 pt-20 mb-6 border-t border-white/[0.03] text-center">
+        <p class="text-[11px] font-mono font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-2">Explore</p>
+        <h2 class="text-2xl md:text-[32px] font-light text-white tracking-[-0.04em]">Prompt Library</h2>
+        <p class="text-white/30 mt-2 text-[13px] font-medium">
+          Curated prompts across all categories. Copy any. Use instantly.
         </p>
       </AnimatedSection>
       <div class="container mx-auto px-4">

@@ -1,63 +1,53 @@
 import React, { useState, useEffect, useRef } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import {
-  Sparkles, User, LogOut, LayoutDashboard, Menu, X,
-  Wand2, Palette, ArrowRightLeft, Image, MessageSquareCode,
-  ChevronDown, Star,
+  User, LogOut, LayoutDashboard, Menu, X,
+  Wand2, Sparkles, ArrowRightLeft, Image, Palette,
+  ChevronDown,
 } from 'lucide-react';
 import { AuthModal } from '../auth/AuthModal';
 import { supabase } from '../../lib/supabase';
 import { Avatar } from '../ui/Avatar';
 
-// ─── Tools dropdown items ────────────────────────────────────────────
 const TOOLS = [
-  { label: 'Prompt Enhancer', href: '/tools/prompt-enhancer', icon: Wand2, color: '#D83F87' },
-  { label: 'Prompt Maker', href: '/tools/prompt-maker', icon: Sparkles, color: '#6B4DB3' },
-  { label: 'Prompt Translator', href: '/tools/prompt-translator', icon: ArrowRightLeft, color: '#A4B3B6' },
-  { label: 'Image to Prompt', href: '/tools/image-to-prompt', icon: Image, color: '#E98074' },
-  { label: 'Prompt to Image', href: '/tools/prompt-to-image', icon: Palette, color: '#44318D' },
+  { label: 'Prompt Enhancer', href: '/tools/prompt-enhancer', icon: Wand2 },
+  { label: 'Prompt Maker', href: '/tools/prompt-maker', icon: Sparkles },
+  { label: 'Prompt Translator', href: '/tools/prompt-translator', icon: ArrowRightLeft },
+  { label: 'Image to Prompt', href: '/tools/image-to-prompt', icon: Image },
+  { label: 'Prompt to Image', href: '/tools/prompt-to-image', icon: Palette },
 ];
 
 export const Header: React.FC = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const toolsRef = useRef<HTMLDivElement>(null);
 
-  // ── Auth session ─────────────────────────────────────────────────
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
     return () => subscription.unsubscribe();
   }, []);
 
-  // ── Scroll detection for border ──────────────────────────────────
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // ── Close tools dropdown on outside click ────────────────────────
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) {
-        setToolsDropdownOpen(false);
-      }
+      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) setToolsDropdownOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
   const handleSignOut = async () => {
+    if (!window.confirm('Are you sure you want to sign out?')) return;
     await supabase.auth.signOut();
     setProfileDropdownOpen(false);
     window.location.href = '/';
@@ -66,56 +56,48 @@ export const Header: React.FC = () => {
   return (
     <>
       <header
-        className="sticky top-0 z-50 w-full bg-[#131316]/80 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.5)] supports-[backdrop-filter]:bg-[#131316]/60 transition-all duration-300"
-        style={{
-          borderBottom: scrolled
-            ? '1px solid rgba(139,92,246,0.2)'
-            : '1px solid rgba(255,255,255,0.05)',
-        }}
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+          scrolled
+            ? 'bg-[#0A0118]/85 backdrop-blur-md border-b border-white/[0.04]'
+            : 'bg-transparent border-b border-transparent'
+        }`}
       >
-        <div className="container mx-auto px-4 lg:px-8 h-[72px] flex items-center justify-between">
+        <div className="container mx-auto px-4 lg:px-8 h-[var(--header-height)] flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent-purple)] flex items-center justify-center shadow-[0_0_20px_var(--color-primary-glow)] border border-white/20">
-              <Sparkles className="text-white w-5 h-5" />
+          <a href="/" className="flex items-center gap-2.5 no-underline group">
+            <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_15px_var(--color-primary-glow)] transition-all duration-300 group-hover:scale-105">
+              <span className="text-white text-xs font-black tracking-tighter">L4</span>
             </div>
-            <a href="/" className="text-2xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 font-sans">
-              iloveprompts
-            </a>
-          </div>
+            <span className="text-[17px] font-bold text-white tracking-[-0.03em] flex items-center">
+              Love<span className="text-[var(--color-primary)]">4</span>Prompts
+            </span>
+          </a>
 
-          {/* Desktop Nav — 3 items */}
-          <nav className="hidden md:flex items-center gap-1 ml-8">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1.5 ml-8">
             {/* Tools dropdown */}
             <div ref={toolsRef} className="relative">
               <button
                 onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 no-underline ${
-                  toolsDropdownOpen
-                    ? 'bg-white/10 text-white'
-                    : 'text-[var(--color-text-muted)] hover:text-white hover:bg-white/5'
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all duration-150 ${
+                  toolsDropdownOpen ? 'bg-white/[0.05] text-white' : 'text-white/40 hover:text-white/70'
                 }`}
               >
                 Tools
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-150 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {toolsDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-64 bg-[#1a1a20]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)] overflow-hidden py-2 animate-in fade-in slide-in-from-top-3 duration-200">
+                <div className="absolute left-0 mt-2 w-56 bg-[#120A24] border border-white/[0.04] rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.8)] overflow-hidden py-1.5 z-50">
                   {TOOLS.map((tool) => {
                     const Icon = tool.icon;
                     return (
                       <a
                         key={tool.href}
                         href={tool.href}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-colors no-underline"
+                        className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline"
                       >
-                        <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center"
-                          style={{ backgroundColor: `${tool.color}15` }}
-                        >
-                          <Icon className="w-4 h-4" style={{ color: tool.color }} />
-                        </div>
+                        <Icon className="w-4 h-4 text-white/20" />
                         {tool.label}
                       </a>
                     );
@@ -124,32 +106,19 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            {/* Library */}
-            <a
-              href="/#library"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 no-underline text-[var(--color-text-muted)] hover:text-white hover:bg-white/5"
-            >
+            <a href="/#library" className="px-3.5 py-1.5 rounded-full text-[13px] font-medium text-white/40 hover:text-white/70 transition-colors no-underline">
               Library
             </a>
-
-            {/* Pro */}
-            <a
-              href="/pricing"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 no-underline text-[var(--color-text-muted)] hover:text-white hover:bg-white/5"
-            >
+            <a href="/pricing" className="px-3.5 py-1.5 rounded-full text-[13px] font-medium text-white/40 hover:text-white/70 transition-colors no-underline">
               Pro
-              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-gradient-to-br from-[#f59e0b] to-[#f97316] text-[10px] text-white font-bold leading-none">
-                ⭐
-              </span>
             </a>
           </nav>
 
           {/* Right Side */}
-          <div className="flex items-center gap-3 relative">
-            {/* Mobile menu toggle */}
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-[var(--color-text-muted)] hover:text-white hover:bg-white/5 transition-colors"
+              className="md:hidden p-2 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.03] transition-colors"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -159,87 +128,64 @@ export const Header: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center gap-2 p-1 rounded-full hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50"
+                  className="flex items-center p-1 rounded-full hover:bg-white/[0.05] transition-colors"
                 >
                   <Avatar size="sm" src={session.user.user_metadata?.avatar_url} />
                 </button>
 
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-56 bg-[#1a1a20] border border-white/10 rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] overflow-hidden py-2 backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-200">
-                    <div className="px-4 py-3 border-b border-white/10 bg-white/5">
-                      <p className="text-sm font-semibold truncate text-white">{session.user.user_metadata?.user_name || session.user.email}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">Creator Account</p>
+                  <div className="absolute right-0 mt-2 w-52 bg-[#120A24] border border-white/[0.04] rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.8)] py-1.5 z-50">
+                    <div className="px-4 py-2.5 border-b border-white/[0.04]">
+                      <p className="text-[13px] font-semibold text-white truncate">{session.user.user_metadata?.user_name || session.user.email}</p>
+                      <p className="text-[11px] text-white/30 mt-0.5 font-mono">Creator Account</p>
                     </div>
-                    <div className="p-1">
-                      <a href="/dashboard" className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
-                        <LayoutDashboard className="w-4 h-4 text-gray-400" /> Dashboard
-                      </a>
-                      <button
-                        onClick={handleSignOut}
-                        className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl text-red-400 hover:bg-red-500/10 transition-colors text-left mt-1"
-                      >
-                        <LogOut className="w-4 h-4 text-red-400" /> Sign Out
-                      </button>
-                    </div>
+                    <a href="/dashboard" className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">
+                      <LayoutDashboard className="w-4 h-4" /> Dashboard
+                    </a>
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[13px] text-red-400/60 hover:text-red-400 hover:bg-red-500/5 transition-colors text-left"
+                    >
+                      <LogOut className="w-4 h-4" /> Sign Out
+                    </button>
                   </div>
                 )}
               </div>
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-gray-100 text-gray-900 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--color-primary)] text-white text-[13px] font-bold hover:bg-[var(--color-primary-hover)] transition-all duration-200 shadow-[0_0_15px_var(--color-primary-glow)] active:scale-95"
               >
-                <User className="w-4 h-4" />
-                <span className="text-sm font-bold tracking-wide">Sign In</span>
+                Sign In
               </button>
             )}
           </div>
         </div>
 
-        {/* Mobile Nav Drawer */}
+        {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-white/10 bg-[#131316]/95 backdrop-blur-xl px-4 py-4 animate-in fade-in slide-in-from-top-2 duration-200">
-            <nav className="flex flex-col gap-1">
-              {/* Tools section */}
-              <div className="px-3 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Tools</div>
+          <div className="md:hidden border-t border-white/[0.04] bg-[#120A24]/95 backdrop-blur-md px-4 py-3">
+            <nav className="flex flex-col gap-0.5">
+              <span className="px-3 py-1.5 text-[10px] font-bold text-white/20 uppercase tracking-widest font-mono">Tools</span>
               {TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
-                  <a
-                    key={tool.href}
-                    href={tool.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors no-underline text-[var(--color-text-muted)] hover:text-white hover:bg-white/5"
+                  <a key={tool.href} href={tool.href} onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline"
                   >
-                    <Icon className="w-4 h-4" style={{ color: tool.color }} />
-                    {tool.label}
+                    <Icon className="w-4 h-4 text-white/30" /> {tool.label}
                   </a>
                 );
               })}
-              <div className="h-px bg-white/10 my-2" />
-              <a
-                href="/#library"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors no-underline text-[var(--color-text-muted)] hover:text-white hover:bg-white/5"
-              >
-                Library
-              </a>
-              <a
-                href="/pricing"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors no-underline text-[var(--color-text-muted)] hover:text-white hover:bg-white/5"
-              >
-                ⭐ Pro
-              </a>
+              <div className="h-px bg-white/[0.04] my-1" />
+              <a href="/#library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
+              <a href="/pricing" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Pro</a>
             </nav>
           </div>
         )}
       </header>
 
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 };

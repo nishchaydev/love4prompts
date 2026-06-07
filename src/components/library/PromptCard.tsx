@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 
 export interface Prompt {
   id: string;
+  /** Original prompt ID — set on duplicated items for infinite scroll */
+  realId?: string;
   slug: string;
   title: string;
   prompt_text: string;
@@ -32,6 +34,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
   const [isHovered, setIsHovered] = useState(false);
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -51,18 +54,28 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden rounded-[20px] bg-[#13131a] border border-white/5 shadow-[0_2px_12px_rgba(0,0,0,0.5)] group-hover:shadow-[0_8px_30px_var(--color-primary-glow)] transition-all duration-500 ease-out group-hover:border-[var(--color-primary)]/30">
+      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden rounded-[20px] bg-[#120A24] border border-white/5 shadow-[0_2px_12px_rgba(0,0,0,0.5)] group-hover:shadow-[0_8px_30px_var(--color-primary-glow)] transition-all duration-500 ease-out group-hover:border-[var(--color-primary)]/30">
         {prompt.image_url && !imageError ? (
-          <img 
-            src={prompt.image_url} 
-            alt={prompt.title} 
-            className="w-full min-h-[150px] h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            loading="lazy"
-            onError={() => setImageError(true)}
-          />
+          <div className="relative w-full min-h-[160px] bg-[#120A24] overflow-hidden">
+            {!imageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/[0.02] animate-pulse">
+                <div className="w-5 h-5 rounded-full border-2 border-[var(--color-primary)] border-t-transparent animate-spin" />
+              </div>
+            )}
+            <img 
+              src={prompt.image_url} 
+              alt={prompt.title} 
+              className={`w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
+                imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+              }`}
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+            />
+          </div>
         ) : (
-          <div className="w-full aspect-[3/4] flex items-center justify-center bg-gradient-to-br from-[#1a1a24] to-[#0f0f14]">
-            <span className="text-gray-500 font-medium text-sm">No image</span>
+          <div className="w-full aspect-[3/4] flex items-center justify-center bg-gradient-to-br from-[#170E30] to-[#0A0118] border-b border-white/[0.03]">
+            <span className="text-white/20 font-medium text-xs font-mono uppercase tracking-widest">No image</span>
           </div>
         )}
         
@@ -73,7 +86,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
         <div className={`absolute top-3 right-3 transition-all duration-300 transform ${isHovered ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}>
           <button 
             onClick={(e) => { e.preventDefault(); onSave?.(prompt.id); }}
-            className="px-4 py-2 rounded-full bg-[var(--color-primary)] text-white font-bold hover:bg-[#cc001f] flex items-center justify-center shadow-[0_0_15px_var(--color-primary-glow)] transition-all duration-300 hover:scale-105 active:scale-95"
+            className="px-4 py-2 rounded-full bg-[var(--color-primary)] text-white font-bold hover:bg-[var(--color-primary-hover)] flex items-center justify-center shadow-[0_0_15px_var(--color-primary-glow)] transition-all duration-300 hover:scale-105 active:scale-95"
             aria-label="Save prompt"
           >
             {isSaved ? 'Saved' : 'Save'}
