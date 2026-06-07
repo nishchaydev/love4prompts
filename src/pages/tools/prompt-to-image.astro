@@ -1,12 +1,18 @@
 ---
+import Layout from '../../components/layout/Layout.astro';
 import { ToolPageLayout } from '../../components/tools/ToolPageLayout';
 import { PromptToImage } from '../../components/tools/PromptToImage';
 ---
 
-<ToolPageLayout 
-  client:load
-  title="Prompt to Image"
-  description="Generate stunning AI images instantly from your text descriptions."
->
-  <PromptToImage client:load />
-</ToolPageLayout>
+<Layout title="Prompt to Image | iloveprompts" description="Generate stunning AI images instantly from your text descriptions.">
+  <ToolPageLayout
+    client:load
+    toolName="Prompt to Image"
+    toolSlug="prompt-to-image"
+    title="Prompt to Image"
+    description="Generate stunning AI images instantly from your text descriptions."
+    accentColor="#ff2a5f"
+  >
+    <PromptToImage client:load />
+  </ToolPageLayout>
+</Layout>

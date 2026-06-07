@@ -4,47 +4,66 @@ import { Star } from 'lucide-react';
 const testimonials = [
   {
     name: 'Sarah Jenkins',
-    role: 'Digital Creator (150k followers)',
+    role: 'Digital Creator · 150k followers',
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&crop=faces',
-    text: 'Love4Prompts is literally my secret weapon. I copy a prompt, tweak it slightly in Midjourney, and post. My engagement is up 300% this month.',
+    text: 'I type what I need, it figures out the tool. Saved me hours every week. The prompt enhancer alone 10x\'d my Midjourney outputs.',
   },
   {
     name: 'Marcus Chen',
-    role: 'Faceless Channel Owner',
+    role: 'AI Developer',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces',
-    text: 'I used to spend hours trying to figure out how other creators got those hyper-realistic AI images. Now I just browse the library and get the exact prompt.',
+    text: 'The universal bar feels like magic. I write "optimize my system prompt" and it just works. No clicking through menus. One place for everything.',
   },
   {
     name: 'Elena Rodriguez',
-    role: 'Social Media Manager',
+    role: 'Marketing Agency Lead',
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=faces',
-    text: 'The best investment for our agency. We generate thousands of assets a week using these prompts. It pays for itself in time saved.',
+    text: 'Our team generates prompts for 6 different AI tools daily. Having one bar that translates between ChatGPT, Midjourney, and Claude saves us real money.',
   },
 ];
 
 export const TestimonialSection: React.FC = () => {
   return (
-    <section className="py-24 bg-[var(--color-background-primary)]">
-      <div className="container mx-auto px-4 max-w-[1200px]">
+    <section className="py-28 relative">
+      <div className="container mx-auto px-4 max-w-[1000px]">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">Loved by 10,000+ Creators</h2>
-          <p className="text-xl text-gray-400 font-medium">Join the community going viral every single day.</p>
+          <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3">What People Say</p>
+          <h2 className="text-3xl md:text-[44px] font-black text-white tracking-[-0.03em] leading-tight mb-3">Built for people who use AI daily</h2>
+          <p className="text-[15px] text-white/30 font-medium">From solo creators to full agencies.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((t, i) => (
-            <div key={i} className="bg-[#111] p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] border border-white/10 hover:border-[var(--color-primary)]/50 hover:shadow-[0_8px_40px_var(--color-primary-glow)] transition-all duration-300">
-              <div className="flex gap-1 mb-6">
-                {[...Array(5)].map((_, j) => (
-                  <Star key={j} className="w-5 h-5 fill-[var(--color-primary)] text-[var(--color-primary)]" />
-                ))}
-              </div>
-              <p className="text-gray-300 leading-relaxed mb-8 text-lg font-medium">"{t.text}"</p>
-              <div className="flex items-center gap-4">
-                <img src={t.image} alt={t.name} className="w-12 h-12 rounded-full object-cover shadow-sm border border-white/20" />
-                <div>
-                  <h4 className="font-bold text-white">{t.name}</h4>
-                  <p className="text-sm text-gray-400 font-medium">{t.role}</p>
+            <div
+              key={i}
+              className="relative p-6 rounded-2xl transition-all duration-500 group"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.04)',
+              }}
+            >
+              <div
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                  boxShadow: '0 0 40px rgba(168,85,247,0.08)',
+                  border: '1px solid rgba(168,85,247,0.15)',
+                  borderRadius: 'inherit',
+                }}
+              />
+
+              <div className="relative z-10">
+                <div className="flex gap-0.5 mb-5">
+                  {[...Array(5)].map((_, j) => (
+                    <Star key={j} className="w-3.5 h-3.5 fill-amber-400/80 text-amber-400/80" />
+                  ))}
+                </div>
+                <p className="text-white/50 leading-relaxed mb-6 text-[14px] font-medium">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <img src={t.image} alt={t.name} className="w-9 h-9 rounded-full object-cover border border-white/10" loading="lazy" />
+                  <div>
+                    <h4 className="text-[13px] font-bold text-white/80">{t.name}</h4>
+                    <p className="text-[11px] text-white/25 font-medium">{t.role}</p>
+                  </div>
                 </div>
               </div>
             </div>

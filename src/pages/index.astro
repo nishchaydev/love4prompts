@@ -1,167 +1,119 @@
 ---
 import Layout from '../components/layout/Layout.astro';
-import { MasonryGrid } from '../components/library/MasonryGrid';
-import { CategoryFilter } from '../components/library/CategoryFilter';
 import { InteractiveLibrary } from '../components/library/InteractiveLibrary';
 import { TestimonialSection } from '../components/marketing/TestimonialSection';
+import { FeaturesGrid } from '../components/marketing/FeaturesGrid';
+import { HowItWorks } from '../components/marketing/HowItWorks';
+import { UniversalBar } from '../components/hero/UniversalBar';
+import { PurpleWaveBackground } from '../components/layout/PurpleWaveBackground';
+import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { supabase } from '../lib/supabase';
 import type { Prompt } from '../components/library/PromptCard';
 import { mockPrompts } from '../lib/mock-data';
 
-// Fetch public prompts
 const { data: dbPrompts, error } = await supabase
   .from('prompts')
   .select('*')
   .eq('is_public', true)
   .order('created_at', { ascending: false });
 
-if (error) {
-  console.error('Error fetching prompts:', error);
-}
+if (error) console.error('Error fetching prompts:', error);
 
-// Fallback to mock data if the database is empty or errors
 const prompts = (dbPrompts && dbPrompts.length > 0) ? dbPrompts : mockPrompts;
-
-// Get unique categories (using style as category for now)
 const styles = Array.from(new Set(prompts?.map(p => p.style).filter(Boolean) || [])) as string[];
 
-const title = "Love4Prompts | Best AI Prompt App for ChatGPT, Gemini & Midjourney (Free)";
-const description = "The ultimate AI prompt app. Download free viral prompts for photo generation, daily journaling, AI video from text, and more.";
+const title = "iloveprompts | All-in-One AI Prompt Platform — Enhance, Generate, Translate";
+const description = "One bar. Every AI tool. Type what you need — enhance prompts, generate images, translate between AI models. Free. No signup. Works with ChatGPT, Midjourney, Claude, DALL-E, Gemini & Flux.";
 ---
 
 <Layout title={title} description={description}>
   <div class="bg-transparent">
-    {/* Hero Section */}
-    <div class="relative pt-[120px] pb-[80px] px-4 overflow-hidden border-b border-white/10">
 
-      <div class="container mx-auto max-w-[1200px] relative z-10">
-        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-8">
-          
-          {/* Left Text Content */}
-          <div class="w-full max-w-[700px] lg:w-[55%] z-20 text-center lg:text-left mx-auto lg:mx-0 animate-fade-in-up">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 text-[var(--color-primary)] text-sm font-bold mb-6 tracking-wide uppercase shadow-[0_0_15px_var(--color-primary-glow)] animate-glow-pulse">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-primary)] opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-primary)]"></span>
-              </span>
-              The #1 AI Prompt App
-            </div>
-            
-            <h1 class="text-[clamp(40px,10vw,82px)] leading-[1.05] font-black text-[var(--color-text-primary)] mb-6 tracking-tighter">
-              Best AI Prompts <br/>
-              <span class="text-[var(--color-text-secondary)] font-bold text-[clamp(28px,7vw,60px)]">Copy, Paste & Create.</span>
-            </h1>
-            
-            <p class="text-[18px] sm:text-[20px] text-[var(--color-text-secondary)] max-w-[600px] leading-relaxed mb-10 font-medium mx-auto lg:mx-0">
-              Unlock the exact AI prompts behind the most viral Instagram Reels. The best free AI prompt app to generate stunning images for Gemini, ChatGPT, and your creator workflows instantly.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-[600px] p-4 border border-white/10 rounded-[24px] bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_12px_40px_var(--color-primary-glow)] hover:border-[var(--color-primary)]/30 transition-all duration-300 mx-auto lg:mx-0">
-              <div class="flex items-center gap-4 w-full sm:w-auto flex-1">
-                <div class="grid place-items-center flex-none w-[52px] h-[52px] rounded-[16px] bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-black text-2xl shadow-inner">
-                  🚀
-                </div>
-                <div class="min-w-0 flex-1 text-left">
-                  <strong class="block text-[16px] leading-[1.2] text-[var(--color-text-primary)] mb-1">Creator? Got viral prompts?</strong>
-                  <span class="block text-[14px] text-[var(--color-text-secondary)] whitespace-nowrap overflow-hidden text-ellipsis">Submit Reels & monetize</span>
-                </div>
-              </div>
-              <a href="/dashboard/submit" class="w-full sm:w-auto inline-flex items-center justify-center min-h-[48px] px-[24px] rounded-[16px] bg-[var(--color-primary)] text-white text-[15px] font-bold no-underline whitespace-nowrap hover:bg-[#cc001f] transition-transform hover:scale-105 active:scale-95 shadow-[0_0_20px_var(--color-primary-glow)]">
-                Submit Reel
-              </a>
-            </div>
+    {/* ═══ HERO ═══════════════════════════════════════════════════ */}
+    <section class="relative min-h-dvh flex flex-col items-center justify-center px-4 pt-[80px] pb-20 overflow-hidden">
+      <PurpleWaveBackground mode="hero" client:load />
+
+      <div class="relative z-10 flex flex-col items-center text-center gap-7 w-full max-w-[860px] mx-auto animate-fade-in-up">
+
+        {/* Badge */}
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-white/50 text-[12px] font-semibold tracking-wide"
+          style="background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] shadow-[0_0_8px_var(--color-primary-glow)] animate-pulse"></span>
+          All-in-One AI Prompt Platform
+        </div>
+
+        {/* H1 */}
+        <h1 class="text-[clamp(44px,9vw,88px)] leading-[0.95] font-black tracking-[-0.04em]">
+          <span class="text-white/95 block">One Bar.</span>
+          <span class="block bg-gradient-to-r from-[#8B5CF6] via-[#D83F87] to-[#8B5CF6] bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">Every AI Tool.</span>
+        </h1>
+
+        {/* Sub */}
+        <p class="text-[16px] sm:text-[17px] text-white/35 font-medium max-w-[460px] leading-relaxed -mt-1">
+          Enhance prompts. Generate images. Translate between models.<br class="hidden sm:block" />
+          Type what you need — we figure out the rest.
+        </p>
+
+        {/* UniversalBar */}
+        <div class="w-full mt-1">
+          <UniversalBar client:load />
+        </div>
+
+        {/* Stats */}
+        <div class="flex flex-wrap items-center justify-center gap-6 text-[12px] font-semibold text-white/20 mt-2">
+          <div class="flex items-center gap-2">
+            <span class="w-1 h-1 rounded-full bg-emerald-400/60"></span>
+            6 AI Tools
           </div>
-
-          {/* Right Visual Tension Collage */}
-          <div class="relative hidden md:block lg:w-[45%] h-[460px] w-full">
-            {/* Main Image */}
-            <div class="absolute top-[10%] right-[15%] w-[260px] lg:w-[300px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] rotate-[4deg] z-20 border-4 border-[var(--color-background-card)] transition-transform duration-500 hover:rotate-0 hover:scale-105 animate-float">
-              <img src={prompts[0]?.image_url} alt="Trending Prompt" class="w-full h-full object-cover" />
-            </div>
-            {/* Secondary Image */}
-            <div class="absolute top-[25%] right-[45%] lg:right-[50%] w-[200px] lg:w-[240px] aspect-[3/4] rounded-[20px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] rotate-[-8deg] z-10 border-[3px] border-[var(--color-background-card)] opacity-90 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30 animate-float-delayed">
-              <img src={prompts[1]?.image_url} alt="Popular Prompt" class="w-full h-full object-cover" />
-            </div>
-            {/* Third Image */}
-            <div class="absolute top-[-5%] right-[0%] w-[180px] lg:w-[200px] aspect-square rounded-[18px] overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.6)] rotate-[12deg] z-10 border-[3px] border-[var(--color-background-card)] opacity-80 transition-transform duration-500 hover:rotate-0 hover:scale-105 hover:z-30 animate-float" style="animation-delay: 1.5s;">
-              <img src={prompts[3]?.image_url} alt="New Prompt" class="w-full h-full object-cover" />
-            </div>
+          <div class="flex items-center gap-2">
+            <span class="w-1 h-1 rounded-full bg-[var(--color-primary)]/60"></span>
+            Free · No Signup
           </div>
+          <div class="flex items-center gap-2">
+            <span class="w-1 h-1 rounded-full bg-[#D83F87]/60"></span>
+            Works with 6+ AI Models
+          </div>
+        </div>
+      </div>
+    </section>
 
+    {/* ═══ WORKS WITH ═════════════════════════════════════════════ */}
+    <div class="border-t border-b border-white/[0.04] overflow-hidden py-6"
+      style="background: rgba(255,255,255,0.01); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+      <div class="container mx-auto max-w-[1100px] px-4 flex flex-col md:flex-row items-center gap-6 justify-between">
+        <p class="text-[11px] font-bold text-white/20 uppercase tracking-[0.15em] whitespace-nowrap">Works With</p>
+        <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-30 hover:opacity-50 transition-opacity duration-500">
+          <span class="text-[14px] font-bold text-white/60">ChatGPT</span>
+          <span class="text-[14px] font-bold text-white/60">Midjourney</span>
+          <span class="text-[14px] font-bold text-white/60">DALL·E</span>
+          <span class="text-[14px] font-bold text-white/60">Claude</span>
+          <span class="text-[14px] font-bold text-white/60">Gemini</span>
+          <span class="text-[14px] font-bold text-white/60">Flux</span>
         </div>
       </div>
     </div>
 
-    {/* Logo Marquee Section */}
-    <div class="border-b border-white/10 bg-[var(--color-background-card)] overflow-hidden py-8">
-      <div class="container mx-auto max-w-[1200px] px-4 flex flex-col md:flex-row items-center gap-8 justify-between">
-        <p class="text-sm font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Trusted by Creators on</p>
-        <div class="flex flex-wrap justify-center items-center gap-6 md:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-          <svg class="h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          <svg class="h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-          <svg class="h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          <svg class="h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
-        </div>
-      </div>
-    </div>
+    {/* ═══ FEATURES (Glassmorphism + Framer Motion) ═════════════ */}
+    <FeaturesGrid client:visible />
 
-    {/* How It Works Section */}
-    <div class="py-24 bg-[var(--color-background-primary)] relative overflow-hidden">
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[var(--color-accent-purple)]/5 via-[var(--color-background-primary)] to-[var(--color-background-primary)] z-0 pointer-events-none"></div>
-      <div class="container mx-auto px-4 max-w-[1200px] relative z-10">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-5xl font-black text-white tracking-tight mb-4">Go Viral in 3 Steps</h2>
-          <p class="text-xl text-gray-400 font-medium">No engineering degree required. Just copy, paste, and create.</p>
-        </div>
+    {/* ═══ HOW IT WORKS (Framer Motion scroll reveals) ══════════ */}
+    <HowItWorks client:visible />
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          {/* Connecting line for desktop */}
-          <div class="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-[var(--color-primary)]/20 via-[var(--color-primary)] to-[var(--color-primary)]/20 z-0"></div>
-
-          {/* Step 1 */}
-          <div class="relative z-10 flex flex-col items-center text-center animate-fade-in-up">
-            <div class="w-32 h-32 rounded-3xl bg-[var(--color-background-card)] shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center mb-6 border border-white/10 transform hover:-translate-y-2 hover:border-[var(--color-primary)]/50 hover:shadow-[0_0_30px_var(--color-primary-glow)] transition-all duration-300">
-              <span class="text-5xl">🔍</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2">1. Discover</h3>
-            <p class="text-gray-400 font-medium leading-relaxed max-w-[280px]">Browse our daily-updated library of hidden prompts from top creators.</p>
-          </div>
-
-          {/* Step 2 */}
-          <div class="relative z-10 flex flex-col items-center text-center animate-fade-in-up" style="animation-delay: 0.2s;">
-            <div class="w-32 h-32 rounded-3xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-accent-purple)] shadow-[0_0_40px_var(--color-primary-glow)] flex items-center justify-center mb-6 border border-white/20 transform hover:-translate-y-2 transition-all duration-300">
-              <span class="text-5xl">📋</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2">2. Copy</h3>
-            <p class="text-gray-400 font-medium leading-relaxed max-w-[280px]">One click copies the exact prompt structure to your clipboard.</p>
-          </div>
-
-          {/* Step 3 */}
-          <div class="relative z-10 flex flex-col items-center text-center animate-fade-in-up" style="animation-delay: 0.4s;">
-            <div class="w-32 h-32 rounded-3xl bg-[var(--color-background-card)] shadow-[0_10px_30px_rgba(0,0,0,0.5)] flex items-center justify-center mb-6 border border-white/10 transform hover:-translate-y-2 hover:border-[var(--color-accent-blue)]/50 hover:shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-all duration-300">
-              <span class="text-5xl">✨</span>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-2">3. Create</h3>
-            <p class="text-gray-400 font-medium leading-relaxed max-w-[280px]">Paste into Midjourney or ChatGPT and watch the magic happen.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    {/* ═══ TESTIMONIALS ═══════════════════════════════════════════ */}
     <TestimonialSection />
 
-    {/* Library Section */}
-    <div class="bg-[var(--color-background-primary)] pb-24" id="library">
-      <div class="container mx-auto px-4 pt-16 mb-8 border-t border-white/10 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-        <div>
-          <h2 class="text-3xl md:text-4xl font-black text-white tracking-tight">The Prompt Library</h2>
-          <p class="text-gray-400 font-medium mt-2">Explore {prompts?.length * 500}+ prompts across all categories.</p>
-        </div>
-      </div>
-      
+    {/* ═══ LIBRARY ════════════════════════════════════════════════ */}
+    <section class="pb-24" id="library">
+      <AnimatedSection client:visible className="container mx-auto px-4 pt-20 mb-6 border-t border-white/[0.04] text-center">
+        <p class="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3">Explore</p>
+        <h2 class="text-3xl md:text-[40px] font-black text-white tracking-[-0.03em]">The Prompt Library</h2>
+        <p class="text-white/25 font-medium mt-2 text-[14px]">
+          Curated prompts across all categories — copy any, use instantly
+        </p>
+      </AnimatedSection>
       <div class="container mx-auto px-4">
         <InteractiveLibrary client:load prompts={prompts as Prompt[]} styles={styles} />
       </div>
-    </div>
+    </section>
   </div>
 </Layout>

@@ -17,21 +17,20 @@ export const InteractiveLibrary: React.FC<InteractiveLibraryProps> = ({ prompts,
   }, [prompts, selectedCategory]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 relative">
-      {/* Sidebar Filters */}
-      <div className="w-full md:w-[240px] md:shrink-0 sticky top-[72px] z-30 bg-white/95 backdrop-blur-xl md:bg-transparent md:backdrop-blur-none py-4 md:py-0 md:h-[calc(100vh-100px)] md:overflow-y-auto scrollbar-hide border-b md:border-b-0 md:border-r border-gray-100 mb-6 md:mb-0">
-        <div className="md:pr-6">
-          <h3 className="hidden md:block font-bold text-gray-900 mb-4 px-2 tracking-wide uppercase text-xs">Categories</h3>
-          <CategoryFilter 
-            categories={styles} 
-            selectedCategory={selectedCategory} 
-            onSelect={setSelectedCategory} 
+    <div className="flex flex-col gap-6 relative">
+      {/* Horizontal filter bar — sticky below header */}
+      <div className="sticky top-[72px] z-30 bg-[var(--color-background-primary)]/95 backdrop-blur-xl py-3 -mx-4 px-4 border-b border-white/[0.06]">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
+          <CategoryFilter
+            categories={styles}
+            selectedCategory={selectedCategory}
+            onSelect={setSelectedCategory}
           />
         </div>
       </div>
 
       {/* Grid Content */}
-      <div className="flex-1 min-w-0 pb-12">
+      <div className="min-w-0 pb-12">
         <MasonryGrid prompts={filteredPrompts} />
       </div>
     </div>

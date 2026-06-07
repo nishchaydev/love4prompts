@@ -43,13 +43,13 @@ const getCategoryIcon = (category: string) => {
 
 export const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCategory, onSelect }) => {
   return (
-    <div className="flex md:flex-col items-center md:items-stretch gap-2 md:gap-1 w-full overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide mt-2 md:mt-0">
+    <div className="flex items-center gap-2 w-full overflow-x-auto pb-2 scrollbar-hide">
       <button
         onClick={() => onSelect('All')}
-        className={`whitespace-nowrap flex items-center px-4 md:px-3 py-2 md:py-2.5 rounded-full md:rounded-xl text-sm font-semibold transition-all duration-300 ${
+        className={`whitespace-nowrap flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
           selectedCategory === 'All' 
             ? 'bg-[var(--color-primary)] text-white shadow-[0_0_15px_var(--color-primary-glow)]' 
-            : 'bg-[var(--color-background-elevated)] md:bg-transparent text-gray-400 hover:text-white hover:bg-white/10 shadow-sm md:shadow-none border border-white/5 md:border-transparent'
+            : 'bg-[var(--color-background-elevated)] text-gray-400 hover:text-white hover:bg-white/10 border border-white/5'
         }`}
       >
         {getCategoryIcon('All')}
@@ -59,10 +59,10 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, sele
         <button
           key={category}
           onClick={() => onSelect(category)}
-          className={`whitespace-nowrap flex items-center px-4 md:px-3 py-2 md:py-2.5 rounded-full md:rounded-xl text-sm font-semibold transition-all duration-300 ${
+          className={`whitespace-nowrap flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
             selectedCategory === category 
               ? 'bg-[var(--color-primary)] text-white shadow-[0_0_15px_var(--color-primary-glow)]' 
-              : 'bg-[var(--color-background-elevated)] md:bg-transparent text-gray-400 hover:text-white hover:bg-white/10 shadow-sm md:shadow-none border border-white/5 md:border-transparent'
+              : 'bg-[var(--color-background-elevated)] text-gray-400 hover:text-white hover:bg-white/10 border border-white/5'
           }`}
         >
           {getCategoryIcon(category)}

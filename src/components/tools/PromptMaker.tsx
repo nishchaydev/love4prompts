@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { ToolPageLayout } from './ToolPageLayout';
 import { AiToolSelector, type AiTool } from './AiToolSelector';
@@ -26,6 +26,13 @@ export const PromptMaker: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [, forceUpdate] = useState(0);
+
+  // Pre-fill from UniversalBar query param
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) setDescription(q);
+  }, []);
 
   const handleSubmit = async () => {
     if (!description.trim()) {

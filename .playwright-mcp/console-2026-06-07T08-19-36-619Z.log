@@ -1,0 +1,40 @@
+[    3001ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:20102
+[    3536ms] [ERROR] React has detected a change in the order of Hooks called by %s. This will lead to bugs and errors if not fixed. For more information, read the Rules of Hooks: https://react.dev/link/rules-of-hooks
+
+   Previous render            Next render
+   ------------------------------------------------------
+%s   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ MouseGlow 1. useRef                     useRef
+2. useContext                 useContext
+3. useRef                     useRef
+4. useContext                 useContext
+5. useState                   useState
+6. useState                   useState
+7. useState                   useState
+8. useContext                 useContext
+9. useRef                     useRef
+10. useContext                useContext
+11. useInsertionEffect        useInsertionEffect
+12. useContext                useContext
+13. useRef                    useRef
+14. useContext                useContext
+15. useInsertionEffect        useInsertionEffect
+16. useEffect                 useEffect
+17. undefined                 useRef
+ @ http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:5593
+[    3551ms] Error: Rendered more hooks than during the previous render.
+    at updateWorkInProgressHook (http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:5792:19)
+    at Object.useRef (http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:18988:18)
+    at exports.useRef (http://localhost:4321/node_modules/.vite/deps/chunk-DBAE36ZG.js?v=35d7a4ad:956:36)
+    at useConstant (http://localhost:4321/node_modules/.vite/deps/framer-motion.js?v=0f4e9883:24:40)
+    at useMotionValue (http://localhost:4321/node_modules/.vite/deps/framer-motion.js?v=0f4e9883:10940:17)
+    at useCombineMotionValues (http://localhost:4321/node_modules/.vite/deps/framer-motion.js?v=0f4e9883:10951:17)
+    at useMotionTemplate (http://localhost:4321/node_modules/.vite/deps/framer-motion.js?v=0f4e9883:10979:10)
+    at MouseGlow (http://localhost:4321/src/components/layout/MouseGlow.tsx:56:39)
+    at Object.react_stack_bottom_frame (http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:18509:20)
+    at renderWithHooks (http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:5654:24)
+[    3549ms] [WARNING] %s
+
+%s
+ An error occurred in the <MouseGlow> component. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:4321/node_modules/.vite/deps/chunk-GOK543N4.js?v=35d7a4ad:6965
