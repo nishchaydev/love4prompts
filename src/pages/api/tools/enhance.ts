@@ -1,7 +1,6 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
-
-const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
+import { AI_TOOLS } from '../../../lib/constants';
 
 export const POST: APIRoute = async ({ request }) => {
   try {

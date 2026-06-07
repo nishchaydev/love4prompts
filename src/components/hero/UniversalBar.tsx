@@ -93,14 +93,14 @@ const QUICK_ACTIONS = [
 ];
 
 // ─── Intent detection ────────────────────────────────────────────────
-const detectIntent = (text: string): Intent => {
+const detectIntent = (text: string, model: string): Intent => {
   const t = text.toLowerCase();
 
   if (/enhance|improve|better|optimize|fix|rewrite|upgrade|polish/i.test(t))
     return {
       mode: 'enhance', label: 'Enhancer', icon: Wand2, color: '#713DFF',
       apiEndpoint: '/api/tools/enhance',
-      buildPayload: (input, model) => ({ prompt: input, targetTool: model }),
+      buildPayload: (input, mdl) => ({ prompt: input, targetTool: mdl }),
       extractResult: (d) => isRecord(d) && typeof d.enhancedPrompt === 'string' ? d.enhancedPrompt : '',
     };
 
@@ -108,15 +108,16 @@ const detectIntent = (text: string): Intent => {
     return {
       mode: 'translate', label: 'Translator', icon: ArrowRightLeft, color: '#ff9f43',
       apiEndpoint: '/api/tools/translate',
-      buildPayload: (input, model) => ({ prompt: input, fromTool: 'Midjourney', toTool: model }),
+      buildPayload: (input, mdl) => ({ prompt: input, fromTool: 'Midjourney', toTool: mdl }),
       extractResult: (d) => isRecord(d) && typeof d.translatedPrompt === 'string' ? d.translatedPrompt : '',
     };
 
-  if (/image|photo|picture|portrait|scenery|render|flux|midjourney|dall|stable|draw|visual|cinematic/i.test(t))
+  if (/image|photo|picture|portrait|scenery|render|flux|midjourney|dall|stable|draw|visual|cinematic/i.test(t) ||
+      ['Midjourney', 'DALL-E', 'Flux'].includes(model))
     return {
       mode: 'image', label: 'Image Gen', icon: Image, color: '#ea2261',
       apiEndpoint: '/api/tools/generate',
-      buildPayload: (input, model) => ({ description: input, targetTool: model, useCase: 'Image Generation' }),
+      buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Image Generation' }),
       extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
     };
 
@@ -124,7 +125,7 @@ const detectIntent = (text: string): Intent => {
     return {
       mode: 'social', label: 'Marketing', icon: Megaphone, color: '#b9b9f9',
       apiEndpoint: '/api/tools/generate',
-      buildPayload: (input, model) => ({ description: input, targetTool: model, useCase: 'Marketing' }),
+      buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Marketing' }),
       extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
     };
 
@@ -132,46 +133,16 @@ const detectIntent = (text: string): Intent => {
     return {
       mode: 'code', label: 'Code', icon: Code2, color: '#faf0e6',
       apiEndpoint: '/api/tools/generate',
-      buildPayload: (input, model) => ({ description: input, targetTool: model, useCase: 'Code' }),
+      buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Code' }),
       extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
     };
 
   return {
     mode: 'make', label: 'Prompt Maker', icon: Sparkles, color: '#713DFF',
     apiEndpoint: '/api/tools/generate',
-    buildPayload: (input, model) => ({ description: input, targetTool: model, useCase: 'Text' }),
+    buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Text' }),
     extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
   };
-};
-
-const DEFAULT_INTENT = detectIntent('');
-
-// ─── Scoring & Autocomplete ───────────────────────────────────────────
-const calculateScore = (text: string): number => {
-  if (!text.trim()) return 0;
-  let score = 0;
-  const t = text.toLowerCase();
-
-  if (text.length > 20) score += 20;
-  if (/(write|generate|create|act as|translate|make|build|design|explain)/.test(t)) score += 20;
-  if (/(markdown|list|table|concise|tone|format|bullet|step-by-step)/.test(t)) score += 20;
-  if (/(for a beginner|expert|audience|specifically for|target)/.test(t)) score += 20;
-  if (/(act as|you are|persona|role|assume the role)/.test(t)) score += 20;
-
-  return Math.min(score, 100);
-};
-
-const getGhostSuggestion = (text: string): string => {
-  if (!text.trim() || text.trim().length < 4) return '';
-  const t = text.toLowerCase();
-
-  if (t.startsWith('write an article') && !t.includes('about')) return ' about [topic], optimized for SEO';
-  if (t.startsWith('act as') && !t.includes('expert')) return ' an expert in [field], and explain...';
-  if (t.startsWith('create a') && !t.includes('for')) return ' for [target audience] with a [tone] tone';
-  if (t.startsWith('generate') && !t.includes('using')) return ' using [format/framework]';
-  if (t.startsWith('translate') && !t.includes('into')) return ' this into [language/format]';
-
-  return '';
 };
 
 // ─── History persistence ─────────────────────────────────────────────
@@ -195,7 +166,7 @@ function pushHistory(q: string) {
 // ─── Component ───────────────────────────────────────────────────────
 export const UniversalBar: React.FC = () => {
   const [input, setInput] = useState('');
-  const [intent, setIntent] = useState<Intent>(DEFAULT_INTENT);
+  const [intent, setIntent] = useState<Intent>(detectIntent('', 'ChatGPT'));
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
@@ -225,39 +196,9 @@ export const UniversalBar: React.FC = () => {
   const [refinementInput, setRefinementInput] = useState('');
   const [isRefining, setIsRefining] = useState(false);
 
-  // Scoring & Ghost Text state
-  const [promptScore, setPromptScore] = useState(0);
-  const [ghostText, setGhostText] = useState('');
-
-  // Keystroke reactive pulse intensity (accumulating & decaying)
-  const [pulseMultiplier, setPulseMultiplier] = useState(0);
-
-  const triggerPulse = useCallback(() => {
-    setPulseMultiplier(prev => Math.min(prev + 0.22, 1.0)); // Build up intensity, max 1.0
-  }, []);
-
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'Escape', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-      triggerPulse();
-    }
-
-    if ((e.key === 'Tab' || e.key === 'ArrowRight') && ghostText && inputRef.current?.selectionStart === input.length) {
-      e.preventDefault();
-      const newValue = input + ghostText;
-      setInput(newValue);
-      setGhostText('');
-      setPromptScore(calculateScore(newValue));
-    }
-  }, [triggerPulse, ghostText, input]);
-
-  // Decay loop for the dynamic glow
-  useEffect(() => {
-    if (pulseMultiplier <= 0) return;
-    const interval = setInterval(() => {
-      setPulseMultiplier(prev => Math.max(prev - 0.08, 0)); // decay over time
-    }, 40);
-    return () => clearInterval(interval);
-  }, [pulseMultiplier]);
+    // Basic handler
+  }, []);
 
   // Helper to construct alpha colors
   const getHexWithOpacity = (hex: string, opacity: number): string => {
@@ -305,12 +246,12 @@ export const UniversalBar: React.FC = () => {
   }, [isLoading, resultPrompt, isFocused]);
 
   // ── Intent detection ─────────────────────────────────────────────
+  useEffect(() => {
+    setIntent(input.trim().length >= 3 ? detectIntent(input, selectedModel) : detectIntent('', selectedModel));
+  }, [selectedModel, input]);
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = e.target.value;
-    setInput(v);
-    setIntent(v.trim().length >= 3 ? detectIntent(v) : DEFAULT_INTENT);
-    setPromptScore(calculateScore(v));
-    setGhostText(getGhostSuggestion(v));
+    setInput(e.target.value);
   }, []);
 
   // ── Execute inline ───────────────────────────────────────────────
@@ -397,17 +338,23 @@ export const UniversalBar: React.FC = () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20_000);
     try {
+      const currentText = (isDirectChat || activeTab === 'output') ? resultOutput || resultPrompt : editedPrompt;
       const res = await fetch('/api/tools/refine', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPrompt: editedPrompt, instruction: refinementInput.trim(), targetTool: selectedModel }),
+        body: JSON.stringify({ currentPrompt: currentText, instruction: refinementInput.trim(), targetTool: selectedModel }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
 
-      setEditedPrompt(data.refinedPrompt || '');
+      const newText = data.refinedPrompt || '';
+      setEditedPrompt(newText);
+      if (isDirectChat || activeTab === 'output') {
+        setResultOutput(newText);
+        setResultPrompt(newText);
+      }
       setRefinementInput('');
     } catch (err: unknown) {
       clearTimeout(timeoutId);
@@ -415,7 +362,7 @@ export const UniversalBar: React.FC = () => {
     } finally {
       setIsRefining(false);
     }
-  }, [editedPrompt, refinementInput, isRefining, selectedModel]);
+  }, [editedPrompt, resultOutput, resultPrompt, isDirectChat, activeTab, refinementInput, isRefining, selectedModel]);
 
   const handleReset = useCallback(() => {
     setResultPrompt('');
@@ -427,9 +374,7 @@ export const UniversalBar: React.FC = () => {
     setError('');
     setResultIntent(null);
     setInput('');
-    setIntent(DEFAULT_INTENT);
-    setPromptScore(0);
-    setGhostText('');
+    setIntent(detectIntent('', selectedModel));
     inputRef.current?.focus();
   }, []);
 
@@ -497,13 +442,13 @@ export const UniversalBar: React.FC = () => {
       return;
     }
     setResultPrompt(''); setResultOutput(''); setEditedPrompt(''); setIsDirectChat(false); setError(''); setResultIntent(null);
-    setInput(starter); setIntent(detectIntent(starter));
+    setInput(starter); setIntent(detectIntent(starter, selectedModel));
     inputRef.current?.focus();
   }, []);
 
   // ── History item click ───────────────────────────────────────────
   const handleHistoryClick = useCallback((q: string) => {
-    setInput(q); setIntent(detectIntent(q));
+    setInput(q); setIntent(detectIntent(q, selectedModel));
     setHistoryOpen(false);
     inputRef.current?.focus();
   }, []);
@@ -514,7 +459,7 @@ export const UniversalBar: React.FC = () => {
   return (
     <div className="w-full max-w-[780px] mx-auto flex flex-col items-center gap-4">
       {/* ── Main bar ───────────────────────────────────────────────── */}
-      <form onSubmit={handleSubmit} className="relative w-full">
+      <form onSubmit={handleSubmit} className="relative w-full z-50">
         {/* Living glow backing */}
         <motion.div
           className="absolute inset-0 rounded-2xl pointer-events-none"
@@ -524,17 +469,13 @@ export const UniversalBar: React.FC = () => {
           }}
           initial={{ opacity: 0.15, scale: 0.99 }}
           animate={isFocused || showPill || isLoading ? {
-            opacity: 0.55 + pulseMultiplier * 0.35,
-            scale: 1.02 + pulseMultiplier * 0.08,
+            opacity: 0.55,
+            scale: 1.02,
           } : {
             opacity: [0.12, 0.24, 0.12],
             scale: [0.99, 1.01, 0.99]
           }}
-          transition={pulseMultiplier > 0 ? {
-            type: "spring",
-            stiffness: 300,
-            damping: 15
-          } : {
+          transition={{
             opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
             scale: { repeat: Infinity, duration: 4, ease: "easeInOut" },
           }}
@@ -545,12 +486,9 @@ export const UniversalBar: React.FC = () => {
             background: 'rgba(18, 10, 36, 0.75)',
             backdropFilter: 'blur(30px)',
             WebkitBackdropFilter: 'blur(30px)',
-            border: `1px solid ${isFocused || showPill || isLoading
-                ? getHexWithOpacity(ac, 0.35 + pulseMultiplier * 0.45)
-                : getHexWithOpacity(ac, 0.15)
-              }`,
+            border: `1px solid ${isFocused || showPill || isLoading ? getHexWithOpacity(ac, 0.35) : getHexWithOpacity(ac, 0.15)}`,
             boxShadow: isFocused || showPill || isLoading
-              ? `0 0 ${Math.round(20 + pulseMultiplier * 25)}px ${getHexWithOpacity(ac, 0.15 + pulseMultiplier * 0.35)}, inset 0 0 ${Math.round(12 + pulseMultiplier * 8)}px ${getHexWithOpacity(ac, 0.05 + pulseMultiplier * 0.2)}`
+              ? `0 0 20px ${getHexWithOpacity(ac, 0.15)}, inset 0 0 12px ${getHexWithOpacity(ac, 0.05)}`
               : `0 8px 32px rgba(0,0,0,0.6), 0 0 15px ${getHexWithOpacity(ac, 0.08)}`,
             transition: 'border-color 100ms ease-out, box-shadow 100ms ease-out',
           }}
@@ -627,13 +565,7 @@ export const UniversalBar: React.FC = () => {
                 <span className="text-[14px] md:text-[15px] font-medium text-white/70 truncate">{PLACEHOLDERS[placeholderIdx]}</span>
               </div>
             )}
-            {/* Ghost text */}
-            {input && ghostText && !isLoading && (
-              <div className="absolute inset-0 flex items-center pointer-events-none overflow-hidden whitespace-pre z-0">
-                <span className="text-[14px] md:text-[15px] font-medium text-transparent">{input}</span>
-                <span className="text-[14px] md:text-[15px] font-medium text-white/30">{ghostText}</span>
-              </div>
-            )}
+            {/* Ghost text removed */}
 
             {/* History dropdown */}
             <AnimatePresence>
@@ -664,21 +596,7 @@ export const UniversalBar: React.FC = () => {
 
           {/* Right section: intent pill + kbd hint + submit */}
           <div className="flex items-center gap-2 flex-shrink-0 ml-2 relative z-10">
-            {/* Score Pill */}
-            {input.trim().length > 0 && !isLoading && (
-              <motion.span
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="hidden md:inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold"
-                style={{
-                  backgroundColor: promptScore >= 80 ? 'rgba(16, 185, 129, 0.15)' : promptScore >= 40 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                  color: promptScore >= 80 ? '#10b981' : promptScore >= 40 ? '#f59e0b' : '#ef4444',
-                  border: `1px solid ${promptScore >= 80 ? 'rgba(16, 185, 129, 0.3)' : promptScore >= 40 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                }}
-              >
-                Score: {promptScore}
-              </motion.span>
-            )}
+            {/* Score Pill removed */}
 
             {/* Intent pill */}
             {showPill && !isLoading && (
@@ -811,21 +729,28 @@ export const UniversalBar: React.FC = () => {
               {/* Body */}
               {error ? (
                 <p className="text-red-400/80 text-[13px] leading-relaxed">{error}</p>
-              ) : activeTab === 'prompt' && !isDirectChat ? (
+              ) : (
                 <div className="flex flex-col gap-3">
-                  <textarea
-                    value={editedPrompt}
-                    onChange={(e) => setEditedPrompt(e.target.value)}
-                    className="w-full min-h-[140px] max-h-[350px] bg-white/[0.02] border border-white/[0.06] rounded-xl p-3 text-white/90 text-[13px] md:text-[14px] leading-[1.6] outline-none focus:border-white/[0.12] transition-all scrollbar-hide resize-y font-medium"
-                    placeholder="Edit your prompt here..."
-                  />
+                  {activeTab === 'prompt' && !isDirectChat ? (
+                    <textarea
+                      value={editedPrompt}
+                      onChange={(e) => setEditedPrompt(e.target.value)}
+                      className="w-full min-h-[140px] max-h-[350px] bg-white/[0.02] border border-white/[0.06] rounded-xl p-3 text-white/90 text-[13px] md:text-[14px] leading-[1.6] outline-none focus:border-white/[0.12] transition-all scrollbar-hide resize-y font-medium"
+                      placeholder="Edit your prompt here..."
+                    />
+                  ) : (
+                    <pre className="text-white/85 text-[13px] md:text-[14px] leading-[1.8] font-[inherit] whitespace-pre-wrap break-words max-h-[350px] overflow-y-auto scrollbar-hide pr-4">
+                      {resultOutput || resultPrompt}
+                    </pre>
+                  )}
 
+                  {/* Refinement Chat Input - Talk More */}
                   <form onSubmit={handleRefine} className="relative flex items-center w-full mt-1">
                     <input
                       type="text"
                       value={refinementInput}
                       onChange={(e) => setRefinementInput(e.target.value)}
-                      placeholder="Refine prompt (e.g., 'Make it shorter and funnier')..."
+                      placeholder="Talk to AI to refine this result..."
                       disabled={isRefining}
                       className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl pl-3 pr-10 py-2.5 text-white/90 text-[13px] outline-none focus:border-white/[0.15] focus:bg-white/[0.05] transition-all"
                     />
@@ -839,7 +764,7 @@ export const UniversalBar: React.FC = () => {
                     </button>
                   </form>
 
-                  {resultIntent?.mode !== 'image' && (
+                  {resultIntent?.mode !== 'image' && activeTab === 'prompt' && !isDirectChat && (
                     <div className="flex justify-end">
                       <button
                         type="button"
@@ -854,10 +779,6 @@ export const UniversalBar: React.FC = () => {
                     </div>
                   )}
                 </div>
-              ) : (
-                <pre className="text-white/85 text-[13px] md:text-[14px] leading-[1.8] font-[inherit] whitespace-pre-wrap break-words max-h-[350px] overflow-y-auto scrollbar-hide pr-4">
-                  {resultOutput || resultPrompt}
-                </pre>
               )}
             </div>
           </motion.div>
