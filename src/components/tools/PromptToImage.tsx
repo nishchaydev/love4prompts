@@ -5,19 +5,40 @@ export const PromptToImage: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleGenerate = () => {
     if (!prompt.trim()) return;
     setIsLoading(true);
+    setImageError(false);
     // Use pollinations.ai for free, keyless image generation
     const encodedPrompt = encodeURIComponent(prompt.trim());
     const newImageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
     
-    // Simulate loading time for better UX
-    setTimeout(() => {
+    const img = new Image();
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    img.onload = () => {
+      clearTimeout(timeoutId);
       setImageUrl(newImageUrl);
+      setImageError(false);
       setIsLoading(false);
-    }, 1500);
+    };
+
+    img.onerror = () => {
+      clearTimeout(timeoutId);
+      setImageError(true);
+      setIsLoading(false);
+    };
+
+    timeoutId = setTimeout(() => {
+      img.onload = null;
+      img.onerror = null;
+      setImageError(true);
+      setIsLoading(false);
+    }, 15000);
+
+    img.src = newImageUrl;
   };
 
   return (
@@ -63,8 +84,12 @@ export const PromptToImage: React.FC = () => {
       {imageUrl && !isLoading && (
         <div className="bg-[var(--color-background-card)] rounded-[24px] p-6 sm:p-8 border border-white/[0.08] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] animate-fade-in-up">
           <h3 className="text-xl font-bold text-white mb-6">Generated Image</h3>
-          <div className="relative w-full aspect-square max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
-            <img src={imageUrl} alt={prompt} className="w-full h-full object-cover" />
+          <div className="relative w-full aspect-square max-w-2xl mx-auto rounded-2xl overflow-hidden border-2 border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center bg-[var(--color-background-elevated)]">
+            {imageError ? (
+              <p className="text-red-400 font-medium">Failed to load image. Please try again.</p>
+            ) : (
+              <img src={imageUrl} alt={prompt} className="w-full h-full object-cover" />
+            )}
           </div>
           
           <div className="mt-8">

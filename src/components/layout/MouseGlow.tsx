@@ -64,7 +64,7 @@ export const MouseGlow: React.FC = () => {
   }, [mouseX, mouseY]);
 
   // Always render the effect since the user explicitly requested it
-  // if (!hasMouse) return null;
+  if (!hasMouse) return null;
 
   // Use framer-motion template to update CSS without React re-renders for max performance
   // Make the glow tighter and brighter when clicking to simulate energy

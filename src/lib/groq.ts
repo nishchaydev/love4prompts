@@ -31,66 +31,86 @@ function getApiKey(): string {
 
 export async function callGroq(request: GroqTextRequest): Promise<GroqResponse> {
   const apiKey = getApiKey();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  const response = await fetch(GROQ_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: request.maxTokens ?? 2048,
-      messages: [
-        { role: 'system', content: request.systemPrompt },
-        { role: 'user', content: request.userMessage },
-      ],
-    }),
-  });
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: request.maxTokens ?? 2048,
+        messages: [
+          { role: 'system', content: request.systemPrompt },
+          { role: 'user', content: request.userMessage },
+        ],
+      }),
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Groq API error (${response.status}): ${errorBody}`);
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Groq API error (${response.status}): ${errorBody}`);
+    }
+
+    const data = await response.json();
+    return {
+      content: data.choices[0]?.message?.content ?? '',
+    };
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
   }
-
-  const data = await response.json();
-  return {
-    content: data.choices[0]?.message?.content ?? '',
-  };
 }
 
 export async function callGroqVision(request: GroqVisionRequest): Promise<GroqResponse> {
   const apiKey = getApiKey();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  const response = await fetch(GROQ_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: VISION_MODEL,
-      max_tokens: request.maxTokens ?? 2048,
-      messages: [
-        { role: 'system', content: request.systemPrompt },
-        { 
-          role: 'user', 
-          content: [
-            { type: 'text', text: request.userMessage ?? 'Analyze this image.' },
-            { type: 'image_url', image_url: { url: `data:${request.mimeType};base64,${request.imageBase64}` } }
-          ] 
-        },
-      ],
-    }),
-  });
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: VISION_MODEL,
+        max_tokens: request.maxTokens ?? 2048,
+        messages: [
+          { role: 'system', content: request.systemPrompt },
+          { 
+            role: 'user', 
+            content: [
+              { type: 'text', text: request.userMessage ?? 'Analyze this image.' },
+              { type: 'image_url', image_url: { url: `data:${request.mimeType};base64,${request.imageBase64}` } }
+            ] 
+          },
+        ],
+      }),
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Groq Vision API error (${response.status}): ${errorBody}`);
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new Error(`Groq Vision API error (${response.status}): ${errorBody}`);
+    }
+
+    const data = await response.json();
+    return {
+      content: data.choices[0]?.message?.content ?? '',
+    };
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
   }
-
-  const data = await response.json();
-  return {
-    content: data.choices[0]?.message?.content ?? '',
-  };
 }
