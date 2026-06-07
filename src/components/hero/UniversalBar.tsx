@@ -86,63 +86,67 @@ const PLACEHOLDERS = [
 const QUICK_ACTIONS = [
   { icon: Image, label: 'Image Prompt', starter: 'Generate an image of ' },
   { icon: Wand2, label: 'Enhance', starter: 'Enhance this prompt: ' },
-  { icon: Megaphone, label: 'Marketing', starter: 'Create a marketing plan for ' },
+  { icon: Megaphone, label: 'LinkedIn Post', starter: 'Write a LinkedIn post about ' },
   { icon: ArrowRightLeft, label: 'Translate', starter: 'Convert this Midjourney prompt to DALL-E: ' },
-  { icon: Code2, label: 'Code', starter: 'Write a system prompt for ' },
+  { icon: Code2, label: 'System Prompt', starter: 'Build a system prompt for an AI assistant that ' },
   { icon: Sparkles, label: 'Library', starter: '__LIBRARY__' },
 ];
 
-// ─── Intent detection ────────────────────────────────────────────────
-const detectIntent = (text: string, model: string): Intent => {
-  const t = text.toLowerCase();
-
-  if (/enhance|improve|better|optimize|fix|rewrite|upgrade|polish/i.test(t))
-    return {
-      mode: 'enhance', label: 'Enhancer', icon: Wand2, color: '#713DFF',
-      apiEndpoint: '/api/tools/enhance',
-      buildPayload: (input, mdl) => ({ prompt: input, targetTool: mdl }),
-      extractResult: (d) => isRecord(d) && typeof d.enhancedPrompt === 'string' ? d.enhancedPrompt : '',
-    };
-
-  if (/translate|convert|midjourney to|dalle to|from .* to/i.test(t))
-    return {
-      mode: 'translate', label: 'Translator', icon: ArrowRightLeft, color: '#ff9f43',
-      apiEndpoint: '/api/tools/translate',
-      buildPayload: (input, mdl) => ({ prompt: input, fromTool: 'Midjourney', toTool: mdl }),
-      extractResult: (d) => isRecord(d) && typeof d.translatedPrompt === 'string' ? d.translatedPrompt : '',
-    };
-
-  if (/image|photo|picture|portrait|scenery|render|flux|midjourney|dall|stable|draw|visual|cinematic/i.test(t) ||
-      ['Midjourney', 'DALL-E', 'Flux'].includes(model))
-    return {
-      mode: 'image', label: 'Image Gen', icon: Image, color: '#ea2261',
-      apiEndpoint: '/api/tools/generate',
-      buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Image Generation' }),
-      extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
-    };
-
-  if (/instagram|social|post|calendar|content|reel|tiktok|linkedin|twitter|marketing|ad|copy/i.test(t))
-    return {
-      mode: 'social', label: 'Marketing', icon: Megaphone, color: '#b9b9f9',
-      apiEndpoint: '/api/tools/generate',
-      buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Marketing' }),
-      extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
-    };
-
-  if (/code|developer|programming|debug|system prompt|api|function|script/i.test(t))
-    return {
-      mode: 'code', label: 'Code', icon: Code2, color: '#faf0e6',
-      apiEndpoint: '/api/tools/generate',
-      buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Code' }),
-      extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
-    };
-
-  return {
-    mode: 'make', label: 'Prompt Maker', icon: Sparkles, color: '#713DFF',
+// ─── Intent map (replaces old regex detectIntent) ───────────────────
+const INTENT_MAP: Record<string, Intent> = {
+  ENHANCE: {
+    mode: 'enhance', label: 'Enhancer', icon: Wand2, color: '#713DFF',
+    apiEndpoint: '/api/tools/enhance',
+    buildPayload: (input, mdl) => ({ prompt: input, targetTool: mdl }),
+    extractResult: (d) => isRecord(d) && typeof d.enhancedPrompt === 'string' ? d.enhancedPrompt : '',
+  },
+  TRANSLATE: {
+    mode: 'translate', label: 'Translator', icon: ArrowRightLeft, color: '#ff9f43',
+    apiEndpoint: '/api/tools/translate',
+    buildPayload: (input, mdl) => ({ prompt: input, fromTool: 'Midjourney', toTool: mdl }),
+    extractResult: (d) => isRecord(d) && typeof d.translatedPrompt === 'string' ? d.translatedPrompt : '',
+  },
+  IMAGE: {
+    mode: 'image', label: 'Image Gen', icon: Image, color: '#ea2261',
+    apiEndpoint: '/api/tools/generate',
+    buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Image Generation' }),
+    extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
+  },
+  SOCIAL: {
+    mode: 'social', label: 'Social', icon: Megaphone, color: '#0a66c2',
+    apiEndpoint: '/api/tools/generate',
+    buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Marketing' }),
+    extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
+  },
+  CODE: {
+    mode: 'code', label: 'Code Prompt', icon: Code2, color: '#10b981',
+    apiEndpoint: '/api/tools/generate',
+    buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Code' }),
+    extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
+  },
+  EXECUTE: {
+    mode: 'execute', label: 'Execute', icon: Zap, color: '#ff9f43',
+    apiEndpoint: '/api/tools/execute',
+    buildPayload: (input, mdl) => ({ prompt: input, targetTool: mdl }),
+    extractResult: (d) => isRecord(d) && typeof d.output === 'string' ? d.output : '',
+  },
+  GENERATE: {
+    mode: 'generate', label: 'Generate', icon: Sparkles, color: '#713DFF',
     apiEndpoint: '/api/tools/generate',
     buildPayload: (input, mdl) => ({ description: input, targetTool: mdl, useCase: 'Text' }),
     extractResult: (d) => isRecord(d) && typeof d.generatedPrompt === 'string' ? d.generatedPrompt : '',
-  };
+  },
+};
+
+// ─── Refinement placeholders (intent-aware) ─────────────────────────
+const REFINEMENT_PLACEHOLDERS: Record<string, string> = {
+  enhance: 'Make it shorter, more formal, add examples...',
+  translate: 'Try a different target tool...',
+  image: 'More cinematic, different lighting, change style...',
+  social: 'Make it shorter, more engaging, add hashtags...',
+  generate: 'Adjust tone, add constraints, change format...',
+  execute: 'Ask a follow-up question...',
+  code: 'Change language, add error handling, explain step...',
 };
 
 // ─── History persistence ─────────────────────────────────────────────
@@ -166,7 +170,9 @@ function pushHistory(q: string) {
 // ─── Component ───────────────────────────────────────────────────────
 export const UniversalBar: React.FC = () => {
   const [input, setInput] = useState('');
-  const [intent, setIntent] = useState<Intent>(detectIntent('', 'ChatGPT'));
+  const [intent, setIntent] = useState<Intent>(INTENT_MAP['GENERATE']);
+  const [isClassifying, setIsClassifying] = useState(false);
+  const classifyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
@@ -245,14 +251,53 @@ export const UniversalBar: React.FC = () => {
     return () => clearInterval(timer);
   }, [isLoading, resultPrompt, isFocused]);
 
-  // ── Intent detection ─────────────────────────────────────────────
-  useEffect(() => {
-    setIntent(input.trim().length >= 3 ? detectIntent(input, selectedModel) : detectIntent('', selectedModel));
-  }, [selectedModel, input]);
+  // ── Async intent classifier (replaces old regex) ─────────────────
+  const classifyIntent = useCallback(async (text: string, model: string): Promise<Intent> => {
+    const t = text.toLowerCase();
+
+    // Fast client-side shortcuts before hitting the API
+    if (/from\s+\w+\s+to\s+\w+|midjourney to|dalle to|convert.*prompt/i.test(t)) {
+      return INTENT_MAP['TRANSLATE'];
+    }
+    if (/linkedin|instagram|caption|tweet|twitter|facebook|social media/i.test(t)) {
+      return INTENT_MAP['SOCIAL'];
+    }
+    if (['Midjourney', 'DALL-E', 'Flux'].includes(model) && text.length < 200) {
+      return INTENT_MAP['IMAGE'];
+    }
+
+    // Call the classifier for everything else
+    try {
+      const res = await fetch('/api/tools/classify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: text, model, charCount: text.length }),
+      });
+      const data = await res.json();
+      return INTENT_MAP[data.intent as keyof typeof INTENT_MAP] ?? INTENT_MAP['GENERATE'];
+    } catch {
+      return INTENT_MAP['GENERATE'];
+    }
+  }, []);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  }, []);
+    const val = e.target.value;
+    setInput(val);
+
+    if (classifyTimeoutRef.current) clearTimeout(classifyTimeoutRef.current);
+
+    if (val.trim().length < 3) {
+      setIntent(INTENT_MAP['GENERATE']);
+      return;
+    }
+
+    classifyTimeoutRef.current = setTimeout(async () => {
+      setIsClassifying(true);
+      const classified = await classifyIntent(val.trim(), selectedModel);
+      setIntent(classified);
+      setIsClassifying(false);
+    }, 400);
+  }, [classifyIntent, selectedModel]);
 
   // ── Execute inline ───────────────────────────────────────────────
   const handleSubmit = useCallback(async (e?: React.FormEvent) => {
@@ -374,7 +419,7 @@ export const UniversalBar: React.FC = () => {
     setError('');
     setResultIntent(null);
     setInput('');
-    setIntent(detectIntent('', selectedModel));
+    setIntent(INTENT_MAP['GENERATE']);
     inputRef.current?.focus();
   }, []);
 
@@ -442,16 +487,28 @@ export const UniversalBar: React.FC = () => {
       return;
     }
     setResultPrompt(''); setResultOutput(''); setEditedPrompt(''); setIsDirectChat(false); setError(''); setResultIntent(null);
-    setInput(starter); setIntent(detectIntent(starter, selectedModel));
+    setInput(starter);
+    // Trigger async classification for the chip starter text
+    setIsClassifying(true);
+    classifyIntent(starter, selectedModel).then((classified) => {
+      setIntent(classified);
+      setIsClassifying(false);
+    });
     inputRef.current?.focus();
-  }, []);
+  }, [classifyIntent, selectedModel]);
 
   // ── History item click ───────────────────────────────────────────
   const handleHistoryClick = useCallback((q: string) => {
-    setInput(q); setIntent(detectIntent(q, selectedModel));
+    setInput(q);
     setHistoryOpen(false);
+    // Trigger async classification for the history item
+    setIsClassifying(true);
+    classifyIntent(q, selectedModel).then((classified) => {
+      setIntent(classified);
+      setIsClassifying(false);
+    });
     inputRef.current?.focus();
-  }, []);
+  }, [classifyIntent, selectedModel]);
 
   const showPill = input.trim().length >= 3;
   const ac = resultIntent?.color ?? intent.color;
@@ -497,6 +554,7 @@ export const UniversalBar: React.FC = () => {
           <div ref={modelRef} className="relative flex-shrink-0 mr-2">
             <button
               type="button"
+              title="Choose your target AI tool"
               onClick={() => setModelOpen(!modelOpen)}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[12px] font-semibold text-white/60 hover:text-white/90 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-200"
             >
@@ -540,7 +598,8 @@ export const UniversalBar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Divider */}
+          {/* "for" label (desktop) + Divider */}
+          <span className="hidden lg:inline text-[10px] font-mono text-white/20 uppercase tracking-wider mr-1 whitespace-nowrap">for</span>
           <div className="w-px h-6 bg-white/[0.08] mr-3 flex-shrink-0" />
 
           {/* Input */}
@@ -606,12 +665,16 @@ export const UniversalBar: React.FC = () => {
                 className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap"
                 style={{
                   backgroundColor: `${intent.color}15`,
-                  color: intent.color,
+                  color: isClassifying ? 'rgba(255,255,255,0.3)' : intent.color,
                   border: `1px solid ${intent.color}30`,
+                  transition: 'color 200ms ease',
                 }}
               >
-                <intent.icon className="w-3 h-3" />
-                {intent.label}
+                {isClassifying
+                  ? <span className="w-3 h-3 rounded-full border border-white/20 border-t-white/60 animate-spin" />
+                  : <intent.icon className="w-3 h-3" />
+                }
+                {isClassifying ? 'Routing...' : intent.label}
               </motion.span>
             )}
 
@@ -711,7 +774,7 @@ export const UniversalBar: React.FC = () => {
                         : 'text-white/40 hover:text-white/70 border-transparent'
                       }`}
                   >
-                    ✨ Optimized Prompt
+                    ✨ The Prompt
                   </button>
                   <button
                     type="button"
@@ -721,7 +784,7 @@ export const UniversalBar: React.FC = () => {
                         : 'text-white/40 hover:text-white/70 border-transparent'
                       }`}
                   >
-                    ⚡ Direct Output
+                    ⚡ What It Generates
                   </button>
                 </div>
               )}
@@ -750,7 +813,7 @@ export const UniversalBar: React.FC = () => {
                       type="text"
                       value={refinementInput}
                       onChange={(e) => setRefinementInput(e.target.value)}
-                      placeholder="Talk to AI to refine this result..."
+                      placeholder={REFINEMENT_PLACEHOLDERS[resultIntent?.mode ?? 'generate'] || 'Talk to AI to refine this result...'}
                       disabled={isRefining}
                       className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl pl-3 pr-10 py-2.5 text-white/90 text-[13px] outline-none focus:border-white/[0.15] focus:bg-white/[0.05] transition-all"
                     />
@@ -785,10 +848,13 @@ export const UniversalBar: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Quick actions (hidden during result) ───────────────────── */}
-      {!resultPrompt && !error && !isLoading && (
+      {/* ── Quick actions (visible always, filtered during result) ──── */}
+      {!isLoading && (
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide w-full pb-1 px-1">
-          {QUICK_ACTIONS.map((a) => {
+          {(resultPrompt
+            ? QUICK_ACTIONS.filter(a => a.starter !== '__LIBRARY__')
+            : QUICK_ACTIONS
+          ).map((a) => {
             const Icon = a.icon;
             return (
               <button
