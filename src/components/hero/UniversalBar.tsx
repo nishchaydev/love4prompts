@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   ArrowRight, Copy, Check, RotateCcw, X,
   Wand2, Image, ArrowRightLeft, Code2, Megaphone, Sparkles,
-  ChevronDown, Clock, Command, Zap,
+  ChevronDown, Clock, Command, Zap, Bot,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// ─── BRAND LOGO PATHS (ChatGPT/OpenAI, Midjourney, Claude, Flux, DALL-E, Gemini) ───
+// ─── BRAND LOGO PATHS (ChatGPT/OpenAI, Midjourney, Claude, DALL-E, Gemini) ───
 const OpenAILogo = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" {...props}>
-    <path d="M21.729 9.176c.123-.807-.052-1.637-.495-2.337a4.26 4.26 0 00-2.029-1.631c-.13-.396-.347-.753-.637-1.049a2.766 2.766 0 00-3.328-.316c-.579-.472-1.307-.732-2.06-.736a3.197 3.197 0 00-2.73 1.51c-.694-.287-1.468-.285-2.161.004a3.194 3.194 0 00-2.001 2.213 2.756 2.756 0 00-1.745.892c-.822.846-1.066 2.103-.615 3.19a3.21 3.21 0 00-.73 2.063c.004.887.368 1.733 1.011 2.348a2.768 2.768 0 00.316 3.328 2.768 2.768 0 003.328.316c.582.476 1.312.739 2.069.742a3.197 3.197 0 002.73-1.51c.691.285 1.463.283 2.152-.005a3.197 3.197 0 002.002-2.212c.621.13 1.258.013 1.802-.332a2.766 2.766 0 001.077-3.155 3.208 3.208 0 00.73-2.063c-.004-.888-.369-1.734-1.012-2.35zm-9.729 9.387c-.779 0-1.468-.387-1.89-1.026l3.359-1.938v-2.09l-3.359 1.938c-.378-.22-.684-.543-.888-.93a2.637 2.637 0 01-.252-1.926l3.359-1.94 1.81 1.045v2.09l-1.81-1.045a1.218 1.218 0 00-1.214.001l-1.545.892c.328.536.911.854 1.545.845h.005l3.359-1.939v2.091l-3.359 1.938c.633.009 1.217-.308 1.545-.845l1.81-1.045v2.09c0 .779-.387 1.468-1.026 1.89zm-1.89-7.306l-1.81-1.045c.422-.64 1.111-1.026 1.89-1.026.779 0 1.468.387 1.89 1.026l-3.359 1.938zm-4.385-1.026c0-.779.387-1.468 1.026-1.89.421.639 1.11 1.026 1.89 1.026.779 0 1.468-.387 1.89-1.026l-3.359 1.938v2.09L5.725 10.231zm2.348 6.556c-.633-.009-1.217.309-1.545.846L4.718 16.581c-.422-.64-.616-1.403-.548-2.164a2.64 2.64 0 011.027-1.74l3.359-1.938 1.81 1.045v2.09l-1.81-1.045a1.218 1.218 0 00-1.214-.001zm6.98 2.051l-1.81-1.045 1.81-1.045a1.218 1.218 0 001.214.001l1.545-.892c-.328-.536-.911-.854-1.545-.845h-.005l-3.359 1.939v-2.091l3.359-1.938c-.633-.009-1.217.308-1.545.845l-1.81 1.045v-2.09c0-.779.387-1.468 1.026-1.89.422.64 1.111 1.026 1.89 1.026.779 0 1.468-.387 1.89-1.026l-3.359 1.938v2.09z" />
+  <svg viewBox="0 0 320 320" fill="currentColor" className="w-3.5 h-3.5" {...props}>
+    <path d="m297.06 130.97c7.26-21.79 4.76-45.66-6.85-65.48-17.46-30.4-52.56-46.04-86.84-38.68-15.25-17.18-37.16-26.95-60.13-26.81-35.04-.08-66.13 22.48-76.91 55.82-22.51 4.61-41.94 18.7-53.31 38.67-17.59 30.32-13.58 68.54 9.92 94.54-7.26 21.79-4.76 45.66 6.85 65.48 17.46 30.4 52.56 46.04 86.84 38.68 15.24 17.18 37.16 26.95 60.13 26.8 35.06.09 66.16-22.49 76.94-55.86 22.51-4.61 41.94-18.7 53.31-38.67 17.57-30.32 13.55-68.51-9.94-94.51zm-120.28 168.11c-14.03.02-27.62-4.89-38.39-13.88.49-.26 1.34-.73 1.89-1.07l63.72-36.8c3.26-1.85 5.26-5.32 5.24-9.07v-89.83l26.93 15.55c.29.14.48.42.52.74v74.39c-.04 33.08-26.83 59.9-59.91 59.97zm-128.84-55.03c-7.03-12.14-9.56-26.37-7.15-40.18.47.28 1.3.79 1.89 1.13l63.72 36.8c3.23 1.89 7.23 1.89 10.47 0l77.79-44.92v31.1c.02.32-.13.63-.38.83l-64.41 37.19c-28.69 16.52-65.33 6.7-81.92-21.95zm-16.77-139.09c7-12.16 18.05-21.46 31.21-26.29 0 .55-.03 1.52-.03 2.2v73.61c-.02 3.74 1.98 7.21 5.23 9.06l77.79 44.91-26.93 15.55c-.27.18-.61.21-.91.08l-64.42-37.22c-28.63-16.58-38.45-53.21-21.95-81.89zm221.26 51.49-77.79-44.92 26.93-15.54c.27-.18.61-.21.91-.08l64.42 37.19c28.68 16.57 38.51 53.26 21.94 81.94-7.01 12.14-18.05 21.44-31.2 26.28v-75.81c.03-3.74-1.96-7.2-5.2-9.06zm26.8-40.34c-.47-.29-1.3-.79-1.89-1.13l-63.72-36.8c-3.23-1.89-7.23-1.89-10.47 0l-77.79 44.92v-31.1c-.02-.32.13-.63.38-.83l64.41-37.16c28.69-16.55 65.37-6.7 81.91 22 6.99 12.12 9.52 26.31 7.15 40.1zm-168.51 55.43-26.94-15.55c-.29-.14-.48-.42-.52-.74v-74.39c.02-33.12 26.89-59.96 60.01-59.94 14.01 0 27.57 4.92 38.34 13.88-.49.26-1.33.73-1.89 1.07l-63.72 36.8c-3.26 1.85-5.26 5.31-5.24 9.06l-.04 89.79zm14.63-31.54 34.65-20.01 34.65 20v40.01l-34.65 20-34.65-20z" />
   </svg>
 );
 
@@ -20,8 +20,14 @@ const MidjourneyLogo = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 const ClaudeLogo = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" {...props}>
-    <path d="M19.1 5.9c-.3-.8-.9-1.4-1.7-1.7-1.1-.5-2.4-.2-3.1.6L8.8 10.3c-.6.6-1.4.9-2.2.9h-.8c-1.3 0-2.4-1.1-2.4-2.4s1.1-2.4 2.4-2.4c1 0 1.9-.6 2.2-1.6s-.1-2-1-2.6c-1.1-.7-2.6-.5-3.5.4C1.9 4.3 1.2 6.1 1.2 8c0 3.7 3 6.8 6.8 6.8h.4c.5 0 .9.2 1.3.5l5.5 5.5c.6.6 1.4.9 2.2.9.8 0 1.6-.3 2.2-.9.6-.6.9-1.4.9-2.2 0-.8-.3-1.6-.9-2.2L14 10.9c-.3-.3-.5-.7-.5-1.1s.2-.8.5-1.1l5.1-2.8z" />
+  <svg viewBox="0 0 100 100" fill="currentColor" className="w-3.5 h-3.5" {...props}>
+    <path d="m19.6 66.5 19.7-11 .3-1-.3-.5h-1l-3.3-.2-11.2-.3L14 53l-9.5-.5-2.4-.5L0 49l.2-1.5 2-1.3 2.9.2 6.3.5 9.5.6 6.9.4L38 49.1h1.6l.2-.7-.5-.4-.4-.4L29 41l-10.6-7-5.6-4.1-3-2-1.5-2-.6-4.2 2.7-3 3.7.3.9.2 3.7 2.9 8 6.1L37 36l1.5 1.2.6-.4.1-.3-.7-1.1L33 25l-6-10.4-2.7-4.3-.7-2.6c-.3-1-.4-2-.4-3l3-4.2L28 0l4.2.6L33.8 2l2.6 6 4.1 9.3L47 29.9l2 3.8 1 3.4.3 1h.7v-.5l.5-7.2 1-8.7 1-11.2.3-3.2 1.6-3.8 3-2L61 2.6l2 2.9-.3 1.8-1.1 7.7L59 27.1l-1.5 8.2h.9l1-1.1 4.1-5.4 6.9-8.6 3-3.5L77 13l2.3-1.8h4.3l3.1 4.7-1.4 4.9-4.4 5.6-3.7 4.7-5.3 7.1-3.2 5.7.3.4h.7l12-2.6 6.4-1.1 7.6-1.3 3.5 1.6.4 1.6-1.4 3.4-8.2 2-9.6 2-14.3 3.3-.2.1.2.3 6.4.6 2.8.2h6.8l12.6 1 3.3 2 1.9 2.7-.3 2-5.1 2.6-6.8-1.6-16-3.8-5.4-1.3h-.8v.4l4.6 4.5 8.3 7.5L89 80.1l.5 2.4-1.3 2-1.4-.2-9.2-7-3.6-3-8-6.8h-.5v.7l1.8 2.7 9.8 14.7.5 4.5-.7 1.4-2.6 1-2.7-.6-5.8-8-6-9-4.7-8.2-.5.4-2.9 30.2-1.3 1.5-3 1.2-2.5-2-1.4-3 1.4-6.2 1.6-8 1.3-6.4 1.2-7.9.7-2.6v-.2H49L43 72l-9 12.3-7.2 7.6-1.7.7-3-1.5.3-2.8L24 86l10-12.8 6-7.9 4-4.6-.1-.5h-.3L17.2 77.4l-4.7.6-2-2 .2-3 1-1 8-5.5Z" />
+  </svg>
+);
+
+const DalleLogo = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 85 24" fill="currentColor" className="w-3.5 h-3.5" {...props}>
+    <path d="M8.147 2c1.438 0 2.75.225 3.937.676 1.186.45 2.21 1.099 3.074 1.946a8.625 8.625 0 011.927 3.094c.44 1.198.66 2.527.66 3.987s-.22 2.788-.66 3.986a8.625 8.625 0 01-1.927 3.095 8.778 8.778 0 01-3.074 1.946c-1.187.45-2.499.675-3.937.675H2V2h6.147zm19.898 0l7.469 19.405h-2.615l-1.969-5.108H22.25l-1.942 5.108H17.72L25.187 2h2.858zM8.12 4.243H4.534v14.92h3.613c2.175 0 3.896-.672 5.164-2.014 1.267-1.343 1.9-3.158 1.9-5.446 0-2.289-.633-4.104-1.9-5.446-1.268-1.343-2.998-2.014-5.19-2.014zm18.442.676l-3.45 9.108h6.956l-3.506-9.108zm23.215 16.486H37.536V2h2.588v17.135h9.653v2.27M54.414 2v17.135h9.653v2.27H51.826V2h2.588zm12.619 9.946v3.19h-3.074v-3.19h3.074zm2.965 9.46V2h12.646v2.27H72.56v5.973h8.547v2.27H72.56v6.622h10.084v2.27H69.998z" />
   </svg>
 );
 
@@ -31,20 +37,13 @@ const GeminiLogo = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-const FluxLogo = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5" {...props}>
-    <path d="M12 2L2 13h9v9l10-11h-9V2z" />
-  </svg>
-);
-
 // ─── AI Model targets ────────────────────────────────────────────────
 const AI_MODELS = [
   { id: 'ChatGPT', label: 'ChatGPT', icon: OpenAILogo },
   { id: 'Midjourney', label: 'Midjourney', icon: MidjourneyLogo },
-  { id: 'DALL-E', label: 'DALL·E', icon: OpenAILogo },
+  { id: 'DALL-E', label: 'DALL·E', icon: DalleLogo },
   { id: 'Claude', label: 'Claude', icon: ClaudeLogo },
   { id: 'Gemini', label: 'Gemini', icon: GeminiLogo },
-  { id: 'Flux', label: 'Flux', icon: FluxLogo },
 ] as const;
 
 // ─── Helpers ─────────────────────────────────────────────────────────
@@ -185,10 +184,43 @@ export const UniversalBar: React.FC = () => {
 
   // Result state
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState('');
+  const [resultPrompt, setResultPrompt] = useState('');
+  const [resultOutput, setResultOutput] = useState('');
+  const [isDirectChat, setIsDirectChat] = useState(false);
+  const [activeTab, setActiveTab] = useState<'prompt' | 'output'>('prompt');
+  const [editedPrompt, setEditedPrompt] = useState('');
   const [resultIntent, setResultIntent] = useState<Intent | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  // Keystroke reactive pulse intensity (accumulating & decaying)
+  const [pulseMultiplier, setPulseMultiplier] = useState(0);
+
+  const triggerPulse = useCallback(() => {
+    setPulseMultiplier(prev => Math.min(prev + 0.22, 1.0)); // Build up intensity, max 1.0
+  }, []);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab', 'Escape', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+      triggerPulse();
+    }
+  }, [triggerPulse]);
+
+  // Decay loop for the dynamic glow
+  useEffect(() => {
+    if (pulseMultiplier <= 0) return;
+    const interval = setInterval(() => {
+      setPulseMultiplier(prev => Math.max(prev - 0.08, 0)); // decay over time
+    }, 40);
+    return () => clearInterval(interval);
+  }, [pulseMultiplier]);
+
+  // Helper to construct alpha colors
+  const getHexWithOpacity = (hex: string, opacity: number): string => {
+    const cleanHex = hex.startsWith('#') ? hex : `#${hex}`;
+    const alpha = Math.round(opacity * 255).toString(16).padStart(2, '0');
+    return `${cleanHex}${alpha}`;
+  };
 
   // Load history on mount
   useEffect(() => { setLocalHistory(getHistory()); }, []);
@@ -217,7 +249,7 @@ export const UniversalBar: React.FC = () => {
 
   // ── Placeholder cycling ──────────────────────────────────────────
   useEffect(() => {
-    if (isLoading || result || isFocused) return;
+    if (isLoading || resultPrompt || isFocused) return;
     const timer = setInterval(() => {
       setPlaceholderVisible(false);
       setTimeout(() => {
@@ -226,7 +258,7 @@ export const UniversalBar: React.FC = () => {
       }, 300);
     }, 3500);
     return () => clearInterval(timer);
-  }, [isLoading, result, isFocused]);
+  }, [isLoading, resultPrompt, isFocused]);
 
   // ── Intent detection ─────────────────────────────────────────────
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -242,13 +274,16 @@ export const UniversalBar: React.FC = () => {
 
     setIsLoading(true);
     setError('');
-    setResult('');
+    setResultPrompt('');
+    setResultOutput('');
+    setEditedPrompt('');
+    setIsDirectChat(false);
     setResultIntent(intent);
     pushHistory(input.trim());
     setLocalHistory(getHistory());
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10_000);
+    const timeoutId = setTimeout(() => controller.abort(), 20_000);
     try {
       const res = await fetch(intent.apiEndpoint, {
         method: 'POST',
@@ -259,9 +294,16 @@ export const UniversalBar: React.FC = () => {
       clearTimeout(timeoutId);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
-      const output = intent.extractResult(data);
-      if (!output) throw new Error('No result returned.');
-      setResult(output);
+      
+      const genPrompt = data.generatedPrompt || '';
+      const dirResponse = data.directResponse || '';
+      const direct = !!data.isDirectChat;
+
+      setResultPrompt(genPrompt);
+      setResultOutput(dirResponse);
+      setEditedPrompt(genPrompt);
+      setIsDirectChat(direct);
+      setActiveTab(direct ? 'output' : 'prompt');
     } catch (err: unknown) {
       clearTimeout(timeoutId);
       if (err instanceof Error && err.name === 'AbortError') {
@@ -274,20 +316,8 @@ export const UniversalBar: React.FC = () => {
     }
   }, [input, intent, isLoading, selectedModel]);
 
-  // ── Copy / Reset ─────────────────────────────────────────────────
-  const handleCopy = useCallback(() => {
-    const onSuccess = () => { setCopied(true); setTimeout(() => setCopied(false), 2000); };
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(result).then(onSuccess).catch(() => {
-        fallbackCopy(result) && onSuccess();
-      });
-    } else {
-      fallbackCopy(result) && onSuccess();
-    }
-  }, [result]);
-
   /** Textarea-based clipboard fallback for non-HTTPS / older browsers */
-  function fallbackCopy(text: string): boolean {
+  const fallbackCopy = useCallback((text: string): boolean => {
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.cssText = 'position:fixed;left:-9999px;opacity:0';
@@ -297,13 +327,76 @@ export const UniversalBar: React.FC = () => {
     try { ok = document.execCommand('copy'); } catch { /* ignore */ }
     document.body.removeChild(ta);
     return ok;
-  }
+  }, []);
 
   const handleReset = useCallback(() => {
-    setResult(''); setError(''); setResultIntent(null);
-    setInput(''); setIntent(DEFAULT_INTENT);
+    setResultPrompt('');
+    setResultOutput('');
+    setEditedPrompt('');
+    setIsDirectChat(false);
+    setActiveTab('prompt');
+    setError('');
+    setResultIntent(null);
+    setInput('');
+    setIntent(DEFAULT_INTENT);
     inputRef.current?.focus();
   }, []);
+
+  // ── Custom execution (Option B) ──────────────────────────────────
+  const handleExecute = useCallback(() => {
+    const prompt = editedPrompt.trim();
+    if (!prompt) return;
+
+    // Auto-copy optimized prompt to clipboard
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(prompt).catch(() => {
+        fallbackCopy(prompt);
+      });
+    } else {
+      fallbackCopy(prompt);
+    }
+
+    // Determine target URL based on selected model
+    const encoded = encodeURIComponent(prompt);
+    let targetUrl = '';
+    
+    switch (selectedModel) {
+      case 'Gemini':
+        targetUrl = `https://gemini.google.com/app?prompt=${encoded}`;
+        break;
+      case 'Claude':
+        targetUrl = `https://claude.ai/new?q=${encoded}`;
+        break;
+      case 'DALL-E':
+      case 'ChatGPT':
+        targetUrl = `https://chatgpt.com/?q=${encoded}`;
+        break;
+      case 'Midjourney':
+        targetUrl = 'https://alpha.midjourney.com/';
+        break;
+      default:
+        targetUrl = `https://chatgpt.com/?q=${encoded}`;
+    }
+
+    // Open target AI tool page in a new window/tab
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
+
+    // Reset bar focus and clear/initialize input to type again
+    handleReset();
+  }, [editedPrompt, selectedModel, handleReset, fallbackCopy]);
+
+  // ── Copy / Reset ─────────────────────────────────────────────────
+  const handleCopy = useCallback(() => {
+    const textToCopy = activeTab === 'prompt' ? editedPrompt : resultOutput;
+    const onSuccess = () => { setCopied(true); setTimeout(() => setCopied(false), 2000); };
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
+        fallbackCopy(textToCopy) && onSuccess();
+      });
+    } else {
+      fallbackCopy(textToCopy) && onSuccess();
+    }
+  }, [activeTab, editedPrompt, resultOutput, fallbackCopy]);
 
   // ── Chip click ───────────────────────────────────────────────────
   const handleChipClick = useCallback((starter: string) => {
@@ -312,7 +405,7 @@ export const UniversalBar: React.FC = () => {
       if (el) el.scrollIntoView({ behavior: 'smooth' });
       return;
     }
-    setResult(''); setError(''); setResultIntent(null);
+    setResultPrompt(''); setResultOutput(''); setEditedPrompt(''); setIsDirectChat(false); setError(''); setResultIntent(null);
     setInput(starter); setIntent(detectIntent(starter));
     inputRef.current?.focus();
   }, []);
@@ -331,16 +424,45 @@ export const UniversalBar: React.FC = () => {
     <div className="w-full max-w-[780px] mx-auto flex flex-col items-center gap-4">
       {/* ── Main bar ───────────────────────────────────────────────── */}
       <form onSubmit={handleSubmit} className="relative w-full">
+        {/* Living glow backing */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${ac}40 0%, ${ac}10 60%, transparent 100%)`,
+            filter: 'blur(20px)',
+          }}
+          initial={{ opacity: 0.15, scale: 0.99 }}
+          animate={isFocused || showPill || isLoading ? {
+            opacity: 0.55 + pulseMultiplier * 0.35,
+            scale: 1.02 + pulseMultiplier * 0.08,
+          } : {
+            opacity: [0.12, 0.24, 0.12],
+            scale: [0.99, 1.01, 0.99]
+          }}
+          transition={pulseMultiplier > 0 ? {
+            type: "spring",
+            stiffness: 300,
+            damping: 15
+          } : {
+            opacity: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+            scale: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+          }}
+        />
         <div
-          className="relative flex items-center w-full h-[56px] md:h-[64px] rounded-2xl px-3 md:px-4 transition-all duration-300"
+          className="relative flex items-center w-full h-[56px] md:h-[64px] rounded-2xl px-3 md:px-4"
           style={{
             background: 'rgba(18, 10, 36, 0.75)',
             backdropFilter: 'blur(30px)',
             WebkitBackdropFilter: 'blur(30px)',
-            border: `1px solid ${isFocused || showPill || isLoading ? `${ac}35` : 'rgba(255,255,255,0.04)'}`,
+            border: `1px solid ${
+              isFocused || showPill || isLoading
+                ? getHexWithOpacity(ac, 0.35 + pulseMultiplier * 0.45)
+                : getHexWithOpacity(ac, 0.15)
+            }`,
             boxShadow: isFocused || showPill || isLoading
-              ? `0 8px 32px ${ac}10, inset 0 0 24px rgba(113, 61, 255, 0.04)`
-              : '0 8px 32px rgba(0,0,0,0.5)',
+              ? `0 0 ${Math.round(20 + pulseMultiplier * 25)}px ${getHexWithOpacity(ac, 0.15 + pulseMultiplier * 0.35)}, inset 0 0 ${Math.round(12 + pulseMultiplier * 8)}px ${getHexWithOpacity(ac, 0.05 + pulseMultiplier * 0.2)}`
+              : `0 8px 32px rgba(0,0,0,0.6), 0 0 15px ${getHexWithOpacity(ac, 0.08)}`,
+            transition: 'border-color 100ms ease-out, box-shadow 100ms ease-out',
           }}
         >
           {/* Model selector */}
@@ -372,11 +494,10 @@ export const UniversalBar: React.FC = () => {
                       key={m.id}
                       type="button"
                       onClick={() => { setSelectedModel(m.id); setModelOpen(false); }}
-                      className={`w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors ${
-                        selectedModel === m.id
-                          ? 'text-white bg-[var(--color-primary)]/15'
-                          : 'text-white/60 hover:text-white hover:bg-white/[0.05]'
-                      }`}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors ${selectedModel === m.id
+                        ? 'text-white bg-[var(--color-primary)]/15'
+                        : 'text-white/60 hover:text-white hover:bg-white/[0.05]'
+                        }`}
                     >
                       {(() => {
                         const ModelIcon = m.icon;
@@ -401,6 +522,7 @@ export const UniversalBar: React.FC = () => {
               type="text"
               value={input}
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               onFocus={() => { setIsFocused(true); if (history.length > 0 && !input) setHistoryOpen(true); }}
               onBlur={() => { setIsFocused(false); setTimeout(() => setHistoryOpen(false), 200); }}
               disabled={isLoading}
@@ -411,8 +533,8 @@ export const UniversalBar: React.FC = () => {
             />
             {/* Animated placeholder */}
             {!input && !isLoading && (
-              <div className="absolute inset-0 flex items-center pointer-events-none" style={{ opacity: placeholderVisible ? 0.35 : 0, transition: 'opacity 300ms' }}>
-                <span className="text-[14px] md:text-[15px] font-medium text-white/40 truncate">{PLACEHOLDERS[placeholderIdx]}</span>
+              <div className="absolute inset-0 flex items-center pointer-events-none" style={{ opacity: placeholderVisible ? 0.85 : 0, transition: 'opacity 300ms' }}>
+                <span className="text-[14px] md:text-[15px] font-medium text-white/70 truncate">{PLACEHOLDERS[placeholderIdx]}</span>
               </div>
             )}
 
@@ -496,7 +618,7 @@ export const UniversalBar: React.FC = () => {
 
       {/* ── Result Panel ───────────────────────────────────────────── */}
       <AnimatePresence mode="wait">
-        {(result || error) && (
+        {(resultPrompt || error) && (
           <motion.div
             initial={{ opacity: 0, y: -8, scale: 0.99 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -525,12 +647,17 @@ export const UniversalBar: React.FC = () => {
                   {error && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20">Error</span>
                   )}
-                  {result && (
-                    <span className="text-[10px] text-white/20 font-medium">{result.split(/\s+/).length} words · {result.length} chars</span>
+                  {!error && (activeTab === 'prompt' ? editedPrompt : resultOutput) && (
+                    <span className="text-[10px] text-white/20 font-medium">
+                      {activeTab === 'prompt'
+                        ? `${editedPrompt.split(/\s+/).length} words · ${editedPrompt.length} chars`
+                        : `${resultOutput.split(/\s+/).length} words · ${resultOutput.length} chars`
+                      }
+                    </span>
                   )}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  {result && (
+                  {!error && (activeTab === 'prompt' ? editedPrompt : resultOutput) && (
                     <button onClick={handleCopy} className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white/[0.04] border border-white/[0.06] text-white/50 hover:bg-white/[0.08] hover:text-white transition-all">
                       {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                       {copied ? 'Copied' : 'Copy'}
@@ -542,12 +669,63 @@ export const UniversalBar: React.FC = () => {
                 </div>
               </div>
 
+              {/* Tabs (Option A & C) */}
+              {!error && !isDirectChat && resultOutput && (
+                <div className="flex border-b border-white/[0.08] mb-4 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('prompt')}
+                    className={`pb-2 text-[12px] md:text-[13px] font-semibold transition-all border-b-2 ${
+                      activeTab === 'prompt'
+                        ? 'text-white border-[var(--color-primary)]'
+                        : 'text-white/40 hover:text-white/70 border-transparent'
+                    }`}
+                  >
+                    ✨ Optimized Prompt
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('output')}
+                    className={`pb-2 text-[12px] md:text-[13px] font-semibold transition-all border-b-2 ${
+                      activeTab === 'output'
+                        ? 'text-white border-[var(--color-primary)]'
+                        : 'text-white/40 hover:text-white/70 border-transparent'
+                    }`}
+                  >
+                    ⚡ Direct Output
+                  </button>
+                </div>
+              )}
+
               {/* Body */}
               {error ? (
                 <p className="text-red-400/80 text-[13px] leading-relaxed">{error}</p>
+              ) : activeTab === 'prompt' && !isDirectChat ? (
+                <div className="flex flex-col gap-3">
+                  <textarea
+                    value={editedPrompt}
+                    onChange={(e) => setEditedPrompt(e.target.value)}
+                    className="w-full min-h-[140px] max-h-[350px] bg-white/[0.02] border border-white/[0.06] rounded-xl p-3 text-white/90 text-[13px] md:text-[14px] leading-[1.6] outline-none focus:border-white/[0.12] transition-all scrollbar-hide resize-y font-medium"
+                    placeholder="Edit your prompt here..."
+                  />
+                  {intent.mode !== 'image' && (
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={handleExecute}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold text-white hover:scale-105 active:scale-95 transition-all"
+                        style={{
+                          background: `linear-gradient(135deg, ${ac}, ${ac}cc)`,
+                        }}
+                      >
+                        <Zap className="w-3.5 h-3.5" /> Run Prompt
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <pre className="text-white/85 text-[13px] md:text-[14px] leading-[1.8] font-[inherit] whitespace-pre-wrap break-words max-h-[350px] overflow-y-auto scrollbar-hide pr-4">
-                  {result}
+                  {resultOutput || resultPrompt}
                 </pre>
               )}
             </div>
@@ -556,7 +734,7 @@ export const UniversalBar: React.FC = () => {
       </AnimatePresence>
 
       {/* ── Quick actions (hidden during result) ───────────────────── */}
-      {!result && !error && !isLoading && (
+      {!resultPrompt && !error && !isLoading && (
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide w-full pb-1 px-1">
           {QUICK_ACTIONS.map((a) => {
             const Icon = a.icon;

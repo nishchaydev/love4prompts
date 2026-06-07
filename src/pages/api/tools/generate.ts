@@ -4,14 +4,6 @@ import { callGroq } from '../../../lib/groq';
 const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
 const USE_CASES = ['Image Generation', 'Text', 'Code', 'Marketing', 'Study'] as const;
 
-const SYSTEM_PROMPTS: Record<string, string> = {
-  'Image Generation': `You are an expert AI image prompt engineer. The user will give you a plain English description of what they want to create. Write a detailed, ready-to-use image generation prompt optimized for TARGET_TOOL. Include style, mood, lighting, composition, and quality modifiers. Return only the prompt text, nothing else.`,
-  'Text': `You are an expert prompt engineer for text/chat AI models. The user will describe what they need. Write a detailed, effective prompt optimized for TARGET_TOOL that will get the best results. Include clear instructions, context, and format requirements. Return only the prompt text, nothing else.`,
-  'Code': `You are an expert prompt engineer for coding tasks. The user will describe a coding task or problem. Write a precise, detailed prompt optimized for TARGET_TOOL that will produce high-quality code output. Include language, framework, constraints, and expected output format. Return only the prompt text, nothing else.`,
-  'Marketing': `You are an expert prompt engineer for marketing and copywriting. The user will describe a marketing need. Write a comprehensive prompt optimized for TARGET_TOOL that will generate effective marketing copy. Include tone, audience, format, and key messaging requirements. Return only the prompt text, nothing else.`,
-  'Study': `You are an expert prompt engineer for educational content. The user will describe a study or learning topic. Write a detailed prompt optimized for TARGET_TOOL that will create comprehensive study material. Include depth, format, examples, and learning objectives. Return only the prompt text, nothing else.`,
-};
-
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
@@ -45,14 +37,76 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const systemPrompt = SYSTEM_PROMPTS[useCase].replace(/TARGET_TOOL/g, targetTool);
+    // First LLM call: Determine mode (direct vs template prompt) and generate content
+    const systemPrompt = `You are a prompt engineering expert and assistant. Analyze the user's input: "${description.trim()}".
+You MUST respond with a valid JSON object in exactly this format:
+{
+  "isDirectChat": boolean,
+  "output": "string"
+}
 
-    const result = await callGroq({
+Guidelines:
+1. "isDirectChat":
+   - Set to true if the user's input is a direct conversational message, greeting, simple question, or direct request (e.g. "hi", "how are you", "who is Albert Einstein?", "write a poem about love", "make a python script to add numbers").
+   - Set to false if the user is describing a prompt they want to create or optimize (e.g. "enhance my prompt for marketing", "make a prompt for coding", "convert this prompt").
+
+2. "output":
+   - If "isDirectChat" is true: Write the direct, complete answer/response to the user's request.
+   - If "isDirectChat" is false: Write a detailed, ready-to-use prompt optimized for ${targetTool} (usecase: ${useCase}) that will get the best results. Include clear instructions, context, and format requirements.
+
+Return ONLY the raw JSON object. Do not include markdown code block wrappers (like \`\`\`json), explanations, or preambles outside the JSON.`;
+
+    const firstResult = await callGroq({
       systemPrompt,
       userMessage: description.trim(),
     });
 
-    return new Response(JSON.stringify({ generatedPrompt: result.content }), {
+    let isDirectChat = false;
+    let generatedPrompt = '';
+    let directResponse = '';
+
+    try {
+      let cleaned = firstResult.content.trim();
+      if (cleaned.startsWith('```json')) {
+        cleaned = cleaned.substring(7);
+      } else if (cleaned.startsWith('```')) {
+        cleaned = cleaned.substring(3);
+      }
+      if (cleaned.endsWith('```')) {
+        cleaned = cleaned.substring(0, cleaned.length - 3);
+      }
+      cleaned = cleaned.trim();
+
+      const parsed = JSON.parse(cleaned);
+      isDirectChat = typeof parsed.isDirectChat === 'boolean' ? parsed.isDirectChat : false;
+      generatedPrompt = parsed.output || '';
+    } catch (e) {
+      console.warn('JSON parse failed in generate.ts, using fallback:', e);
+      isDirectChat = false;
+      generatedPrompt = firstResult.content;
+    }
+
+    const isImageGen = useCase === 'Image Generation';
+
+    // Second LLM call: If it's prompt engineering (not direct chat) AND not an image generator prompt, execute it
+    if (!isDirectChat && !isImageGen && generatedPrompt.trim().length > 0) {
+      const executionSystemPrompt = `You are a helpful and intelligent AI assistant. Execute the user's prompt optimized for ${targetTool}. Provide only the direct final answer, output, or content requested. Do not include any meta-commentary, introductory phrases (like "Sure, here is the..."), or conversational preambles unless specifically requested by the prompt. Just output the content.`;
+      
+      const secondResult = await callGroq({
+        systemPrompt: executionSystemPrompt,
+        userMessage: generatedPrompt,
+      });
+      directResponse = secondResult.content;
+    } else {
+      // For direct chat or image gen, the prompt itself is the final response
+      directResponse = generatedPrompt;
+    }
+
+    return new Response(JSON.stringify({
+      generatedPrompt,
+      directResponse,
+      isDirectChat
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -64,3 +118,4 @@ export const POST: APIRoute = async ({ request }) => {
     });
   }
 };
+

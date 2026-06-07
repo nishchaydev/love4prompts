@@ -17,14 +17,24 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
   const infinitePrompts = useMemo(() => {
     if (prompts.length === 0) return [];
     const repeated: Prompt[] = [];
-    while (repeated.length < 200) {
+    let cycleCount = 0;
+    while (repeated.length < 2000) {
+      // Shift the prompts list on each cycle to mix the repeating pattern
+      const shiftedPrompts = [...prompts];
+      const shiftAmount = cycleCount % prompts.length;
+      if (shiftAmount > 0) {
+        const chunk = shiftedPrompts.splice(0, shiftAmount);
+        shiftedPrompts.push(...chunk);
+      }
+
       repeated.push(
-        ...prompts.map((p, i) => ({
+        ...shiftedPrompts.map((p, i) => ({
           ...p,
           realId: p.id,
           id: `${p.id}__dup${repeated.length + i}`,
         })),
       );
+      cycleCount++;
     }
     return repeated;
   }, [prompts]);
@@ -124,12 +134,13 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
     <>
       {/* Masonry grid */}
       <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-2">
-        {displayedPrompts.map((prompt) => (
+        {displayedPrompts.map((prompt, idx) => (
           <div key={prompt.id} className="break-inside-avoid">
             <PromptCard
               prompt={prompt}
               isSaved={savedIds.has(prompt.id)}
               onSave={handleSave}
+              index={idx}
             />
           </div>
         ))}

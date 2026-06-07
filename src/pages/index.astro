@@ -9,6 +9,8 @@ import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { supabase } from '../lib/supabase';
 import type { Prompt } from '../components/library/PromptCard';
 import { mockPrompts } from '../lib/mock-data';
+import { TrustedBy } from '../components/marketing/TrustedBy';
+import { DeployShowcase } from '../components/marketing/DeployShowcase';
 
 const { data: dbPrompts, error } = await supabase
   .from('prompts')
@@ -68,6 +70,9 @@ const description = "One search bar. Six AI tools. Enhance, generate, translate,
 
     {/* ═══ FEATURES ═════════════════════════════════════════════ */}
     <FeaturesGrid client:visible />
+
+    {/* ═══ DEPLOY SHOWCASE ══════════════════════════════════════ */}
+    <DeployShowcase client:visible />
 
     {/* ═══ HOW IT WORKS ═════════════════════════════════════════ */}
     <HowItWorks client:visible />

@@ -4,6 +4,28 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import type { Prompt } from '../library/PromptCard';
 
+const getOptimizedImageUrlDetail = (url: string | null): string => {
+  if (!url) return '';
+  if (url.includes('images.unsplash.com')) {
+    let optimized = url;
+    if (optimized.includes('w=')) {
+      optimized = optimized.replace(/w=\d+/, 'w=800');
+    } else {
+      optimized += '&w=800';
+    }
+    if (optimized.includes('q=')) {
+      optimized = optimized.replace(/q=\d+/, 'q=75');
+    } else {
+      optimized += '&q=75';
+    }
+    if (!optimized.includes('auto=')) {
+      optimized += '&auto=format';
+    }
+    return optimized;
+  }
+  return url;
+};
+
 interface PromptDetailViewProps {
   prompt: Prompt;
   initialSaved?: boolean;
@@ -83,9 +105,11 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
       <div className="w-full relative rounded-2xl overflow-hidden bg-[var(--color-background-card)] border border-[var(--color-border)]">
         {prompt.image_url ? (
           <img 
-            src={prompt.image_url} 
+            src={getOptimizedImageUrlDetail(prompt.image_url)} 
             alt={prompt.title} 
             className="w-full h-auto object-cover"
+            loading="eager"
+            {...({ fetchPriority: "high" } as any)}
           />
         ) : (
           <div className="w-full aspect-square flex items-center justify-center">

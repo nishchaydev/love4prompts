@@ -10,11 +10,11 @@ import { supabase } from '../../lib/supabase';
 import { Avatar } from '../ui/Avatar';
 
 const TOOLS = [
-  { label: 'Prompt Enhancer', href: '/tools/prompt-enhancer', icon: Wand2 },
-  { label: 'Prompt Maker', href: '/tools/prompt-maker', icon: Sparkles },
-  { label: 'Prompt Translator', href: '/tools/prompt-translator', icon: ArrowRightLeft },
-  { label: 'Image to Prompt', href: '/tools/image-to-prompt', icon: Image },
-  { label: 'Prompt to Image', href: '/tools/prompt-to-image', icon: Palette },
+  { label: 'Prompt Enhancer', href: '/tools/prompt-enhancer', icon: Wand2, desc: 'Optimize & polish prompts for all models' },
+  { label: 'Prompt Maker', href: '/tools/prompt-maker', icon: Sparkles, desc: 'Generate high-quality custom prompts' },
+  { label: 'Prompt Translator', href: '/tools/prompt-translator', icon: ArrowRightLeft, desc: 'Convert prompts between platforms' },
+  { label: 'Image to Prompt', href: '/tools/image-to-prompt', icon: Image, desc: 'Extract descriptive prompts from images' },
+  { label: 'Prompt to Image', href: '/tools/prompt-to-image', icon: Palette, desc: 'Generate visual art from text' },
 ];
 
 export const Header: React.FC = () => {
@@ -43,7 +43,14 @@ export const Header: React.FC = () => {
       if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) setToolsDropdownOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    
+    const handleOpenAuth = () => setIsAuthModalOpen(true);
+    window.addEventListener('open-auth-modal', handleOpenAuth);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      window.removeEventListener('open-auth-modal', handleOpenAuth);
+    };
   }, []);
 
   const handleSignOut = async () => {
@@ -58,18 +65,20 @@ export const Header: React.FC = () => {
       <header
         className={`sticky top-0 z-50 w-full transition-all duration-300 ${
           scrolled
-            ? 'bg-[#0A0118]/85 backdrop-blur-md border-b border-white/[0.04]'
+            ? 'bg-[#0A0118]/80 backdrop-blur-xl border-b border-white/[0.05] shadow-[0_4px_30px_rgba(0,0,0,0.4)]'
             : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div className="container mx-auto px-4 lg:px-8 h-[var(--header-height)] flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2.5 no-underline group">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] flex items-center justify-center shadow-[0_0_15px_var(--color-primary-glow)] transition-all duration-300 group-hover:scale-105">
-              <span className="text-white text-xs font-black tracking-tighter">L4</span>
-            </div>
-            <span className="text-[17px] font-bold text-white tracking-[-0.03em] flex items-center">
-              Love<span className="text-[var(--color-primary)]">4</span>Prompts
+            <img 
+              src="/logo-icon.png" 
+              alt="Love4Prompts Logo" 
+              className="h-10 md:h-11 w-auto object-contain transition-all duration-300 group-hover:scale-105" 
+            />
+            <span className="text-xl md:text-2xl font-black font-display tracking-tight text-white transition-colors">
+              Love4<span className="text-[var(--color-primary)]">Prompts</span>
             </span>
           </a>
 
@@ -79,26 +88,33 @@ export const Header: React.FC = () => {
             <div ref={toolsRef} className="relative">
               <button
                 onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all duration-150 ${
-                  toolsDropdownOpen ? 'bg-white/[0.05] text-white' : 'text-white/40 hover:text-white/70'
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all duration-200 ${
+                  toolsDropdownOpen 
+                    ? 'bg-white/[0.08] text-white border border-white/[0.08]' 
+                    : 'text-white/50 hover:text-white hover:bg-white/[0.04] border border-transparent'
                 }`}
               >
                 Tools
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-150 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${toolsDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {toolsDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-56 bg-[#120A24] border border-white/[0.04] rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.8)] overflow-hidden py-1.5 z-50">
+                <div className="absolute left-0 mt-3 w-80 bg-[#120A24]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden py-2 z-50 flex flex-col">
                   {TOOLS.map((tool) => {
                     const Icon = tool.icon;
                     return (
                       <a
                         key={tool.href}
                         href={tool.href}
-                        className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline"
+                        className="flex items-start gap-3.5 px-4 py-3 text-left hover:bg-white/[0.03] transition-all no-underline group"
                       >
-                        <Icon className="w-4 h-4 text-white/20" />
-                        {tool.label}
+                        <div className="mt-0.5 p-1.5 rounded-lg bg-white/[0.03] group-hover:bg-[var(--color-primary)]/10 text-white/40 group-hover:text-[var(--color-primary)] transition-all">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[13px] font-bold text-white/70 group-hover:text-white transition-colors">{tool.label}</span>
+                          <span className="text-[11px] text-white/30 group-hover:text-white/45 transition-colors mt-0.5 leading-normal">{tool.desc}</span>
+                        </div>
                       </a>
                     );
                   })}
@@ -106,10 +122,10 @@ export const Header: React.FC = () => {
               )}
             </div>
 
-            <a href="/#library" className="px-3.5 py-1.5 rounded-full text-[13px] font-medium text-white/40 hover:text-white/70 transition-colors no-underline">
+            <a href="/#library" className="px-4 py-2 rounded-full text-[13px] font-semibold text-white/50 hover:text-white hover:bg-white/[0.04] transition-all no-underline">
               Library
             </a>
-            <a href="/pricing" className="px-3.5 py-1.5 rounded-full text-[13px] font-medium text-white/40 hover:text-white/70 transition-colors no-underline">
+            <a href="/pricing" className="px-4 py-2 rounded-full text-[13px] font-semibold text-white/50 hover:text-white hover:bg-white/[0.04] transition-all no-underline">
               Pro
             </a>
           </nav>
@@ -134,7 +150,7 @@ export const Header: React.FC = () => {
                 </button>
 
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-[#120A24] border border-white/[0.04] rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.8)] py-1.5 z-50">
+                  <div className="absolute right-0 mt-3 w-52 bg-[#120A24]/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] py-2 z-50">
                     <div className="px-4 py-2.5 border-b border-white/[0.04]">
                       <p className="text-[13px] font-semibold text-white truncate">{session.user.user_metadata?.user_name || session.user.email}</p>
                       <p className="text-[11px] text-white/30 mt-0.5 font-mono">Creator Account</p>
@@ -154,7 +170,7 @@ export const Header: React.FC = () => {
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--color-primary)] text-white text-[13px] font-bold hover:bg-[var(--color-primary-hover)] transition-all duration-200 shadow-[0_0_15px_var(--color-primary-glow)] active:scale-95"
+                className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent-cerise)] text-white text-[13px] font-bold hover:brightness-110 active:scale-95 transition-all duration-250 shadow-[0_4px_20px_var(--color-primary-glow)]"
               >
                 Sign In
               </button>
@@ -164,22 +180,26 @@ export const Header: React.FC = () => {
 
         {/* Mobile Nav */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-white/[0.04] bg-[#120A24]/95 backdrop-blur-md px-4 py-3">
-            <nav className="flex flex-col gap-0.5">
+          <div className="md:hidden border-t border-white/[0.04] bg-[#120A24]/95 backdrop-blur-md px-4 py-4">
+            <nav className="flex flex-col gap-1">
               <span className="px-3 py-1.5 text-[10px] font-bold text-white/20 uppercase tracking-widest font-mono">Tools</span>
               {TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
                   <a key={tool.href} href={tool.href} onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline animate-fade-in-up"
                   >
-                    <Icon className="w-4 h-4 text-white/30" /> {tool.label}
+                    <Icon className="w-4 h-4 text-white/30" />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-white/80">{tool.label}</span>
+                      <span className="text-[10px] text-white/30 mt-0.5">{tool.desc}</span>
+                    </div>
                   </a>
                 );
               })}
-              <div className="h-px bg-white/[0.04] my-1" />
-              <a href="/#library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
-              <a href="/pricing" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Pro</a>
+              <div className="h-px bg-white/[0.04] my-2" />
+              <a href="/#library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
+              <a href="/pricing" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Pro</a>
             </nav>
           </div>
         )}

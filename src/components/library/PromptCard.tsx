@@ -28,13 +28,39 @@ interface PromptCardProps {
   prompt: Prompt;
   isSaved?: boolean;
   onSave?: (id: string) => void;
+  index?: number;
 }
 
-export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false, onSave }) => {
+const getOptimizedImageUrl = (url: string | null): string => {
+  if (!url) return '';
+  if (url.includes('images.unsplash.com')) {
+    let optimized = url;
+    if (optimized.includes('w=')) {
+      optimized = optimized.replace(/w=\d+/, 'w=400');
+    } else {
+      optimized += '&w=400';
+    }
+    if (optimized.includes('q=')) {
+      optimized = optimized.replace(/q=\d+/, 'q=65');
+    } else {
+      optimized += '&q=65';
+    }
+    if (!optimized.includes('auto=')) {
+      optimized += '&auto=format';
+    }
+    return optimized;
+  }
+  return url;
+};
+
+export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false, onSave, index }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const optimizedUrl = getOptimizedImageUrl(prompt.image_url);
+  const isAboveFold = index !== undefined && index < 6;
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,12 +89,13 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
               </div>
             )}
             <img 
-              src={prompt.image_url} 
+              src={optimizedUrl} 
               alt={prompt.title} 
               className={`w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
                 imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
               }`}
-              loading="lazy"
+              loading={isAboveFold ? "eager" : "lazy"}
+              {...(isAboveFold ? { fetchPriority: "high" } as any : {})}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
