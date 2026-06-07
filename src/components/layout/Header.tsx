@@ -7,7 +7,6 @@ import {
 import { AuthModal } from '../auth/AuthModal';
 import { supabase } from '../../lib/supabase';
 import { Avatar } from '../ui/Avatar';
-import { TrendingDropdown } from './TrendingDropdown';
 
 // ─── Tools dropdown items ────────────────────────────────────────────
 const TOOLS = [
@@ -132,9 +131,6 @@ export const Header: React.FC = () => {
             >
               Library
             </a>
-
-            {/* Trending */}
-            <TrendingDropdown />
 
             {/* Pro */}
             <a
