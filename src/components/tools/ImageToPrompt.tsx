@@ -50,12 +50,8 @@ export const ImageToPrompt: React.FC = () => {
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [remainingUses, setRemainingUses] = useState(5);
+  const [remainingUses, setRemainingUses] = useState(() => getRemainingUses(TOOL_SLUG));
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setRemainingUses(getRemainingUses(TOOL_SLUG));
-  }, []);
 
   const processFile = useCallback(async (file: File) => {
     if (!ACCEPTED_TYPES.includes(file.type)) {

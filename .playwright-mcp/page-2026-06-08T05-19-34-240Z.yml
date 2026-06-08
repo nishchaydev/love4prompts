@@ -1,0 +1,722 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "Love4Prompts Logo Love4Prompts" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Love4Prompts Logo" [ref=e7]
+          - generic [ref=e8]: Love4Prompts
+        - navigation [ref=e9]:
+          - link "Library" [ref=e10] [cursor=pointer]:
+            - /url: /#library
+          - link "Pro" [ref=e11] [cursor=pointer]:
+            - /url: /pricing
+        - button "Sign In" [ref=e13] [cursor=pointer]
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - img [ref=e18]
+        - generic [ref=e21]: Trending
+      - generic [ref=e24]:
+        - link "Ghibli Portrait Prompts" [ref=e25] [cursor=pointer]:
+          - /url: "#"
+        - link "Cyberpunk Cityscapes" [ref=e26] [cursor=pointer]:
+          - /url: "#"
+        - link "Prompt Enhancer → Midjourney" [ref=e27] [cursor=pointer]:
+          - /url: "#"
+        - link "3D Product Mockups" [ref=e28] [cursor=pointer]:
+          - /url: "#"
+        - link "Minimalist Logo Design" [ref=e29] [cursor=pointer]:
+          - /url: "#"
+        - link "AI Headshot Generator" [ref=e30] [cursor=pointer]:
+          - /url: "#"
+        - link "Ghibli Portrait Prompts" [ref=e31] [cursor=pointer]:
+          - /url: "#"
+        - link "Cyberpunk Cityscapes" [ref=e32] [cursor=pointer]:
+          - /url: "#"
+        - link "Prompt Enhancer → Midjourney" [ref=e33] [cursor=pointer]:
+          - /url: "#"
+        - link "3D Product Mockups" [ref=e34] [cursor=pointer]:
+          - /url: "#"
+        - link "Minimalist Logo Design" [ref=e35] [cursor=pointer]:
+          - /url: "#"
+        - link "AI Headshot Generator" [ref=e36] [cursor=pointer]:
+          - /url: "#"
+        - link "Ghibli Portrait Prompts" [ref=e37] [cursor=pointer]:
+          - /url: "#"
+        - link "Cyberpunk Cityscapes" [ref=e38] [cursor=pointer]:
+          - /url: "#"
+        - link "Prompt Enhancer → Midjourney" [ref=e39] [cursor=pointer]:
+          - /url: "#"
+        - link "3D Product Mockups" [ref=e40] [cursor=pointer]:
+          - /url: "#"
+        - link "Minimalist Logo Design" [ref=e41] [cursor=pointer]:
+          - /url: "#"
+        - link "AI Headshot Generator" [ref=e42] [cursor=pointer]:
+          - /url: "#"
+    - main [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e46]:
+          - paragraph [ref=e47]: Universal Prompt Toolkit
+          - heading "Write better prompts. Ship better results." [level=1] [ref=e48]:
+            - text: Write better prompts.
+            - text: Ship better results.
+          - paragraph [ref=e49]: One console bar that enhances, generates, and translates prompts across every major AI model. Just type.
+          - generic [ref=e52]:
+            - generic [ref=e54]:
+              - button "ChatGPT" [ref=e56]:
+                - img [ref=e57]
+                - generic [ref=e59]: ChatGPT
+                - img [ref=e60]
+              - generic [ref=e62]: for
+              - generic [ref=e64]:
+                - textbox "Universal prompt bar" [ref=e65]:
+                  - /placeholder: A cinematic portrait of a samurai in rain...
+                - generic:
+                  - generic: A cinematic portrait of a samurai in rain...
+              - generic [ref=e66]:
+                - generic [ref=e67]:
+                  - img [ref=e68]
+                  - text: K
+                - button "Execute" [disabled] [ref=e70]:
+                  - img [ref=e71]
+            - generic [ref=e73]:
+              - button "Image Prompt" [ref=e74]:
+                - img [ref=e75]
+                - text: Image Prompt
+              - button "Enhance" [ref=e79]:
+                - img [ref=e80]
+                - text: Enhance
+              - button "LinkedIn Post" [ref=e83]:
+                - img [ref=e84]
+                - text: LinkedIn Post
+              - button "Translate" [ref=e87]:
+                - img [ref=e88]
+                - text: Translate
+              - button "System Prompt" [ref=e91]:
+                - img [ref=e92]
+                - text: System Prompt
+              - button "Library" [ref=e96]:
+                - img [ref=e97]
+                - text: Library
+          - generic [ref=e100]:
+            - generic [ref=e101]: 6 tools
+            - generic [ref=e103]: Free
+            - generic [ref=e105]: No signup
+            - generic [ref=e107]: Works with 6+ models
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - heading "Get 5 prompt ideas for your niche, every Monday. Free." [level=3] [ref=e114]
+            - generic [ref=e115]:
+              - textbox "Enter your email" [ref=e116]
+              - button "Send me prompts" [ref=e117] [cursor=pointer]
+          - generic [ref=e119]: No spam. Unsubscribe anytime.
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - paragraph [ref=e123]: Interactive Console Suite
+            - heading "Everything you need to prompt better." [level=2] [ref=e124]
+            - paragraph [ref=e125]: Choose from our custom tailored tool workflow suite, designed specifically for rapid generation and refinement.
+          - generic [ref=e126]:
+            - link "Prompt Enhancer Make any prompt sharper and more effective USE TOOL" [ref=e127] [cursor=pointer]:
+              - /url: /tools/prompt-enhancer
+              - generic [ref=e128]:
+                - img [ref=e130]
+                - generic [ref=e133]:
+                  - heading "Prompt Enhancer" [level=3] [ref=e134]
+                  - paragraph [ref=e135]: Make any prompt sharper and more effective
+              - generic [ref=e136]:
+                - generic [ref=e137]: USE TOOL
+                - img [ref=e138]
+            - link "Prompt Maker Generate prompts from a simple idea USE TOOL" [ref=e141] [cursor=pointer]:
+              - /url: /tools/prompt-maker
+              - generic [ref=e142]:
+                - img [ref=e144]
+                - generic [ref=e147]:
+                  - heading "Prompt Maker" [level=3] [ref=e148]
+                  - paragraph [ref=e149]: Generate prompts from a simple idea
+              - generic [ref=e150]:
+                - generic [ref=e151]: USE TOOL
+                - img [ref=e152]
+            - link "Prompt Translator Convert prompts between AI models USE TOOL" [ref=e155] [cursor=pointer]:
+              - /url: /tools/prompt-translator
+              - generic [ref=e156]:
+                - img [ref=e158]
+                - generic [ref=e161]:
+                  - heading "Prompt Translator" [level=3] [ref=e162]
+                  - paragraph [ref=e163]: Convert prompts between AI models
+              - generic [ref=e164]:
+                - generic [ref=e165]: USE TOOL
+                - img [ref=e166]
+            - link "Image to Prompt Reverse-engineer any image into a prompt USE TOOL" [ref=e169] [cursor=pointer]:
+              - /url: /tools/image-to-prompt
+              - generic [ref=e170]:
+                - img [ref=e172]
+                - generic [ref=e176]:
+                  - heading "Image to Prompt" [level=3] [ref=e177]
+                  - paragraph [ref=e178]: Reverse-engineer any image into a prompt
+              - generic [ref=e179]:
+                - generic [ref=e180]: USE TOOL
+                - img [ref=e181]
+            - link "Prompt to Image Craft perfect Midjourney and Flux prompts USE TOOL" [ref=e184] [cursor=pointer]:
+              - /url: /tools/prompt-to-image
+              - generic [ref=e185]:
+                - img [ref=e187]
+                - generic [ref=e190]:
+                  - heading "Prompt to Image" [level=3] [ref=e191]
+                  - paragraph [ref=e192]: Craft perfect Midjourney and Flux prompts
+              - generic [ref=e193]:
+                - generic [ref=e194]: USE TOOL
+                - img [ref=e195]
+            - link "LinkedIn Post Write posts that get real engagement USE TOOL" [ref=e198] [cursor=pointer]:
+              - /url: /linkedin-post-generator
+              - generic [ref=e199]:
+                - img [ref=e201]
+                - generic [ref=e205]:
+                  - heading "LinkedIn Post" [level=3] [ref=e206]
+                  - paragraph [ref=e207]: Write posts that get real engagement
+              - generic [ref=e208]:
+                - generic [ref=e209]: USE TOOL
+                - img [ref=e210]
+            - link "Instagram Caption Captions that stop the scroll USE TOOL" [ref=e213] [cursor=pointer]:
+              - /url: /instagram-caption-generator
+              - generic [ref=e214]:
+                - img [ref=e216]
+                - generic [ref=e219]:
+                  - heading "Instagram Caption" [level=3] [ref=e220]
+                  - paragraph [ref=e221]: Captions that stop the scroll
+              - generic [ref=e222]:
+                - generic [ref=e223]: USE TOOL
+                - img [ref=e224]
+            - link "Coding Prompt Get better code from any AI model USE TOOL" [ref=e227] [cursor=pointer]:
+              - /url: /coding-prompt-generator
+              - generic [ref=e228]:
+                - img [ref=e230]
+                - generic [ref=e234]:
+                  - heading "Coding Prompt" [level=3] [ref=e235]
+                  - paragraph [ref=e236]: Get better code from any AI model
+              - generic [ref=e237]:
+                - generic [ref=e238]: USE TOOL
+                - img [ref=e239]
+        - generic [ref=e244]:
+          - generic [ref=e245]:
+            - paragraph [ref=e246]: Interactive Showcase
+            - heading "Designed for impact. Built for precision." [level=2] [ref=e247]:
+              - text: Designed for impact.
+              - text: Built for precision.
+          - generic [ref=e248]:
+            - generic [ref=e250]:
+              - generic [ref=e251]:
+                - img [ref=e253]
+                - generic [ref=e256]:
+                  - heading "Active Prompt Optimizer" [level=3] [ref=e257]
+                  - paragraph [ref=e258]: Watch plain text transform to production-ready prompts
+              - generic [ref=e259]:
+                - generic [ref=e260]:
+                  - generic [ref=e261]:
+                    - generic [ref=e262]: User Input
+                    - textbox "Type a basic prompt..." [ref=e263]: a samurai portrait
+                  - button "Optimize Prompt" [ref=e264] [cursor=pointer]:
+                    - img [ref=e265]
+                    - text: Optimize Prompt
+                - generic [ref=e268]:
+                  - generic [ref=e269]: Optimized Output
+                  - paragraph [ref=e270]: Click Optimize to see result...
+            - generic [ref=e271]:
+              - generic [ref=e272]:
+                - generic [ref=e273]:
+                  - img [ref=e275]
+                  - generic [ref=e278]:
+                    - heading "Impact & Analytics" [level=3] [ref=e279]
+                    - paragraph [ref=e280]: Interactive performance metrics
+                - generic [ref=e281]:
+                  - generic [ref=e282]:
+                    - generic [ref=e283]: Visibility Index
+                    - generic [ref=e284]: 72%
+                  - slider [ref=e285] [cursor=pointer]: "72"
+              - paragraph [ref=e287]: Drag the visibility index to forecast the quality and search rank score of your generated prompt outputs.
+            - generic [ref=e288]:
+              - generic [ref=e289]:
+                - generic [ref=e290]:
+                  - img [ref=e292]
+                  - heading "Intelligent LLM & Image Router" [level=3] [ref=e295]
+                - paragraph [ref=e296]: One console input automatically routes optimized configurations to the appropriate target. Hover over any target to preview routing channel pathways.
+                - generic [ref=e297]:
+                  - generic [ref=e298]:
+                    - img [ref=e299]
+                    - generic [ref=e301]: Automatic Target Selection
+                  - generic [ref=e302]:
+                    - img [ref=e303]
+                    - generic [ref=e305]: Dynamic Formatting Conversion
+                  - generic [ref=e306]:
+                    - img [ref=e307]
+                    - generic [ref=e309]: API & Console Ready
+                  - generic [ref=e310]:
+                    - img [ref=e311]
+                    - generic [ref=e313]: Multi-Model Syncing
+              - generic [ref=e314]:
+                - generic [ref=e316]: L4
+                - generic [ref=e317] [cursor=pointer]:
+                  - img [ref=e319]
+                  - generic [ref=e321]: ChatGPT
+                - generic [ref=e322] [cursor=pointer]:
+                  - img [ref=e324]
+                  - generic [ref=e326]: Midjourney
+                - generic [ref=e327] [cursor=pointer]:
+                  - img [ref=e329]
+                  - generic [ref=e331]: Claude
+                - generic [ref=e332] [cursor=pointer]:
+                  - img [ref=e334]
+                  - generic [ref=e336]: Gemini
+                - generic [ref=e337] [cursor=pointer]:
+                  - img [ref=e339]
+                  - generic [ref=e341]: DALL-E
+        - generic [ref=e344]:
+          - generic [ref=e345]:
+            - paragraph [ref=e346]: Process Channel
+            - heading "Optimized in three phases." [level=2] [ref=e347]
+          - generic [ref=e348]:
+            - generic [ref=e349]:
+              - generic [ref=e350]: 01 / INPUT
+              - heading "Write Intent" [level=3] [ref=e351]
+              - paragraph [ref=e352]: Describe your idea in simple keywords or draft instructions.
+            - generic [ref=e353]:
+              - generic [ref=e354]: 02 / ANALYZE
+              - heading "Smart Detection" [level=3] [ref=e355]
+              - paragraph [ref=e356]: The system instantly parses intent and detects the optimal action.
+            - generic [ref=e357]:
+              - generic [ref=e358]: 03 / OUTPUT
+              - heading "Production Ready" [level=3] [ref=e359]
+              - paragraph [ref=e360]: Get structured, high-fidelity prompt parameters formatted for your model.
+        - generic [ref=e362]:
+          - generic [ref=e363]:
+            - paragraph [ref=e364]: Feedback
+            - heading "Built for creators and teams" [level=2] [ref=e365]
+            - paragraph [ref=e366]: Powering workflows from solo creators to full agencies.
+          - generic [ref=e367]:
+            - generic [ref=e369]:
+              - generic [ref=e370]:
+                - img [ref=e371]
+                - img [ref=e373]
+                - img [ref=e375]
+                - img [ref=e377]
+                - img [ref=e379]
+              - paragraph [ref=e381]: "\"I type what I need, it figures out the tool. Saved me hours every week. The prompt enhancer alone 10x'd my Midjourney outputs.\""
+              - generic [ref=e382]:
+                - img "Sarah Jenkins" [ref=e383]
+                - generic [ref=e384]:
+                  - heading "Sarah Jenkins" [level=4] [ref=e385]
+                  - paragraph [ref=e386]: Digital Creator · 150k followers
+            - generic [ref=e388]:
+              - generic [ref=e389]:
+                - img [ref=e390]
+                - img [ref=e392]
+                - img [ref=e394]
+                - img [ref=e396]
+                - img [ref=e398]
+              - paragraph [ref=e400]: "\"The universal bar feels like magic. I write \"optimize my system prompt\" and it just works. No clicking through menus. One place for everything.\""
+              - generic [ref=e401]:
+                - img "Marcus Chen" [ref=e402]
+                - generic [ref=e403]:
+                  - heading "Marcus Chen" [level=4] [ref=e404]
+                  - paragraph [ref=e405]: AI Developer
+            - generic [ref=e407]:
+              - generic [ref=e408]:
+                - img [ref=e409]
+                - img [ref=e411]
+                - img [ref=e413]
+                - img [ref=e415]
+                - img [ref=e417]
+              - paragraph [ref=e419]: "\"Our team generates prompts for 6 different AI tools daily. Having one bar that translates between ChatGPT, Midjourney, and Claude saves us real money.\""
+              - generic [ref=e420]:
+                - img "Elena Rodriguez" [ref=e421]
+                - generic [ref=e422]:
+                  - heading "Elena Rodriguez" [level=4] [ref=e423]
+                  - paragraph [ref=e424]: Marketing Agency Lead
+        - generic [ref=e425]:
+          - generic [ref=e428]:
+            - paragraph [ref=e429]: Explore
+            - heading "Prompt Library" [level=2] [ref=e430]
+            - paragraph [ref=e431]: Curated prompts across all categories. Copy any. Use instantly.
+          - generic [ref=e434]:
+            - generic [ref=e437]:
+              - button "All" [ref=e438]:
+                - img [ref=e439]
+                - text: All
+              - button "Cinematic" [ref=e441]:
+                - img [ref=e442]
+                - text: Cinematic
+              - button "Graphic Design" [ref=e445]:
+                - img [ref=e446]
+                - text: Graphic Design
+              - button "Illustration" [ref=e449]:
+                - img [ref=e450]
+                - text: Illustration
+              - button "3D Render" [ref=e454]:
+                - img [ref=e455]
+                - text: 3D Render
+              - button "Portrait" [ref=e458]:
+                - img [ref=e459]
+                - text: Portrait
+              - button "Abstract" [ref=e462]:
+                - img [ref=e463]
+                - text: Abstract
+              - button "Concept Art" [ref=e466]:
+                - img [ref=e467]
+                - text: Concept Art
+              - button "3D Animation" [ref=e470]:
+                - img [ref=e471]
+                - text: 3D Animation
+              - button "Photography" [ref=e474]:
+                - img [ref=e475]
+                - text: Photography
+              - button "Food Photography" [ref=e478]:
+                - img [ref=e479]
+                - text: Food Photography
+              - button "Line Art" [ref=e482]:
+                - img [ref=e483]
+                - text: Line Art
+              - button "Macro Photography" [ref=e486]:
+                - img [ref=e487]
+                - text: Macro Photography
+              - button "Pixel Art" [ref=e490]:
+                - img [ref=e491]
+                - text: Pixel Art
+              - button "UI Design" [ref=e494]:
+                - img [ref=e495]
+                - text: UI Design
+            - generic [ref=e499]:
+              - generic [ref=e501]:
+                - link "Cinematic Cyberpunk Cityscape with Neon Reflections Save prompt Copy Prompt Share prompt" [ref=e502] [cursor=pointer]:
+                  - /url: /prompt/cinematic-cyberpunk-city
+                  - img "Cinematic Cyberpunk Cityscape with Neon Reflections" [ref=e506]
+                  - button "Save prompt" [ref=e508]: Save
+                  - generic [ref=e509]:
+                    - button "Copy Prompt" [ref=e510]:
+                      - img [ref=e511]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e514]:
+                      - img [ref=e515]
+                - generic [ref=e521]:
+                  - heading "Cinematic Cyberpunk Cityscape with Neon Reflections" [level=3] [ref=e522]
+                  - generic [ref=e523]:
+                    - img "Sarah Jenkins" [ref=e524]
+                    - generic [ref=e525] [cursor=pointer]: Sarah Jenkins
+              - generic [ref=e527]:
+                - link "Minimalist Tech Startup Logo Save prompt Copy Prompt Share prompt" [ref=e528] [cursor=pointer]:
+                  - /url: /prompt/minimalist-logo-design
+                  - img "Minimalist Tech Startup Logo" [ref=e532]
+                  - button "Save prompt" [ref=e534]: Save
+                  - generic [ref=e535]:
+                    - button "Copy Prompt" [ref=e536]:
+                      - img [ref=e537]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e540]:
+                      - img [ref=e541]
+                - generic [ref=e547]:
+                  - heading "Minimalist Tech Startup Logo" [level=3] [ref=e548]
+                  - generic [ref=e549]:
+                    - img "Marcus Chen" [ref=e550]
+                    - generic [ref=e551] [cursor=pointer]: Marcus Chen
+              - generic [ref=e553]:
+                - link "Vintage Watercolor Botanical Illustration Save prompt Copy Prompt Share prompt" [ref=e554] [cursor=pointer]:
+                  - /url: /prompt/watercolor-botanical-illustration
+                  - img "Vintage Watercolor Botanical Illustration" [ref=e558]
+                  - button "Save prompt" [ref=e560]: Save
+                  - generic [ref=e561]:
+                    - button "Copy Prompt" [ref=e562]:
+                      - img [ref=e563]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e566]:
+                      - img [ref=e567]
+                - generic [ref=e573]:
+                  - heading "Vintage Watercolor Botanical Illustration" [level=3] [ref=e574]
+                  - generic [ref=e575]:
+                    - img "Elena Rodriguez" [ref=e576]
+                    - generic [ref=e577] [cursor=pointer]: Elena Rodriguez
+              - generic [ref=e579]:
+                - link "Cozy 3D Isometric Gaming Room Save prompt Copy Prompt Share prompt" [ref=e580] [cursor=pointer]:
+                  - /url: /prompt/3d-isometric-room
+                  - img "Cozy 3D Isometric Gaming Room" [ref=e584]
+                  - button "Save prompt" [ref=e586]: Save
+                  - generic [ref=e587]:
+                    - button "Copy Prompt" [ref=e588]:
+                      - img [ref=e589]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e592]:
+                      - img [ref=e593]
+                - generic [ref=e599]:
+                  - heading "Cozy 3D Isometric Gaming Room" [level=3] [ref=e600]
+                  - generic [ref=e601]:
+                    - img "David Kim" [ref=e602]
+                    - generic [ref=e603] [cursor=pointer]: David Kim
+              - generic [ref=e605]:
+                - link "High Fantasy Elf Portrait Save prompt Copy Prompt Share prompt" [ref=e606] [cursor=pointer]:
+                  - /url: /prompt/portrait-fantasy-elf
+                  - img "High Fantasy Elf Portrait" [ref=e610]
+                  - button "Save prompt" [ref=e612]: Save
+                  - generic [ref=e613]:
+                    - button "Copy Prompt" [ref=e614]:
+                      - img [ref=e615]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e618]:
+                      - img [ref=e619]
+                - generic [ref=e625]:
+                  - heading "High Fantasy Elf Portrait" [level=3] [ref=e626]
+                  - generic [ref=e627]:
+                    - img "Sarah Jenkins" [ref=e628]
+                    - generic [ref=e629] [cursor=pointer]: Sarah Jenkins
+              - generic [ref=e631]:
+                - link "Vibrant Abstract Fluid Art Save prompt Copy Prompt Share prompt" [ref=e632] [cursor=pointer]:
+                  - /url: /prompt/abstract-fluid-art
+                  - img "Vibrant Abstract Fluid Art" [ref=e636]
+                  - button "Save prompt" [ref=e638]: Save
+                  - generic [ref=e639]:
+                    - button "Copy Prompt" [ref=e640]:
+                      - img [ref=e641]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e644]:
+                      - img [ref=e645]
+                - generic [ref=e651]:
+                  - heading "Vibrant Abstract Fluid Art" [level=3] [ref=e652]
+                  - generic [ref=e653]:
+                    - img "Marcus Chen" [ref=e654]
+                    - generic [ref=e655] [cursor=pointer]: Marcus Chen
+              - generic [ref=e657]:
+                - link "Massive Sci-Fi Space Station Save prompt Copy Prompt Share prompt" [ref=e658] [cursor=pointer]:
+                  - /url: /prompt/sci-fi-space-station
+                  - img "Massive Sci-Fi Space Station" [ref=e662]
+                  - button "Save prompt" [ref=e664]: Save
+                  - generic [ref=e665]:
+                    - button "Copy Prompt" [ref=e666]:
+                      - img [ref=e667]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e670]:
+                      - img [ref=e671]
+                - generic [ref=e677]:
+                  - heading "Massive Sci-Fi Space Station" [level=3] [ref=e678]
+                  - generic [ref=e679]:
+                    - img "Elena Rodriguez" [ref=e680]
+                    - generic [ref=e681] [cursor=pointer]: Elena Rodriguez
+              - generic [ref=e683]:
+                - link "Cute Pixar Style Robot Character Save prompt Copy Prompt Share prompt" [ref=e684] [cursor=pointer]:
+                  - /url: /prompt/cute-pixar-character
+                  - img "Cute Pixar Style Robot Character" [ref=e688]
+                  - button "Save prompt" [ref=e690]: Save
+                  - generic [ref=e691]:
+                    - button "Copy Prompt" [ref=e692]:
+                      - img [ref=e693]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e696]:
+                      - img [ref=e697]
+                - generic [ref=e703]:
+                  - heading "Cute Pixar Style Robot Character" [level=3] [ref=e704]
+                  - generic [ref=e705]:
+                    - img "David Kim" [ref=e706]
+                    - generic [ref=e707] [cursor=pointer]: David Kim
+              - generic [ref=e709]:
+                - link "Modern Japandi Living Room Save prompt Copy Prompt Share prompt" [ref=e710] [cursor=pointer]:
+                  - /url: /prompt/architectural-interior-design
+                  - img "Modern Japandi Living Room" [ref=e714]
+                  - button "Save prompt" [ref=e716]: Save
+                  - generic [ref=e717]:
+                    - button "Copy Prompt" [ref=e718]:
+                      - img [ref=e719]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e722]:
+                      - img [ref=e723]
+                - generic [ref=e729]:
+                  - heading "Modern Japandi Living Room" [level=3] [ref=e730]
+                  - generic [ref=e731]:
+                    - img "Sarah Jenkins" [ref=e732]
+                    - generic [ref=e733] [cursor=pointer]: Sarah Jenkins
+              - generic [ref=e735]:
+                - link "Gourmet Burger Food Photography Save prompt Copy Prompt Share prompt" [ref=e736] [cursor=pointer]:
+                  - /url: /prompt/food-photography-burger
+                  - img "Gourmet Burger Food Photography" [ref=e740]
+                  - button "Save prompt" [ref=e742]: Save
+                  - generic [ref=e743]:
+                    - button "Copy Prompt" [ref=e744]:
+                      - img [ref=e745]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e748]:
+                      - img [ref=e749]
+                - generic [ref=e755]:
+                  - heading "Gourmet Burger Food Photography" [level=3] [ref=e756]
+                  - generic [ref=e757]:
+                    - img "Marcus Chen" [ref=e758]
+                    - generic [ref=e759] [cursor=pointer]: Marcus Chen
+              - generic [ref=e761]:
+                - link "Epic Steampunk Airship Save prompt Copy Prompt Share prompt" [ref=e762] [cursor=pointer]:
+                  - /url: /prompt/steampunk-flying-ship
+                  - img "Epic Steampunk Airship" [ref=e766]
+                  - button "Save prompt" [ref=e768]: Save
+                  - generic [ref=e769]:
+                    - button "Copy Prompt" [ref=e770]:
+                      - img [ref=e771]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e774]:
+                      - img [ref=e775]
+                - generic [ref=e781]:
+                  - heading "Epic Steampunk Airship" [level=3] [ref=e782]
+                  - generic [ref=e783]:
+                    - img "Elena Rodriguez" [ref=e784]
+                    - generic [ref=e785] [cursor=pointer]: Elena Rodriguez
+              - generic [ref=e787]:
+                - link "Minimalist Line Art Tattoo Save prompt Copy Prompt Share prompt" [ref=e788] [cursor=pointer]:
+                  - /url: /prompt/line-art-tattoo-design
+                  - img "Minimalist Line Art Tattoo" [ref=e792]
+                  - button "Save prompt" [ref=e794]: Save
+                  - generic [ref=e795]:
+                    - button "Copy Prompt" [ref=e796]:
+                      - img [ref=e797]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e800]:
+                      - img [ref=e801]
+                - generic [ref=e807]:
+                  - heading "Minimalist Line Art Tattoo" [level=3] [ref=e808]
+                  - generic [ref=e809]:
+                    - img "David Kim" [ref=e810]
+                    - generic [ref=e811] [cursor=pointer]: David Kim
+              - generic [ref=e813]:
+                - link "Extreme Macro Human Eye Save prompt Copy Prompt Share prompt" [ref=e814] [cursor=pointer]:
+                  - /url: /prompt/macro-photography-eye
+                  - img "Extreme Macro Human Eye" [ref=e818]
+                  - button "Save prompt" [ref=e820]: Save
+                  - generic [ref=e821]:
+                    - button "Copy Prompt" [ref=e822]:
+                      - img [ref=e823]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e826]:
+                      - img [ref=e827]
+                - generic [ref=e833]:
+                  - heading "Extreme Macro Human Eye" [level=3] [ref=e834]
+                  - generic [ref=e835]:
+                    - img "Sarah Jenkins" [ref=e836]
+                    - generic [ref=e837] [cursor=pointer]: Sarah Jenkins
+              - generic [ref=e839]:
+                - link "16-bit Pixel Art Landscape Save prompt Copy Prompt Share prompt" [ref=e840] [cursor=pointer]:
+                  - /url: /prompt/pixel-art-landscape
+                  - img "16-bit Pixel Art Landscape" [ref=e844]
+                  - button "Save prompt" [ref=e846]: Save
+                  - generic [ref=e847]:
+                    - button "Copy Prompt" [ref=e848]:
+                      - img [ref=e849]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e852]:
+                      - img [ref=e853]
+                - generic [ref=e859]:
+                  - heading "16-bit Pixel Art Landscape" [level=3] [ref=e860]
+                  - generic [ref=e861]:
+                    - img "Marcus Chen" [ref=e862]
+                    - generic [ref=e863] [cursor=pointer]: Marcus Chen
+              - generic [ref=e865]:
+                - link "Modern UI/UX Dashboard Save prompt Copy Prompt Share prompt" [ref=e866] [cursor=pointer]:
+                  - /url: /prompt/ui-ux-dashboard-design
+                  - img "Modern UI/UX Dashboard" [ref=e870]
+                  - button "Save prompt" [ref=e872]: Save
+                  - generic [ref=e873]:
+                    - button "Copy Prompt" [ref=e874]:
+                      - img [ref=e875]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e878]:
+                      - img [ref=e879]
+                - generic [ref=e885]:
+                  - heading "Modern UI/UX Dashboard" [level=3] [ref=e886]
+                  - generic [ref=e887]:
+                    - img "Elena Rodriguez" [ref=e888]
+                    - generic [ref=e889] [cursor=pointer]: Elena Rodriguez
+              - generic [ref=e891]:
+                - link "Minimalist Tech Startup Logo Save prompt Copy Prompt Share prompt" [ref=e892] [cursor=pointer]:
+                  - /url: /prompt/minimalist-logo-design
+                  - img "Minimalist Tech Startup Logo" [ref=e896]
+                  - button "Save prompt" [ref=e898]: Save
+                  - generic [ref=e899]:
+                    - button "Copy Prompt" [ref=e900]:
+                      - img [ref=e901]
+                      - text: Copy Prompt
+                    - button "Share prompt" [ref=e904]:
+                      - img [ref=e905]
+                - generic [ref=e911]:
+                  - heading "Minimalist Tech Startup Logo" [level=3] [ref=e912]
+                  - generic [ref=e913]:
+                    - img "Marcus Chen" [ref=e914]
+                    - generic [ref=e915] [cursor=pointer]: Marcus Chen
+    - contentinfo [ref=e922]:
+      - generic [ref=e923]:
+        - generic [ref=e924]:
+          - generic [ref=e925]:
+            - generic [ref=e926]:
+              - img "Love4Prompts Logo" [ref=e927]
+              - generic [ref=e928]: Love4Prompts
+            - paragraph [ref=e929]: The ultimate prompt toolkit for every AI. Access our daily updated library to discover and download free prompts for every use case.
+            - link "Manage Prompts →" [ref=e930] [cursor=pointer]:
+              - /url: /dashboard
+              - text: Manage Prompts
+              - generic [ref=e931]: →
+          - generic [ref=e932]:
+            - heading "AI Tools" [level=3] [ref=e933]
+            - link "Prompt Enhancer" [ref=e934] [cursor=pointer]:
+              - /url: /tools/prompt-enhancer
+            - link "Prompt Maker" [ref=e935] [cursor=pointer]:
+              - /url: /tools/prompt-maker
+            - link "Prompt Translator" [ref=e936] [cursor=pointer]:
+              - /url: /tools/prompt-translator
+            - link "Image to Prompt" [ref=e937] [cursor=pointer]:
+              - /url: /tools/image-to-prompt
+            - link "All Tools" [ref=e938] [cursor=pointer]:
+              - /url: /tools
+          - generic [ref=e939]:
+            - heading "Prompt Maker" [level=3] [ref=e940]
+            - link "AI Prompt Maker" [ref=e941] [cursor=pointer]:
+              - /url: /?tag=maker
+            - link "ChatGPT Maker" [ref=e942] [cursor=pointer]:
+              - /url: /?tag=chatgpt-maker
+            - link "AI Video Maker" [ref=e943] [cursor=pointer]:
+              - /url: /?tag=video-maker
+            - link "Claude Maker" [ref=e944] [cursor=pointer]:
+              - /url: /?tag=claude-maker
+            - link "Sora Maker" [ref=e945] [cursor=pointer]:
+              - /url: /?tag=sora-maker
+            - link "Story Maker" [ref=e946] [cursor=pointer]:
+              - /url: /?tag=story-maker
+          - generic [ref=e947]:
+            - heading "Visuals" [level=3] [ref=e948]
+            - link "Photo Prompt" [ref=e949] [cursor=pointer]:
+              - /url: /?tag=photo
+            - link "AI Photo App" [ref=e950] [cursor=pointer]:
+              - /url: /?tag=ai-photo
+            - link "Drawing Prompt" [ref=e951] [cursor=pointer]:
+              - /url: /?tag=drawing
+            - link "AI Video from Text" [ref=e952] [cursor=pointer]:
+              - /url: /?tag=video
+          - generic [ref=e953]:
+            - heading "Platforms & Socials" [level=3] [ref=e954]
+            - link "ChatGPT Prompts" [ref=e955] [cursor=pointer]:
+              - /url: /?tag=chatgpt
+            - link "Gemini Prompts" [ref=e956] [cursor=pointer]:
+              - /url: /?tag=gemini
+            - link "LinkedIn Generator" [ref=e957] [cursor=pointer]:
+              - /url: /linkedin-post-generator
+            - link "Insta Caption Generator" [ref=e958] [cursor=pointer]:
+              - /url: /instagram-caption-generator
+            - link "Coding Prompt Generator" [ref=e959] [cursor=pointer]:
+              - /url: /coding-prompt-generator
+        - generic [ref=e960]:
+          - paragraph [ref=e961]: © 2026 Love4Prompts. Download Free AI Prompts. All rights reserved.
+          - generic [ref=e962]:
+            - link "Privacy Policy" [ref=e963] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms of Service" [ref=e964] [cursor=pointer]:
+              - /url: /terms
+  - generic [ref=e967]:
+    - button "Menu" [ref=e968]:
+      - img [ref=e970]
+      - generic: Menu
+    - button "Inspect" [ref=e974]:
+      - img [ref=e976]
+      - generic: Inspect
+    - button "Audit" [ref=e978]:
+      - img [ref=e980]
+      - generic: Audit
+    - button "Settings" [ref=e983]:
+      - img [ref=e985]
+      - generic: Settings

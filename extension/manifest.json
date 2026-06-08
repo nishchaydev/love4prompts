@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Love4Prompts Assistant",
+  "version": "1.0.0",
+  "description": "All-in-one prompt enhancer. Improves user prompts at runtime.",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://*.chatgpt.com/*",
+        "*://claude.ai/*",
+        "*://*.claude.ai/*",
+        "*://gemini.google.com/*"
+      ],
+      "js": ["src/content/index.tsx"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": ["storage", "contextMenus"],
+  "host_permissions": ["*://*/*"]
+}
