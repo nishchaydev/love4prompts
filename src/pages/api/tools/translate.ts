@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
 
-const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux'] as const;
+const AI_TOOLS = ['ChatGPT', 'Midjourney', 'DALL-E', 'Claude', 'Gemini', 'Flux', 'Stable Diffusion'] as const;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -36,14 +36,41 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const systemPrompt = `You are a prompt translation expert. The user will give you a prompt written for ${fromTool}. Rewrite and reformat it so it works optimally for ${toTool}. Adapt the syntax, modifiers, parameters, and structure to match ${toTool}'s expected format and best practices. Return only the translated prompt, no explanation, no preamble.`;
+    const systemPrompt = `You are a prompt translation expert. The user will give you a prompt written for ${fromTool}. Rewrite and reformat it so it works optimally for ${toTool}. Adapt the syntax, modifiers, parameters, and structure to match ${toTool}'s expected format and best practices.
+
+You MUST respond with valid JSON in this exact format:
+{
+  "translatedPrompt": "the fully translated prompt text",
+  "adaptations": [
+    "Brief explanation of adaptation 1",
+    "Brief explanation of adaptation 2",
+    "Brief explanation of adaptation 3"
+  ]
+}
+
+The "adaptations" array should contain 3-5 short bullet points explaining the key changes you made during translation (e.g., "Converted Midjourney aspect ratio flags to DALL-E sizing parameters", "Restructured from comma-separated tags to natural language sentences for Claude").
+
+Return ONLY valid JSON. No markdown, no explanation outside the JSON.`;
 
     const result = await callGroq({
       systemPrompt,
       userMessage: prompt.trim(),
+      responseFormat: { type: 'json_object' },
     });
 
-    return new Response(JSON.stringify({ translatedPrompt: result.content }), {
+    let translatedPrompt = '';
+    let adaptations: string[] = [];
+
+    try {
+      const parsed = JSON.parse(result.content);
+      translatedPrompt = parsed.translatedPrompt || '';
+      adaptations = Array.isArray(parsed.adaptations) ? parsed.adaptations : [];
+    } catch {
+      translatedPrompt = result.content;
+      adaptations = [];
+    }
+
+    return new Response(JSON.stringify({ translatedPrompt, adaptations }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });

@@ -1,4 +1,11 @@
+# Love4Prompts robots.txt
 User-agent: *
 Allow: /
 
-Sitemap: https://love4prompts.com/sitemap-index.xml
+# Block API and internal routes from crawling
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_astro/
+
+# Sitemap
+Sitemap: https://love4prompts.vercel.app/sitemap-index.xml

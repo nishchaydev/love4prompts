@@ -76,7 +76,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden rounded-[20px] bg-[#120A24] border border-white/5 shadow-[0_2px_12px_rgba(0,0,0,0.5)] group-hover:shadow-[0_8px_30px_var(--color-primary-glow)] transition-all duration-500 ease-out group-hover:border-[var(--color-primary)]/30">
+      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden rounded-[20px] bg-[#120A24] border border-[var(--color-border-warm)] shadow-[0_2px_12px_rgba(0,0,0,0.5)] group-hover:shadow-[0_8px_30px_var(--color-primary-glow)] transition-all duration-500 ease-out group-hover:border-[var(--color-primary)]/30">
         {prompt.image_url && !imageError ? (
           <div className="relative w-full min-h-[160px] bg-[#120A24] overflow-hidden">
             {!imageLoaded && (
@@ -87,6 +87,8 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
             <img 
               src={optimizedUrl} 
               alt={prompt.title} 
+              width={400}
+              height={300}
               className={`w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
                 imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
               }`}
@@ -144,7 +146,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
         
         {prompt.creator ? (
           <div className="flex items-center gap-2 mt-2">
-            <img src={prompt.creator.avatar} alt={prompt.creator.name} className="w-6 h-6 rounded-full object-cover border border-white/10" />
+            <img src={prompt.creator.avatar} alt={prompt.creator.name} className="w-6 h-6 rounded-full object-cover border border-white/10" width={24} height={24} />
             <span className="text-[13px] font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">{prompt.creator.name}</span>
           </div>
         ) : (

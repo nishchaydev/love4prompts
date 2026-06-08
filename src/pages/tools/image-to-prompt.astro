@@ -1,11 +1,26 @@
 ---
 import Layout from '../../components/layout/Layout.astro';
 import { ImageToPrompt } from '../../components/tools/ImageToPrompt';
+import { FAQSection } from '../../components/seo/FAQSection';
+
+const faqs = [
+  { question: "How does image-to-prompt work?", answer: "Upload any image and our AI analyzes its composition, style, lighting, colors, subjects, and mood to generate a detailed text prompt that can recreate a similar image in Midjourney, DALL-E, Flux, or Stable Diffusion." },
+  { question: "What image formats are supported?", answer: "JPEG, PNG, and WebP files up to 4MB. Images are automatically resized to 1024px max dimension for optimal analysis." },
+  { question: "Can I use the generated prompt directly?", answer: "Yes — the output prompt is formatted for your selected target model and can be copied and pasted directly into Midjourney, DALL-E, or any other image AI." },
+  { question: "Is my uploaded image stored?", answer: "No. Images are processed in-memory and not saved on our servers. Your uploads are never stored or shared." },
+];
+
+const relatedTools = [
+  { label: "Prompt to Image", href: "/tools/prompt-to-image" },
+  { label: "Prompt Enhancer", href: "/tools/prompt-enhancer" },
+  { label: "Prompt Translator", href: "/tools/prompt-translator" },
+];
 ---
 
 <Layout 
-  title="Image to Prompt — Reverse Engineer Any AI Image" 
-  description="Upload any AI-generated image and get the reverse-engineered prompt that could recreate it. Free image to prompt tool powered by Claude Vision."
+  title="Free Image to Prompt — Reverse Engineer Any Image into AI Prompt" 
+  description="Upload any image and get a detailed AI prompt that can recreate it in Midjourney, DALL-E, Flux, or Stable Diffusion. Free reverse image-to-prompt tool."
 >
   <ImageToPrompt client:load />
+  <FAQSection client:visible faqs={faqs} relatedTools={relatedTools} />
 </Layout>

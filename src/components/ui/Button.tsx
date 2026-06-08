@@ -9,14 +9,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className = '', variant = 'primary', size = 'md', fullWidth = false, ...props }, ref) => {
     
-    const baseStyles = "inline-flex items-center justify-center font-[700] transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#435ee5] disabled:bg-[#f6f6f3] disabled:text-[#91918c] disabled:pointer-events-none";
+    const baseStyles = "inline-flex items-center justify-center font-[700] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[#0A0118] disabled:bg-white/5 disabled:text-white/20 disabled:pointer-events-none rounded-xl";
     
     const variants = {
-      primary: "bg-[#e60023] text-white hover:bg-[#cc001f] rounded-[16px]",
-      secondary: "bg-[#e5e5e0] text-[#000000] hover:bg-[#c8c8c1] rounded-[16px]",
-      tertiary: "bg-transparent text-[#000000] hover:bg-[#f6f6f3] rounded-[16px]",
-      'icon-circular': "bg-[#f6f6f3] text-[#000000] hover:bg-[#e5e5e0] rounded-full",
-      'pill-on-image': "bg-white text-[#000000] hover:bg-[#f6f6f3] rounded-full"
+      primary: "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] shadow-[0_4px_20px_var(--color-primary-glow)]",
+      secondary: "bg-white/[0.04] text-white hover:bg-white/[0.08] border border-white/[0.08]",
+      outline: "bg-transparent text-white border border-white/[0.12] hover:bg-white/[0.04]",
+      ghost: "bg-transparent text-white/60 hover:text-white hover:bg-white/[0.04]",
     };
 
     const sizes = {
@@ -35,3 +34,4 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
+

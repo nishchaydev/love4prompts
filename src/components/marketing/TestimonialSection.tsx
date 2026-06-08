@@ -36,20 +36,8 @@ export const TestimonialSection: React.FC = () => {
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="relative p-6 rounded-3xl transition-all duration-500 group"
-              style={{
-                background: 'rgba(18, 10, 36, 0.4)',
-                border: '1px solid rgba(255,255,255,0.04)',
-              }}
+              className="relative p-6 rounded-3xl transition-all duration-500 group bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] hover:border-[var(--color-border-warm)] hover:shadow-[0_0_32px_var(--color-primary-glow)]"
             >
-              <div
-                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{
-                  boxShadow: '0 0 32px var(--color-primary-glow)',
-                  border: '1px solid rgba(113, 61, 255, 0.2)',
-                  borderRadius: 'inherit',
-                }}
-              />
 
               <div className="relative z-10">
                 <div className="flex gap-0.5 mb-5">

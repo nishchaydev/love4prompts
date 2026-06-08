@@ -121,6 +121,8 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
           <img 
             src={getOptimizedImageUrlDetail(prompt.image_url)} 
             alt={prompt.title} 
+            width={800}
+            height={600}
             className="w-full h-auto object-cover"
             loading="eager"
             {...({ fetchPriority: "high" } as any)}

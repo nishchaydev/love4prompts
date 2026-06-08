@@ -14,6 +14,8 @@ export const SeoFooter: React.FC = () => {
               <img 
                 src="/logo-icon.png" 
                 alt="Love4Prompts Logo" 
+                width={48}
+                height={48}
                 className="h-12 w-auto object-contain transition-all duration-300 hover:scale-105" 
               />
               <span className="text-xl md:text-2xl font-black font-display tracking-tight text-white">

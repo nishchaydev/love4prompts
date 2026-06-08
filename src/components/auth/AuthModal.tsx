@@ -66,7 +66,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               required 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-purple)]"
+              className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-primary)]"
               placeholder="e.g. promptmaster"
             />
           </div>
@@ -79,7 +79,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             required 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-purple)]"
+            className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-primary)]"
             placeholder="you@example.com"
           />
         </div>
@@ -91,7 +91,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             required 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-purple)]"
+            className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-lg px-4 py-2 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-primary)]"
             placeholder="••••••••"
           />
         </div>
@@ -105,7 +105,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <button 
             type="button" 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-[var(--color-accent-purple)] hover:text-[var(--color-accent-purple-hover)] font-medium"
+            className="text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] font-medium font-display"
           >
             {isLogin ? 'Sign up' : 'Sign in'}
           </button>

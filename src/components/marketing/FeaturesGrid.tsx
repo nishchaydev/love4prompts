@@ -105,7 +105,7 @@ export const FeaturesGrid: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Panel 1: Prompt Optimizer (Asymmetrical width 2/3) */}
           <motion.div
-            className="lg:col-span-2 bg-[#120A24]/60 border border-white/[0.04] rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            className="lg:col-span-2 bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -125,7 +125,7 @@ export const FeaturesGrid: React.FC = () => {
               </div>
 
               {/* Console Workspace */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 bg-[#0A0118]/80 border border-white/[0.03] rounded-2xl p-4 min-h-[200px]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 bg-[var(--color-background-primary)]/60 backdrop-blur-md border border-white/[0.03] rounded-2xl p-4 min-h-[200px]">
                 {/* Left pane: input */}
                 <div className="flex flex-col justify-between">
                   <div>
@@ -194,7 +194,7 @@ export const FeaturesGrid: React.FC = () => {
 
           {/* Panel 2: Rank/Impact Tracker (Asymmetrical width 1/3) */}
           <motion.div
-            className="bg-[#120A24]/60 border border-white/[0.04] rounded-3xl p-6 flex flex-col justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            className="bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] rounded-3xl p-6 flex flex-col justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -211,7 +211,7 @@ export const FeaturesGrid: React.FC = () => {
               </div>
 
               {/* Slider Controls */}
-              <div className="mt-6 bg-[#0A0118]/80 border border-white/[0.03] rounded-2xl p-4 flex flex-col gap-4">
+              <div className="mt-6 bg-[var(--color-background-primary)]/60 backdrop-blur-md border border-white/[0.03] rounded-2xl p-4 flex flex-col gap-4">
                 <div className="flex justify-between items-baseline">
                   <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Visibility Index</span>
                   <span className="text-2xl font-black text-emerald-400 font-mono tracking-tighter" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -255,7 +255,7 @@ export const FeaturesGrid: React.FC = () => {
 
           {/* Panel 3: Intelligent Model Router (Full width 3/3) */}
           <motion.div
-            className="lg:col-span-3 bg-[#120A24]/60 border border-white/[0.04] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden"
+            className="lg:col-span-3 bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -286,7 +286,7 @@ export const FeaturesGrid: React.FC = () => {
             </div>
 
             {/* Router Interactive Diagram */}
-            <div className="flex-1 w-full max-w-[400px] bg-[#0A0118]/80 border border-white/[0.03] rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center relative min-h-[180px] sm:min-h-[220px]">
+            <div className="flex-1 w-full max-w-[400px] bg-[var(--color-background-primary)]/60 backdrop-blur-md border border-white/[0.03] rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center relative min-h-[180px] sm:min-h-[220px]">
               {/* Central Input Node */}
               <div className="w-12 h-12 rounded-full bg-[var(--color-primary)]/25 border border-[var(--color-primary)]/40 flex items-center justify-center z-10 shadow-[0_0_20px_var(--color-primary-glow)]">
                 <span className="text-[11px] font-mono font-bold text-white">L4</span>
@@ -315,7 +315,7 @@ export const FeaturesGrid: React.FC = () => {
                       className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all duration-300 ${
                         isHovered
                           ? 'bg-[var(--color-primary)]/20 border-[var(--color-primary)] shadow-[0_0_15px_var(--color-primary-glow)]'
-                          : 'bg-[#120A24] border-white/5 hover:border-white/20'
+                          : 'bg-[var(--color-background-card)] border-white/5 hover:border-white/20'
                       }`}
                     >
                       <IconComponent className={`w-4 h-4 ${isHovered ? 'text-white' : 'text-white/40'}`} />

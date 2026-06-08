@@ -68,13 +68,13 @@ export const PurpleWaveBackground: React.FC<PurpleWaveBackgroundProps> = ({ mode
             />
             <defs>
               <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.6" />
-                <stop offset="50%" stopColor="#D83F87" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.6" />
+                <stop offset="0%" stopColor="var(--color-accent-violet)" stopOpacity="0.6" />
+                <stop offset="50%" stopColor="var(--color-primary)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="var(--color-accent-violet)" stopOpacity="0.6" />
               </linearGradient>
             </defs>
           </svg>
-
+ 
           {/* Wave 2 — counter-direction */}
           <svg
             className="absolute bottom-0 left-0 w-[200%] h-[35%] opacity-[0.04]"
@@ -88,9 +88,9 @@ export const PurpleWaveBackground: React.FC<PurpleWaveBackgroundProps> = ({ mode
             />
             <defs>
               <linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#D83F87" stopOpacity="0.5" />
-                <stop offset="50%" stopColor="#44318D" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#D83F87" stopOpacity="0.5" />
+                <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.5" />
+                <stop offset="50%" stopColor="var(--color-accent-violet)" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0.5" />
               </linearGradient>
             </defs>
           </svg>

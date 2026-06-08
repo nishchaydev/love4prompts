@@ -1,6 +1,20 @@
 ---
 import Layout from '../../components/layout/Layout.astro';
 import { PromptEnhancer } from '../../components/tools/PromptEnhancer';
+import { FAQSection } from '../../components/seo/FAQSection';
+
+const faqs = [
+  { question: "How does the AI prompt enhancer work?", answer: "Our prompt enhancer analyzes your basic prompt and rewrites it with more detail, structure, and specificity. It adds context, constraints, and formatting that AI models respond to better — resulting in higher-quality outputs." },
+  { question: "Is the prompt enhancer free to use?", answer: "Yes! You get 5 free enhancements per day, no signup required. Just type your rough idea and get a production-ready prompt instantly." },
+  { question: "Which AI models does it work with?", answer: "The enhancer optimizes prompts for ChatGPT, Midjourney, DALL-E, Claude, Gemini, and Flux. Each model has different strengths, and we tailor the enhanced prompt to your chosen target." },
+  { question: "Can I enhance image generation prompts?", answer: "Absolutely. Select Midjourney, DALL-E, or Flux as your target model and the enhancer will add visual-specific parameters like lighting, composition, style, and camera angle." },
+];
+
+const relatedTools = [
+  { label: "Prompt Translator", href: "/tools/prompt-translator" },
+  { label: "Prompt Maker", href: "/tools/prompt-maker" },
+  { label: "Image to Prompt", href: "/tools/image-to-prompt" },
+];
 ---
 
 <Layout 
@@ -8,4 +22,5 @@ import { PromptEnhancer } from '../../components/tools/PromptEnhancer';
   description="Enhance any basic prompt into a detailed, optimized prompt for ChatGPT, Midjourney, DALL-E, Claude, Gemini, or Flux. Free AI prompt enhancer tool."
 >
   <PromptEnhancer client:load />
+  <FAQSection client:visible faqs={faqs} relatedTools={relatedTools} />
 </Layout>

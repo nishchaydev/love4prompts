@@ -1,11 +1,26 @@
 ---
 import Layout from '../../components/layout/Layout.astro';
 import { PromptMaker } from '../../components/tools/PromptMaker';
+import { FAQSection } from '../../components/seo/FAQSection';
+
+const faqs = [
+  { question: "How does the prompt maker generate prompts?", answer: "Our 3-step wizard collects your topic, use case, target model, and style preferences, then uses AI to craft a complete, production-ready prompt — no guesswork needed." },
+  { question: "What use cases does the prompt maker support?", answer: "Image generation, marketing copy, code generation, creative writing, data analysis, conversation design, education content, and business strategy." },
+  { question: "Can beginners use this tool?", answer: "Absolutely. The step-by-step wizard guides you through every decision. Just describe what you want in plain language and the AI handles the rest." },
+  { question: "Is the prompt maker free?", answer: "Yes, 5 free prompt generations per day. No account required." },
+];
+
+const relatedTools = [
+  { label: "Prompt Enhancer", href: "/tools/prompt-enhancer" },
+  { label: "Prompt Translator", href: "/tools/prompt-translator" },
+  { label: "Image to Prompt", href: "/tools/image-to-prompt" },
+];
 ---
 
 <Layout 
-  title="AI Prompt Generator — Create Prompts from Any Idea" 
-  description="Generate ready-to-use AI prompts from plain English descriptions. Supports image generation, text, code, marketing, and study use cases."
+  title="Free AI Prompt Maker — Generate Perfect Prompts From Scratch" 
+  description="Generate production-ready prompts for ChatGPT, Midjourney, DALL-E, Claude, and Gemini from a simple description. Free AI prompt maker with 3-step wizard."
 >
   <PromptMaker client:load />
+  <FAQSection client:visible faqs={faqs} relatedTools={relatedTools} />
 </Layout>

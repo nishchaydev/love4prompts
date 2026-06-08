@@ -1,0 +1,175 @@
+# Love4Prompts — Full Documentation for LLMs
+
+> The universal prompt toolkit for every AI. One console bar that enhances, generates, and translates prompts across every major AI model. Free, no signup required.
+
+---
+
+## Overview
+
+Love4Prompts (https://love4prompts.vercel.app) is a free web-based toolkit that helps users write better prompts for AI models. It provides six specialized tools accessible through both dedicated pages and a universal search bar on the homepage.
+
+The site targets anyone who uses AI tools — from beginners who don't know how to write effective prompts, to power users who need to translate prompts between platforms or generate them at scale.
+
+---
+
+## Tools (Detailed)
+
+### 1. Prompt Enhancer
+**URL**: https://love4prompts.vercel.app/tools/prompt-enhancer
+**Purpose**: Takes a rough, basic prompt and rewrites it into a detailed, structured, production-ready prompt.
+**How it works**:
+- User types a rough idea (up to 1000 chars)
+- Selects target AI model (ChatGPT, Midjourney, DALL-E, Claude, Gemini)
+- Optionally selects enhancement modes: More Detail, Add Examples, More Concise, Expert Level, Structure
+- AI returns the enhanced prompt plus a list of specific improvements made
+**API**: POST /api/tools/enhance
+**Rate limit**: 5 free uses/day per browser
+
+### 2. Prompt Translator
+**URL**: https://love4prompts.vercel.app/tools/prompt-translator
+**Purpose**: Converts prompts between AI platforms while preserving intent and adapting platform-specific syntax.
+**How it works**:
+- User selects source platform (e.g., Midjourney) and target platform (e.g., DALL-E)
+- Pastes the source prompt
+- AI translates and returns the adapted prompt plus a list of adaptations made
+**Supported platforms**: ChatGPT, Midjourney, DALL-E, Claude, Gemini, Flux, Stable Diffusion
+**API**: POST /api/tools/translate
+**Rate limit**: 5 free uses/day per browser
+
+### 3. Prompt Maker
+**URL**: https://love4prompts.vercel.app/tools/prompt-maker
+**Purpose**: Generates complete prompts from scratch based on a topic description.
+**How it works** (3-step wizard):
+1. Describe what you want (topic + use case category)
+2. Select target model + optional style modifiers
+3. AI generates a complete prompt with pro tips
+**Categories**: Image Generation, Marketing, Code, Writing, Analysis, Conversation, Education, Business
+**API**: POST /api/tools/generate
+**Rate limit**: 5 free uses/day per browser
+
+### 4. Image to Prompt
+**URL**: https://love4prompts.vercel.app/tools/image-to-prompt
+**Purpose**: Reverse-engineers any image into a text prompt that can recreate it.
+**How it works**:
+- User uploads an image (JPEG, PNG, WebP, max 4MB)
+- Selects target AI model for prompt format
+- AI analyzes the image and generates a detailed recreation prompt
+**API**: POST /api/tools/image-to-prompt
+**Rate limit**: 5 free uses/day per browser
+
+### 5. Prompt to Image
+**URL**: https://love4prompts.vercel.app/tools/prompt-to-image
+**Purpose**: Generates images from text descriptions.
+**How it works**:
+- User types a text description
+- Image is generated via Pollinations AI (free, no API key)
+- Result can be downloaded or prompt copied
+**External API**: https://image.pollinations.ai
+**Rate limit**: Unlimited (uses free external API)
+
+### 6. LinkedIn Post Generator
+**URL**: https://love4prompts.vercel.app/linkedin-post-generator
+**Purpose**: Creates optimized LinkedIn posts with professional formatting.
+**Controls**: Topic, tone (Professional/Storytelling/Thought Leadership/Casual), length, CTA toggle
+**API**: POST /api/tools/generate
+**Rate limit**: 5 free uses/day per browser
+
+### 7. Instagram Caption Generator
+**URL**: https://love4prompts.vercel.app/instagram-caption-generator
+**Purpose**: Generates Instagram captions with hashtags and emoji controls.
+**API**: POST /api/tools/generate
+
+### 8. Coding Prompt Generator
+**URL**: https://love4prompts.vercel.app/coding-prompt-generator
+**Purpose**: Creates structured coding prompts for AI coding assistants.
+**API**: POST /api/tools/generate
+
+---
+
+## Universal Bar (Homepage Feature)
+
+The Universal Bar at https://love4prompts.vercel.app is an intelligent search bar that:
+1. Accepts any natural language input
+2. Auto-classifies intent using an AI classifier (POST /api/tools/classify)
+3. Routes to the appropriate tool backend (enhance, translate, generate, image, social, code)
+4. Returns results inline without page navigation
+
+**Keyboard shortcuts**:
+- `Ctrl+K` (Windows/Linux) or `⌘+K` (Mac) — Focus the bar
+- `Ctrl+Enter` or `⌘+Enter` — Submit
+
+**Features**:
+- Model selector (ChatGPT, Midjourney, DALL-E, Claude, Gemini)
+- Intent detection pill (shows detected mode: Enhancer, Translator, Image Gen, etc.)
+- Inline result panel with copy, execute (opens target AI), and refinement
+- Bulletproof Mode — asks clarifying questions then generates a comprehensive prompt
+- Recent prompts history (localStorage)
+
+---
+
+## Prompt Library
+
+Accessible at https://love4prompts.vercel.app/#library on the homepage.
+- Curated prompts stored in Supabase
+- Filterable by style/category
+- Each prompt card shows: title, prompt text, style tag, copy button
+- Prompts are publicly browsable, no login required
+
+---
+
+## Supported AI Models
+
+| Model | Company | Best For |
+|-------|---------|----------|
+| ChatGPT | OpenAI | Text, code, analysis, conversation |
+| Midjourney | Midjourney Inc. | Image generation (artistic, detailed) |
+| DALL-E 3 | OpenAI | Image generation (photorealistic) |
+| Claude | Anthropic | Long-form text, analysis, coding |
+| Gemini | Google | Multimodal, research, coding |
+| Flux | Black Forest Labs | Image generation (open-source) |
+| Stable Diffusion | Stability AI | Image generation (open-source, local) |
+
+---
+
+## Technical Architecture
+
+- **Frontend**: Astro 6 (SSR on Vercel), React 19, Tailwind CSS v4, Framer Motion
+- **AI Backend**: Groq API (Llama 3 70B) for text generation/enhancement/translation
+- **Image AI**: Pollinations AI (free, no key) for prompt-to-image
+- **Database**: Supabase (PostgreSQL) for prompt library
+- **Analytics**: Microsoft Clarity (session recording + heatmaps)
+- **Hosting**: Vercel (serverless functions + static assets)
+- **Rate Limiting**: Client-side localStorage-based (5 uses/tool/day)
+
+---
+
+## Site Structure
+
+```
+love4prompts.vercel.app/
+├── /                          # Homepage (Universal Bar + Library)
+├── /tools/prompt-enhancer     # Prompt Enhancer tool
+├── /tools/prompt-translator   # Prompt Translator tool
+├── /tools/prompt-maker        # Prompt Maker tool
+├── /tools/image-to-prompt     # Image to Prompt tool
+├── /tools/prompt-to-image     # Prompt to Image tool
+├── /tools/                    # All tools index page
+├── /linkedin-post-generator   # LinkedIn Post Generator
+├── /instagram-caption-generator # Instagram Caption Generator
+├── /coding-prompt-generator   # Coding Prompt Generator
+├── /dashboard                 # User dashboard (prompt management)
+├── /privacy                   # Privacy Policy
+├── /terms                     # Terms of Service
+├── /robots.txt                # Crawler directives
+├── /llms.txt                  # This file (concise)
+└── /llms-full.txt             # Full documentation (this file)
+```
+
+---
+
+## Contact & Brand
+
+- **Brand Name**: Love4Prompts
+- **Tagline**: "Write better prompts. Ship better results."
+- **Domain**: love4prompts.vercel.app
+- **Pricing**: Free (no paid tier currently)

@@ -5,6 +5,14 @@ import {
   ChevronDown, Clock, Command, Zap, Bot,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useOS } from '../../lib/useOS';
+
+declare global {
+  interface Window {
+    clarity?: (method: string, event: string, data?: Record<string, string>) => void;
+  }
+}
+
 
 // ─── BRAND LOGO PATHS (ChatGPT/OpenAI, Midjourney, Claude, DALL-E, Gemini) ───
 const OpenAILogo = (props: React.SVGProps<SVGSVGElement>) => (
@@ -62,6 +70,14 @@ function isLocalStorageAvailable(): boolean {
 }
 
 // ─── Types ───────────────────────────────────────────────────────────
+interface RecentEntry {
+  input: string;
+  output: string;
+  model: string;
+  mode: string;
+  timestamp: number;
+}
+
 interface Intent {
   mode: string;
   label: string;
@@ -177,6 +193,8 @@ export const UniversalBar: React.FC = () => {
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const os = useOS();
+  const modKey = os === 'mac' ? '⌘' : 'Ctrl';
 
   // Model selector
   const [selectedModel, setSelectedModel] = useState('ChatGPT');
@@ -186,6 +204,27 @@ export const UniversalBar: React.FC = () => {
   // History dropdown
   const [historyOpen, setHistoryOpen] = useState(false);
   const [history, setLocalHistory] = useState<string[]>([]);
+  const [recentPrompts, setRecentPrompts] = useState<RecentEntry[]>([]);
+
+  const saveRecentPrompt = useCallback((queryInput: string, queryOutput: string, queryModel: string, queryMode: string) => {
+    if (!isLocalStorageAvailable()) return;
+    try {
+      const existing: RecentEntry[] = JSON.parse(localStorage.getItem('l4p_recent') || '[]');
+      const filtered = existing.filter((item) => item.input.toLowerCase() !== queryInput.toLowerCase());
+      const newEntry: RecentEntry = {
+        input: queryInput,
+        output: queryOutput,
+        model: queryModel,
+        mode: queryMode,
+        timestamp: Date.now()
+      };
+      const updated = [newEntry, ...filtered].slice(0, 5);
+      localStorage.setItem('l4p_recent', JSON.stringify(updated));
+      setRecentPrompts(updated);
+    } catch (e) {
+      console.error('Failed to save recent prompt:', e);
+    }
+  }, []);
 
   // Result state
   const [isLoading, setIsLoading] = useState(false);
@@ -202,9 +241,14 @@ export const UniversalBar: React.FC = () => {
   const [refinementInput, setRefinementInput] = useState('');
   const [isRefining, setIsRefining] = useState(false);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Basic handler
-  }, []);
+  // Bulletproof Mode state
+  const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false);
+  const [isGeneratingFinalPrompt, setIsGeneratingFinalPrompt] = useState(false);
+  const [bulletproofQuestions, setBulletproofQuestions] = useState<{ id: number; question: string; answer: string; }[]>([]);
+  const [finalBulletproofPrompt, setFinalBulletproofPrompt] = useState('');
+  const [bulletproofError, setBulletproofError] = useState('');
+  const [copiedFinalPrompt, setCopiedFinalPrompt] = useState(false);
+
 
   // Helper to construct alpha colors
   const getHexWithOpacity = (hex: string, opacity: number): string => {
@@ -213,8 +257,17 @@ export const UniversalBar: React.FC = () => {
     return `${cleanHex}${alpha}`;
   };
 
-  // Load history on mount
-  useEffect(() => { setLocalHistory(getHistory()); }, []);
+  // Load history and recent prompts on mount
+  useEffect(() => { 
+    setLocalHistory(getHistory()); 
+    if (isLocalStorageAvailable()) {
+      try {
+        setRecentPrompts(JSON.parse(localStorage.getItem('l4p_recent') || '[]'));
+      } catch {
+        setRecentPrompts([]);
+      }
+    }
+  }, []);
 
   // ── Cmd+K global shortcut ────────────────────────────────────────
   useEffect(() => {
@@ -300,10 +353,7 @@ export const UniversalBar: React.FC = () => {
   }, [classifyIntent, selectedModel]);
 
   // ── Execute inline ───────────────────────────────────────────────
-  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!input.trim() || isLoading) return;
-
+  const executeQuery = useCallback(async (queryInput: string, queryModel: string, queryIntent: Intent) => {
     setIsLoading(true);
     setError('');
     setResultPrompt('');
@@ -311,8 +361,12 @@ export const UniversalBar: React.FC = () => {
     setEditedPrompt('');
     setRefinementInput('');
     setIsDirectChat(false);
-    setResultIntent(intent);
-    pushHistory(input.trim());
+    setResultIntent(queryIntent);
+    setBulletproofQuestions([]);
+    setFinalBulletproofPrompt('');
+    setBulletproofError('');
+    setCopiedFinalPrompt(false);
+    pushHistory(queryInput);
     setLocalHistory(getHistory());
 
     const controller = new AbortController();
@@ -323,23 +377,23 @@ export const UniversalBar: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: input.trim(),
-          model: selectedModel,
-          intent: intent.label
+          prompt: queryInput,
+          model: queryModel,
+          intent: queryIntent.label
         })
       }).catch(err => console.error('Failed to save prompt:', err));
 
-      const res = await fetch(intent.apiEndpoint, {
+      const res = await fetch(queryIntent.apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(intent.buildPayload(input.trim(), selectedModel)),
+        body: JSON.stringify(queryIntent.buildPayload(queryInput, queryModel)),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
 
-      const genPrompt = intent.extractResult(data) || '';
+      const genPrompt = queryIntent.extractResult(data) || '';
       const dirResponse = (isRecord(data) && typeof data.directResponse === 'string') ? data.directResponse : '';
       const direct = isRecord(data) && !!data.isDirectChat;
 
@@ -348,6 +402,9 @@ export const UniversalBar: React.FC = () => {
       setEditedPrompt(genPrompt);
       setIsDirectChat(direct);
       setActiveTab(direct ? 'output' : 'prompt');
+
+      saveRecentPrompt(queryInput, genPrompt || dirResponse, queryModel, queryIntent.mode);
+      window.clarity?.("event", "prompt_enhanced", { mode: queryIntent.mode, model: queryModel });
     } catch (err: unknown) {
       clearTimeout(timeoutId);
       if (err instanceof Error && err.name === 'AbortError') {
@@ -358,7 +415,115 @@ export const UniversalBar: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [input, intent, isLoading, selectedModel]);
+  }, [saveRecentPrompt]);
+
+  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!input.trim() || isLoading) return;
+    await executeQuery(input.trim(), selectedModel, intent);
+  }, [input, intent, isLoading, selectedModel, executeQuery]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  }, [handleSubmit]);
+
+  const handleRecentClick = useCallback(async (entry: RecentEntry) => {
+    if (isLoading) return;
+    window.clarity?.("event", "recent_chip_used");
+    setInput(entry.input);
+    setSelectedModel(entry.model);
+    const matchedIntent = Object.values(INTENT_MAP).find(t => t.mode === entry.mode) || INTENT_MAP['GENERATE'];
+    setIntent(matchedIntent);
+    await executeQuery(entry.input, entry.model, matchedIntent);
+  }, [isLoading, executeQuery]);
+
+  const handleMakeBulletproof = useCallback(async () => {
+    const currentPrompt = editedPrompt || resultPrompt;
+    if (!currentPrompt || isGeneratingQuestions) return;
+
+    window.clarity?.("event", "bulletproof_clicked");
+
+    setIsGeneratingQuestions(true);
+    setBulletproofError('');
+    setBulletproofQuestions([]);
+    setFinalBulletproofPrompt('');
+
+    try {
+      const res = await fetch('/api/tools/bulletproof', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enhancedPrompt: currentPrompt,
+          targetModel: selectedModel,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to generate questions');
+
+      if (data.questions && Array.isArray(data.questions)) {
+        const mapped = data.questions.map((q: any) => ({
+          id: q.id,
+          question: q.question,
+          answer: q.defaultAnswer || '',
+        }));
+        setBulletproofQuestions(mapped);
+      } else {
+        throw new Error('Invalid response structure from server.');
+      }
+    } catch (err: any) {
+      console.error(err);
+      setBulletproofError(err.message || 'Something went wrong while generating questions.');
+    } finally {
+      setIsGeneratingQuestions(false);
+    }
+  }, [editedPrompt, resultPrompt, selectedModel, isGeneratingQuestions]);
+
+  const handleAnswerChange = useCallback((id: number, val: string) => {
+    setBulletproofQuestions(prev =>
+      prev.map(q => q.id === id ? { ...q, answer: val } : q)
+    );
+  }, []);
+
+  const handleGenerateCompletePrompt = useCallback(async () => {
+    const currentPrompt = editedPrompt || resultPrompt;
+    if (!currentPrompt || isGeneratingFinalPrompt) return;
+
+    window.clarity?.("event", "bulletproof_completed");
+
+    setIsGeneratingFinalPrompt(true);
+    setBulletproofError('');
+
+    try {
+      const res = await fetch('/api/tools/bulletproof', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          enhancedPrompt: currentPrompt,
+          targetModel: selectedModel,
+          answers: bulletproofQuestions.map(q => ({
+            question: q.question,
+            answer: q.answer,
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to generate complete prompt');
+
+      if (data.mergedPrompt) {
+        setFinalBulletproofPrompt(data.mergedPrompt);
+      } else {
+        throw new Error('Server returned empty response.');
+      }
+    } catch (err: any) {
+      console.error(err);
+      setBulletproofError(err.message || 'Something went wrong while generating final prompt.');
+    } finally {
+      setIsGeneratingFinalPrompt(false);
+    }
+  }, [editedPrompt, resultPrompt, selectedModel, bulletproofQuestions, isGeneratingFinalPrompt]);
 
   /** Textarea-based clipboard fallback for non-HTTPS / older browsers */
   const fallbackCopy = useCallback((text: string): boolean => {
@@ -420,12 +585,15 @@ export const UniversalBar: React.FC = () => {
     setResultIntent(null);
     setInput('');
     setIntent(INTENT_MAP['GENERATE']);
+    setBulletproofQuestions([]);
+    setFinalBulletproofPrompt('');
+    setBulletproofError('');
+    setCopiedFinalPrompt(false);
     inputRef.current?.focus();
   }, []);
 
-  // ── Custom execution (Option B) ──────────────────────────────────
-  const handleExecute = useCallback(() => {
-    const prompt = editedPrompt.trim();
+  const copyAndOpenInModel = useCallback((promptText: string) => {
+    const prompt = promptText.trim();
     if (!prompt) return;
 
     // Auto-copy optimized prompt to clipboard
@@ -461,14 +629,23 @@ export const UniversalBar: React.FC = () => {
 
     // Open target AI tool page in a new window/tab
     window.open(targetUrl, '_blank', 'noopener,noreferrer');
+  }, [selectedModel, fallbackCopy]);
+
+  // ── Custom execution (Option B) ──────────────────────────────────
+  const handleExecute = useCallback(() => {
+    const prompt = editedPrompt.trim();
+    if (!prompt) return;
+
+    copyAndOpenInModel(prompt);
 
     // Reset bar focus and clear/initialize input to type again
     handleReset();
-  }, [editedPrompt, selectedModel, handleReset, fallbackCopy]);
+  }, [editedPrompt, copyAndOpenInModel, handleReset]);
 
   // ── Copy / Reset ─────────────────────────────────────────────────
   const handleCopy = useCallback(() => {
     const textToCopy = activeTab === 'prompt' ? editedPrompt : resultOutput;
+    window.clarity?.("event", "prompt_copied", { mode: intent.mode });
     const onSuccess = () => { setCopied(true); setTimeout(() => setCopied(false), 2000); };
     if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
@@ -678,10 +855,10 @@ export const UniversalBar: React.FC = () => {
               </motion.span>
             )}
 
-            {/* Cmd+K hint */}
+            {/* Keyboard shortcut hint */}
             {!input && !isLoading && (
               <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-semibold text-white/20 bg-white/[0.04] border border-white/[0.06]">
-                <Command className="w-2.5 h-2.5" />K
+                {os === 'mac' ? <Command className="w-2.5 h-2.5" /> : <span>Ctrl+</span>}K
               </kbd>
             )}
 
@@ -828,7 +1005,26 @@ export const UniversalBar: React.FC = () => {
                   </form>
 
                   {resultIntent?.mode !== 'image' && activeTab === 'prompt' && !isDirectChat && (
-                    <div className="flex justify-end">
+                    <div className="flex items-center justify-end gap-2.5 mt-2">
+                      <button
+                        type="button"
+                        onClick={handleMakeBulletproof}
+                        disabled={isGeneratingQuestions}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold text-white/70 border border-white/10 hover:border-white/20 hover:text-white transition-all hover:bg-white/[0.02] cursor-pointer"
+                      >
+                        {isGeneratingQuestions ? (
+                          <>
+                            <div className="w-3.5 h-3.5 rounded-full border-2 border-t-transparent animate-spin border-[var(--color-primary)]" />
+                            Analyzing...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-3.5 h-3.5 text-[var(--color-primary)]" />
+                            Make it Bulletproof
+                          </>
+                        )}
+                      </button>
+
                       <button
                         type="button"
                         onClick={handleExecute}
@@ -839,6 +1035,136 @@ export const UniversalBar: React.FC = () => {
                       >
                         <Zap className="w-3.5 h-3.5" /> Run Prompt
                       </button>
+                    </div>
+                  )}
+
+                  {bulletproofError && bulletproofQuestions.length === 0 && (
+                    <div className="mt-2 text-right">
+                      <span className="text-[11px] text-red-400 font-medium">{bulletproofError}</span>
+                    </div>
+                  )}
+
+                  {/* Bulletproof Questions Section */}
+                  {bulletproofQuestions.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-white/[0.08] flex flex-col gap-4">
+                      <div>
+                        <h4 className="text-[13px] font-bold text-white flex items-center gap-1.5">
+                          <Bot className="w-4 h-4 text-[var(--color-primary)] animate-pulse" />
+                          Anticipated Follow-up Details
+                        </h4>
+                        <p className="text-[11px] text-white/40 mt-0.5">
+                          We've anticipated what the AI will ask next. Refine these answers to bake them into your final prompt.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {bulletproofQuestions.map((q) => (
+                          <div 
+                            key={q.id}
+                            className="flex flex-col gap-2 p-3.5 rounded-xl border border-white/[0.04]"
+                            style={{ backgroundColor: 'var(--color-background-elevated)' }}
+                          >
+                            <span className="text-[11px] font-bold text-white/50 leading-tight">
+                              {q.question}
+                            </span>
+                            <textarea
+                              value={q.answer}
+                              onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                              rows={2}
+                              className="w-full text-[12px] bg-[var(--color-background-card)] border border-white/[0.06] rounded-lg p-2 text-white/80 leading-normal focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all resize-none"
+                              placeholder="Type your answer..."
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3">
+                        {bulletproofError && (
+                          <span className="text-[11px] text-red-400 font-medium">{bulletproofError}</span>
+                        )}
+                        {!bulletproofError && <span />}
+                        
+                        <button
+                          type="button"
+                          onClick={handleGenerateCompletePrompt}
+                          disabled={isGeneratingFinalPrompt}
+                          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-bold text-white hover:scale-105 active:scale-95 transition-all self-end cursor-pointer"
+                          style={{
+                            background: `linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))`,
+                            boxShadow: `0 4px 14px var(--color-primary-glow)`,
+                          }}
+                        >
+                          {isGeneratingFinalPrompt ? (
+                            <>
+                              <div className="w-3.5 h-3.5 rounded-full border-2 border-t-transparent animate-spin border-white" />
+                              Baking in Answers...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-3.5 h-3.5" />
+                              Generate Complete Prompt
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Bulletproof Merged Output Box */}
+                  {finalBulletproofPrompt && (
+                    <div 
+                      className="mt-4 p-4 rounded-xl border border-[var(--color-border-warm)] flex flex-col gap-3"
+                      style={{ backgroundColor: 'var(--color-primary-surface)' }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.1em] font-mono">
+                          🛡️ Complete Bulletproof Prompt
+                        </span>
+                        
+                        <button
+                          type="button"
+                          onClick={() => {
+                            window.clarity?.("event", "prompt_copied", { mode: "bulletproof" });
+                            const onSuccess = () => {
+                              setCopiedFinalPrompt(true);
+                              setTimeout(() => setCopiedFinalPrompt(false), 2000);
+                            };
+                            const textToCopy = finalBulletproofPrompt;
+                            if (navigator.clipboard?.writeText) {
+                              navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
+                                fallbackCopy(textToCopy) && onSuccess();
+                              });
+                            } else {
+                              fallbackCopy(textToCopy) && onSuccess();
+                            }
+                          }}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-white/[0.04] border border-white/[0.06] text-white/50 hover:bg-white/[0.08] hover:text-white transition-all cursor-pointer"
+                        >
+                          {copiedFinalPrompt ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                          {copiedFinalPrompt ? 'Copied' : 'Copy'}
+                        </button>
+                      </div>
+
+                      <textarea
+                        readOnly
+                        value={finalBulletproofPrompt}
+                        className="w-full min-h-[120px] max-h-[300px] bg-black/20 border border-white/[0.04] rounded-lg p-3 text-white/90 text-[13px] leading-[1.6] outline-none font-medium resize-y"
+                      />
+                      
+                      <div className="flex justify-end mt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            copyAndOpenInModel(finalBulletproofPrompt);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-bold text-white hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                          style={{
+                            background: `linear-gradient(135deg, var(--color-primary), var(--color-primary-hover))`,
+                          }}
+                        >
+                          <Zap className="w-3.5 h-3.5" /> Run Bulletproof Prompt
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -869,6 +1195,31 @@ export const UniversalBar: React.FC = () => {
           })}
         </div>
       )}
+
+      {/* ── Recent prompts chips row ───────────────────────────────── */}
+      <AnimatePresence>
+        {!isLoading && recentPrompts.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            className="flex items-center gap-2 overflow-x-auto scrollbar-hide w-full pb-1 px-1 text-[11px] font-medium text-white/30"
+          >
+            <span className="flex-shrink-0 font-mono uppercase tracking-wider text-[9px] font-bold text-white/20">Recent:</span>
+            {recentPrompts.slice(0, 3).map((item, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleRecentClick(item)}
+                className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.01] hover:bg-white/[0.04] border border-white/[0.03] hover:border-white/[0.08] text-white/45 hover:text-white/80 transition-all duration-200 text-[11px] truncate max-w-[160px] cursor-pointer"
+                title={`Prefill: "${item.input}" (${item.model})`}
+              >
+                {item.input}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

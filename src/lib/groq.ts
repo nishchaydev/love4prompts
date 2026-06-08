@@ -6,6 +6,7 @@ interface GroqTextRequest {
   systemPrompt: string;
   userMessage: string;
   maxTokens?: number;
+  responseFormat?: { type: 'json_object' };
 }
 
 interface GroqResponse {
@@ -97,14 +98,20 @@ async function fetchWithFallback(
 
 // ─── Public API ────────────────────────────────────────────────────
 export async function callGroq(request: GroqTextRequest): Promise<GroqResponse> {
-  return fetchWithFallback({
+  const payload: Record<string, any> = {
     model: MODEL,
     max_tokens: request.maxTokens ?? 2048,
     messages: [
       { role: 'system', content: request.systemPrompt },
       { role: 'user', content: request.userMessage },
     ],
-  });
+  };
+
+  if (request.responseFormat) {
+    payload.response_format = request.responseFormat;
+  }
+
+  return fetchWithFallback(payload);
 }
 
 export async function callGroqVision(request: GroqVisionRequest): Promise<GroqResponse> {

@@ -42,7 +42,7 @@ export const TrendingBar: React.FC = () => {
   const ALL = [...items, ...items, ...items];
 
   return (
-    <div className="border-b border-white/[0.04] bg-[#0A0118]/60 backdrop-blur-sm h-9 flex items-center overflow-hidden z-20 relative">
+    <div className="hidden md:flex border-b border-white/[0.04] bg-[#0A0118]/60 backdrop-blur-sm h-9 items-center overflow-hidden z-20 relative">
       <div className="container mx-auto px-4 flex items-center gap-4">
         {/* Label */}
         <div className="flex items-center gap-1.5 flex-shrink-0">

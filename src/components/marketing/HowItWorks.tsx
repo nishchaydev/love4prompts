@@ -12,7 +12,7 @@ export const HowItWorks: React.FC = () => {
   const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section className="py-24 border-t border-white/[0.03] relative bg-[#0A0118]/20" ref={ref}>
+    <section className="py-24 border-t border-white/[0.03] relative bg-[var(--color-background-primary)]/40" ref={ref}>
       <div className="container mx-auto px-4 max-w-[960px]">
         <motion.div
           className="text-center mb-16"
@@ -28,7 +28,7 @@ export const HowItWorks: React.FC = () => {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/[0.04] bg-[#120A24]/30 rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[var(--color-border)] bg-[var(--color-background-card)]/40 backdrop-blur-xl rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
           {STEPS.map((step, i) => (
             <motion.div
               key={step.num}

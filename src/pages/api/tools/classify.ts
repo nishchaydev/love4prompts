@@ -8,6 +8,11 @@ export const POST: APIRoute = async ({ request }) => {
     if (!input || typeof input !== 'string' || input.trim().length < 2) {
       return json({ intent: 'GENERATE' }, 200);
     }
+    
+    const MAX_INPUT_LENGTH = 10000;
+    if (input.length > MAX_INPUT_LENGTH) {
+      return json({ intent: 'GENERATE', error: 'Input too long' }, 400);
+    }
 
     const systemPrompt = `You are an intent classifier for a prompt engineering toolkit.
 
@@ -44,7 +49,8 @@ Character count: ${charCount || input.length}`,
     const intent = VALID.includes(raw) ? raw : 'GENERATE';
 
     return json({ intent }, 200);
-  } catch {
+  } catch (error) {
+    console.error('Classification error:', error);
     return json({ intent: 'GENERATE' }, 200);
   }
 };

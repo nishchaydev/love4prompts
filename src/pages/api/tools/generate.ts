@@ -41,8 +41,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Build the professional system prompt using COSTAR + CoT + Few-Shot framework
     const systemPrompt = buildGenerateSystemPrompt(
       targetTool as any,
-      useCase as any,
-      description.trim()
+      useCase as any
     );
 
     const firstResult = await callGroq({

@@ -202,8 +202,7 @@ EXCELLENT PROMPT: "Create a comprehensive study guide for [Subject]. Structure i
 // ─── Master Prompt Generator System Prompt ──────────────────────────────────
 export function buildGenerateSystemPrompt(
   targetTool: AITool,
-  useCase: UseCase,
-  userDescription: string
+  useCase: UseCase
 ): string {
   const modelNotes = MODEL_NOTES[targetTool] || '';
   const framework = USE_CASE_FRAMEWORKS[useCase] || USE_CASE_FRAMEWORKS['Text'];

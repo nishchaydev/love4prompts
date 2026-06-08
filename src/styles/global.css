@@ -15,15 +15,19 @@
 
   /* Typography — high contrast */
   --color-text-primary: #f8f7fa;
-  --color-text-secondary: #a3a1af;
+  --color-text-secondary: #BEBEC8;
   --color-text-muted: #5e5b6e;
 
-  /* Brand — Wope punchy violet/purple accent */
-  --color-primary: #713DFF;
-  --color-primary-hover: #5d2bf6;
-  --color-primary-rgb: 113, 61, 255;
-  --color-primary-glow: rgba(113, 61, 255, 0.35);
-  --color-primary-surface: rgba(113, 61, 255, 0.08);
+  /* Brand — Wope punchy cerise accent */
+  --color-primary: #D83F87;
+  --color-primary-hover: #C12F76;
+  --color-primary-rgb: 216, 63, 135;
+  --color-primary-glow: rgba(216, 63, 135, 0.3);
+  --color-primary-surface: rgba(216, 63, 135, 0.08);
+  --color-accent-violet: #8B5CF6;
+  --color-accent-purple: var(--color-accent-violet);
+  --color-accent-purple-hover: #7c4bf5;
+  --color-border-warm: rgba(216, 63, 135, 0.12);
 
   /* Layout */
   --header-height: 72px;
@@ -54,6 +58,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    width: 100%;
+    max-width: 100%;
     overflow-x: hidden;
   }
 
@@ -70,6 +76,9 @@
     font-size: 15px;
     line-height: 1.6;
     font-feature-settings: "ss01" 1;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
