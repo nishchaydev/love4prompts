@@ -11,6 +11,8 @@ export default function ContentUI() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (!chrome?.storage?.local) return;
+    
     chrome.storage.local.get(['shadowMode'], (data) => {
       setShadowMode(!!data.shadowMode);
     });
@@ -20,10 +22,15 @@ export default function ContentUI() {
         setShadowMode(changes.shadowMode.newValue);
       }
     };
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    
+    if (chrome?.storage?.onChanged) {
+      chrome.storage.onChanged.addListener(handleStorageChange);
+    }
 
     return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange);
+      if (chrome?.storage?.onChanged) {
+        chrome.storage.onChanged.removeListener(handleStorageChange);
+      }
     };
   }, []);
 
@@ -121,13 +128,19 @@ export default function ContentUI() {
   }, [activeElement, isEnhancing]);
 
   useEffect(() => {
+    if (!chrome?.runtime?.onMessage) return;
+    
     const handleMessage = (request: any, _sender: chrome.runtime.MessageSender, _sendResponse: (response?: any) => void) => {
       if (request.action === 'REVERSE_PROMPT') {
         handleReversePrompt(request.text);
       }
     };
     chrome.runtime.onMessage.addListener(handleMessage);
-    return () => chrome.runtime.onMessage.removeListener(handleMessage);
+    return () => {
+      if (chrome?.runtime?.onMessage) {
+        chrome.runtime.onMessage.removeListener(handleMessage);
+      }
+    };
   }, []);
 
   const handleReversePrompt = async (text: string) => {
@@ -135,6 +148,11 @@ export default function ContentUI() {
     setReversePromptResult('Analyzing text to deduce the original prompt...');
     
     try {
+      if (!chrome?.runtime?.sendMessage) {
+        setIsReversing(false);
+        setReversePromptResult('Extension context lost. Please reload the page.');
+        return;
+      }
       chrome.runtime.sendMessage(
         {
           action: 'ENHANCE_PROMPT',
@@ -187,6 +205,10 @@ export default function ContentUI() {
     setIsEnhancing(true);
 
     try {
+      if (!chrome?.storage?.local || !chrome?.runtime?.sendMessage) {
+        alert('Extension context lost. Please reload the page.');
+        return;
+      }
       const storage = await chrome.storage.local.get(['enhancementMode', 'tone', 'length', 'memory', 'shadowMode', 'deepThink']);
       const mode = storage.enhancementMode || 'Auto';
       const tone = storage.tone !== undefined ? storage.tone : 50;

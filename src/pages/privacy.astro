@@ -5,78 +5,54 @@ const title = "Privacy Policy | Love4Prompts";
 const description = "Privacy Policy for Love4Prompts. Learn how we handle your email subscriptions, analytics data, and prompt data.";
 ---
 
-<Layout title={title} description={description}>
-  <div class="max-w-3xl mx-auto px-6 py-16 text-white relative z-10">
-    <div class="mb-12">
-      <h1 class="text-4xl font-light tracking-tight mb-2 text-white">Privacy Policy</h1>
-      <p class="text-white/40 text-sm font-mono">Last updated: June 2026</p>
+<Layout title={title} description={description} theme="editorial">
+  <div class="max-w-4xl mx-auto px-6 py-24 text-black relative z-10 font-['Inter']">
+    <div class="mb-12 border-b-8 border-black pb-8">
+      <h1 class="text-5xl sm:text-7xl font-black tracking-tighter mb-4 text-black uppercase">Privacy Policy</h1>
+      <p class="text-[#FF6D87] text-lg font-bold uppercase tracking-widest bg-black inline-block px-4 py-2">Last updated: June 2026</p>
     </div>
 
-    <div class="space-y-10">
-      <section class="space-y-3">
-        <h2 class="text-2xl font-bold tracking-tight text-white/90">1. What We Collect</h2>
-        <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm">
+    <div class="space-y-12">
+      <section class="space-y-4 bg-white border-4 border-black p-6 sm:p-10 shadow-[8px_8px_0_#FF6D87] hover:shadow-[12px_12px_0_#1482A3] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300">
+        <h2 class="text-3xl font-black tracking-tight text-black uppercase">1. What We Collect</h2>
+        <p class="text-gray-800 font-medium leading-relaxed text-lg">
           We collect minimal information to provide and improve our service. This includes:
         </p>
-        <ul class="list-disc pl-5 text-[var(--color-text-secondary)] leading-relaxed text-sm space-y-2">
-          <li><strong>Email address:</strong> Only if you explicitly subscribe to our newsletter. This is securely stored using <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" class="text-[var(--color-primary)] hover:underline">Supabase</a>, a secure cloud database service.</li>
-          <li><strong>Usage data:</strong> Collected via Microsoft Clarity. This records heatmaps, session clicks, and general interaction patterns in an anonymized form to help us optimize the toolkit.</li>
-          <li><strong>Prompts:</strong> The text you input is processed in real-time by Groq AI to generate optimized prompt suggestions. We do not store or retain your prompt text on our servers.</li>
+        <ul class="list-disc pl-8 text-gray-800 font-bold leading-relaxed text-lg space-y-3">
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">Email address:</span> Only if you explicitly subscribe to our newsletter. This is securely stored using <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" class="text-black font-black border-b-4 border-black hover:bg-black hover:text-white transition-all">Supabase</a>.</li>
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">Usage data:</span> Collected via Microsoft Clarity. This records heatmaps, session clicks, and general interaction patterns in an anonymized form to help us optimize the toolkit.</li>
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">Prompts:</span> The text you input is processed in real-time by Groq AI to generate optimized prompt suggestions. We do not store or retain your prompt text on our servers.</li>
         </ul>
       </section>
 
-      <section class="space-y-3">
-        <h2 class="text-2xl font-bold tracking-tight text-white/90">2. How We Use It</h2>
-        <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm">
-          We use the information we collect for the following purposes:
-        </p>
-        <ul class="list-disc pl-5 text-[var(--color-text-secondary)] leading-relaxed text-sm space-y-2">
+      <section class="space-y-4 bg-white border-4 border-black p-6 sm:p-10 shadow-[8px_8px_0_#FF6D87] hover:shadow-[12px_12px_0_#1482A3] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300">
+        <h2 class="text-3xl font-black tracking-tight text-black uppercase">2. How We Use It</h2>
+        <ul class="list-disc pl-8 text-gray-800 font-bold leading-relaxed text-lg space-y-3">
           <li>To send weekly prompt ideas, templates, and updates directly to your inbox (only if subscribed). You can opt-out at any time.</li>
           <li>To analyze general usage patterns and fix bugs.</li>
-          <li><strong>We never sell, rent, or share your personal data with third-party advertisers or brokers.</strong></li>
+          <li class="text-black font-black bg-[#1482A3] p-2">We never sell, rent, or share your personal data with third-party advertisers or brokers.</li>
         </ul>
       </section>
 
-      <section class="space-y-3">
-        <h2 class="text-2xl font-bold tracking-tight text-white/90">3. Third Party Services</h2>
-        <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm">
-          We integrate with the following trusted third-party platforms to run the service:
-        </p>
-        <ul class="list-disc pl-5 text-[var(--color-text-secondary)] leading-relaxed text-sm space-y-2">
-          <li><strong>Database:</strong> Supabase (<a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" class="text-[var(--color-primary)] hover:underline">supabase.com/privacy</a>)</li>
-          <li><strong>Analytics:</strong> Microsoft Clarity (<a href="https://microsoft.com/privacy" target="_blank" rel="noopener noreferrer" class="text-[var(--color-primary)] hover:underline">microsoft.com/privacy</a>)</li>
-          <li><strong>AI Inference:</strong> Groq (<a href="https://groq.com/privacy" target="_blank" rel="noopener noreferrer" class="text-[var(--color-primary)] hover:underline">groq.com/privacy</a>)</li>
-          <li><strong>Hosting:</strong> Vercel (<a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" class="text-[var(--color-primary)] hover:underline">vercel.com/legal/privacy-policy</a>)</li>
+      <section class="space-y-4 bg-white border-4 border-black p-6 sm:p-10 shadow-[8px_8px_0_#FF6D87] hover:shadow-[12px_12px_0_#1482A3] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300">
+        <h2 class="text-3xl font-black tracking-tight text-black uppercase">3. Third Party Services</h2>
+        <ul class="list-disc pl-8 text-gray-800 font-bold leading-relaxed text-lg space-y-3">
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">Database:</span> Supabase (<a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" class="text-black font-black border-b-4 border-black hover:bg-black hover:text-white transition-all">supabase.com/privacy</a>)</li>
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">Analytics:</span> Microsoft Clarity (<a href="https://microsoft.com/privacy" target="_blank" rel="noopener noreferrer" class="text-black font-black border-b-4 border-black hover:bg-black hover:text-white transition-all">microsoft.com/privacy</a>)</li>
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">AI Inference:</span> Groq (<a href="https://groq.com/privacy" target="_blank" rel="noopener noreferrer" class="text-black font-black border-b-4 border-black hover:bg-black hover:text-white transition-all">groq.com/privacy</a>)</li>
+          <li><span class="text-black bg-[#FF6D87] px-2 uppercase tracking-widest">Hosting:</span> Vercel (<a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" class="text-black font-black border-b-4 border-black hover:bg-black hover:text-white transition-all">vercel.com/legal/privacy-policy</a>)</li>
         </ul>
       </section>
 
-      <section class="space-y-3">
-        <h2 class="text-2xl font-bold tracking-tight text-white/90">4. Cookies</h2>
-        <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm">
-          We use standard storage technologies to keep your session state lightweight:
-        </p>
-        <ul class="list-disc pl-5 text-[var(--color-text-secondary)] leading-relaxed text-sm space-y-2">
-          <li><strong>localStorage:</strong> We use local storage (not cookies) to remember your model choices and recent prompt history locally on your device.</li>
-          <li><strong>Microsoft Clarity:</strong> Clarity uses cookies to identify unique user sessions and compile behavior analytics.</li>
-        </ul>
-      </section>
-
-      <section class="space-y-3">
-        <h2 class="text-2xl font-bold tracking-tight text-white/90">5. Your Rights</h2>
-        <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm">
+      <section class="space-y-4 bg-white border-4 border-black p-6 sm:p-10 shadow-[8px_8px_0_#FF6D87] hover:shadow-[12px_12px_0_#1482A3] hover:-translate-y-1 hover:-translate-x-1 transition-all duration-300">
+        <h2 class="text-3xl font-black tracking-tight text-black uppercase">4. Your Rights</h2>
+        <p class="text-gray-800 font-medium leading-relaxed text-lg">
           You have complete control over your data:
         </p>
-        <ul class="list-disc pl-5 text-[var(--color-text-secondary)] leading-relaxed text-sm space-y-2">
-          <li>To request immediate deletion of your email from our database, contact us at <a href="mailto:nishchaydev@outlook.com" class="text-[var(--color-primary)] hover:underline">nishchaydev@outlook.com</a>.</li>
+        <ul class="list-disc pl-8 text-gray-800 font-bold leading-relaxed text-lg space-y-3">
+          <li>To request immediate deletion of your email from our database, contact us at <a href="mailto:nishchaydev@outlook.com" class="text-black font-black border-b-4 border-black hover:bg-black hover:text-white transition-all">nishchaydev@outlook.com</a>.</li>
           <li>To delete your cached prompt history and preferences, simply clear your browser's site data or local storage.</li>
         </ul>
-      </section>
-
-      <section class="space-y-3">
-        <h2 class="text-2xl font-bold tracking-tight text-white/90">6. Contact</h2>
-        <p class="text-[var(--color-text-secondary)] leading-relaxed text-sm">
-          If you have any questions about this privacy policy, email us at <a href="mailto:nishchaydev@outlook.com" class="text-[var(--color-primary)] hover:underline">nishchaydev@outlook.com</a>.
-        </p>
       </section>
     </div>
   </div>

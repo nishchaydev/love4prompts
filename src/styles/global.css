@@ -58,6 +58,29 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background-color: #FF6D87;
+    color: white;
+  }
+  ::-moz-selection {
+    background-color: #FF6D87;
+    color: white;
+  }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  html {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
@@ -100,4 +123,134 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EDITORIAL PAGE — Neo-Brutalist ILOVEPROMPTS Theme
+   ═══════════════════════════════════════════════════════════ */
+
+.editorial-page {
+  background-color: #FFFFFF;
+  color: #000000;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.editorial-page ::selection {
+  background: #0047BB;
+  color: #ffffff;
+}
+
+/* ── Typography tokens ─────────────────── */
+.ed-label-caps {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ed-label-ui {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+
+.ed-body-main {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.ed-headline-lg {
+  font-family: "Inter", sans-serif;
+  font-size: 48px;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .ed-headline-lg {
+    font-size: 88px;
+    line-height: 88px;
+    letter-spacing: -0.04em;
+  }
+}
+
+.ed-display-wordmark {
+  font-family: "Inter", sans-serif;
+  font-size: 320px;
+  line-height: 280px;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+}
+
+/* ── Color tokens ──────────────────────── */
+.ed-vermillion { color: #FF3B30; }
+.ed-cobalt { color: #0047BB; }
+.ed-bg-vermillion { background-color: #FF3B30; }
+.ed-bg-cobalt { background-color: #0047BB; }
+.ed-border-vermillion { border-color: #FF3B30; }
+.ed-border-cobalt { border-color: #0047BB; }
+.ed-surface { color: #4c4546; }
+
+/* ── Masonry grid ──────────────────────── */
+.masonry-grid {
+  column-gap: 1px;
+}
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1px;
+}
+@media (min-width: 768px) {
+  .masonry-grid { column-count: 2; }
+}
+@media (min-width: 1024px) {
+  .masonry-grid { column-count: 3; }
+}
+@media (min-width: 1280px) {
+  .masonry-grid { column-count: 4; }
+}
+
+/* ── Vertical text for sidebar wordmark ── */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+/* ── Chromatic accents for detail page ─── */
+.chromatic-border {
+  border: 1px solid #FF3B30;
+}
+
+.chromatic-underline {
+  text-decoration: none;
+  border-bottom: 2px solid #0047BB;
+  transition: all 0.2s ease;
+}
+
+.chromatic-underline:hover {
+  background-color: #0047BB;
+  color: #ffffff;
+}
+
+/* ── Editorial scrollbar ─────────────── */
+.editorial-page::-webkit-scrollbar {
+  width: 12px;
+  background: #f9f9f9;
+  border-left: 1px solid #000000;
+}
+.editorial-page::-webkit-scrollbar-thumb {
+  background: #000000;
+  border: 1px solid #000000;
+}
+
+/* ── Material Symbols fill state ─────── */
+.fill-icon {
+  font-variation-settings: 'FILL' 1;
 }

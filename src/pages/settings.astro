@@ -1,0 +1,81 @@
+---
+import Layout from '../components/layout/Layout.astro';
+
+const title = "Love4Prompts — Settings";
+const description = "Manage your account and preferences.";
+---
+
+<Layout title={title} description={description} theme="editorial">
+  <div class="flex flex-1 relative overflow-hidden bg-[#FAEFED]">
+    <main class="flex-1 pt-[120px] px-[20px] sm:px-[40px] max-w-4xl mx-auto pb-[100px] overflow-y-auto w-full">
+      <header class="mb-[60px]">
+        <h1 class="text-black tracking-tighter uppercase font-black text-[40px] sm:text-[56px] mb-[16px] leading-none border-b-[4px] border-black pb-[20px]">
+          Settings
+        </h1>
+        <p class="text-[#4c4546] font-medium text-[18px] sm:text-[20px] leading-tight mt-[20px]">
+          Manage your profile, preferences, and account details.
+        </p>
+      </header>
+
+      <div class="space-y-[40px]">
+        {/* Profile Section */}
+        <section class="border-2 border-black p-[30px] sm:p-[40px] shadow-[8px_8px_0_#FF6D87] bg-white relative">
+          <h2 class="text-black uppercase font-black text-[24px] mb-[20px]">Profile Information</h2>
+          <div class="space-y-[20px]">
+            <div>
+              <label class="block text-black font-bold uppercase tracking-wider text-[14px] mb-[8px]">Display Name</label>
+              <input type="text" placeholder="Your Name" class="w-full border-2 border-black p-[12px] text-[16px] font-medium text-black focus:outline-none focus:border-[#FF6D87] transition-colors" />
+            </div>
+            <div>
+              <label class="block text-black font-bold uppercase tracking-wider text-[14px] mb-[8px]">Email Address</label>
+              <input type="email" placeholder="you@example.com" disabled class="w-full border-2 border-[#cfc4c5] bg-[#f9f9f9] p-[12px] text-[16px] font-medium text-[#4c4546] cursor-not-allowed" />
+              <p class="text-[12px] text-[#FF6D87] mt-[4px] font-bold tracking-wide uppercase">Email cannot be changed.</p>
+            </div>
+            <button class="bg-black text-white px-[24px] py-[12px] font-bold uppercase tracking-widest text-[12px] hover:bg-[#FF6D87] transition-colors cursor-pointer mt-[10px]">
+              Save Changes
+            </button>
+          </div>
+        </section>
+
+        {/* Preferences Section */}
+        <section class="border-2 border-black p-[30px] sm:p-[40px] shadow-[8px_8px_0_#000] bg-white relative">
+          <h2 class="text-black uppercase font-black text-[24px] mb-[20px]">Preferences</h2>
+          <div class="space-y-[20px]">
+            <div class="flex items-center justify-between border-b border-[#cfc4c5] pb-[20px]">
+              <div>
+                <p class="text-black font-bold uppercase tracking-wider text-[14px]">Email Notifications</p>
+                <p class="text-[#4c4546] text-[14px]">Receive updates about new prompts and tools.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" class="sr-only peer" checked />
+                <div class="w-11 h-6 bg-[#cfc4c5] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#FF6D87]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF6D87]"></div>
+              </label>
+            </div>
+            <div class="flex items-center justify-between border-b border-[#cfc4c5] pb-[20px]">
+              <div>
+                <p class="text-black font-bold uppercase tracking-wider text-[14px]">Public Profile</p>
+                <p class="text-[#4c4546] text-[14px]">Allow others to see your submitted prompts.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" class="sr-only peer" checked />
+                <div class="w-11 h-6 bg-[#cfc4c5] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#FF6D87]/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        {/* Danger Zone Section */}
+        <section class="border-2 border-[#FF6D87] p-[30px] sm:p-[40px] bg-[#fff5f5] relative mt-[60px]">
+          <h2 class="text-[#FF6D87] uppercase font-black text-[24px] mb-[20px]">Danger Zone</h2>
+          <p class="text-[#4c4546] text-[16px] mb-[20px]">
+            Once you delete your account, there is no going back. Please be certain.
+          </p>
+          <button class="bg-[#FF6D87] text-white px-[24px] py-[12px] font-bold uppercase tracking-widest text-[12px] hover:bg-black transition-colors cursor-pointer">
+            Delete Account
+          </button>
+        </section>
+      </div>
+
+    </main>
+  </div>
+</Layout>

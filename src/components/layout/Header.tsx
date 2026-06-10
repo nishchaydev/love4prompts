@@ -3,7 +3,7 @@ import type { Session } from '@supabase/supabase-js';
 import {
   User, LogOut, LayoutDashboard, Menu, X,
   Wand2, Sparkles, ArrowRightLeft, Image, Palette,
-  ChevronDown,
+  ChevronDown, Puzzle
 } from 'lucide-react';
 import { AuthModal } from '../auth/AuthModal';
 import { supabase } from '../../lib/supabase';
@@ -15,20 +15,34 @@ const TOOLS = [
   { label: 'Prompt Translator', href: '/tools/prompt-translator', icon: ArrowRightLeft, desc: 'Convert prompts between platforms' },
   { label: 'Image to Prompt', href: '/tools/image-to-prompt', icon: Image, desc: 'Extract descriptive prompts from images' },
   { label: 'Prompt to Image', href: '/tools/prompt-to-image', icon: Palette, desc: 'Generate visual art from text' },
+  { label: 'Chrome Extension', href: '/extension', icon: Puzzle, desc: 'Use AI prompts anywhere on the web' },
 ];
 
-export const Header: React.FC = () => {
+export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> = ({ isEditorial = false, currentPath = '/' }) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activePath, setActivePath] = useState(currentPath);
   const toolsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session && localStorage.getItem('demo_auth') === 'true') {
+        setSession({ user: { email: 'demo@love4prompts.com', user_metadata: { user_name: 'Demo User' } } } as any);
+      } else {
+        setSession(session);
+      }
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session && localStorage.getItem('demo_auth') === 'true') {
+        setSession({ user: { email: 'demo@love4prompts.com', user_metadata: { user_name: 'Demo User' } } } as any);
+      } else {
+        setSession(session);
+      }
+    });
     return () => subscription.unsubscribe();
   }, []);
 
@@ -36,6 +50,13 @@ export const Header: React.FC = () => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setActivePath(window.location.pathname);
+    const handlePageLoad = () => setActivePath(window.location.pathname);
+    document.addEventListener('astro:page-load', handlePageLoad);
+    return () => document.removeEventListener('astro:page-load', handlePageLoad);
   }, []);
 
   useEffect(() => {
@@ -55,11 +76,111 @@ export const Header: React.FC = () => {
 
   const handleSignOut = async () => {
     if (!window.confirm('Are you sure you want to sign out?')) return;
+    localStorage.removeItem('demo_auth');
     await supabase.auth.signOut();
     setProfileDropdownOpen(false);
     window.location.href = '/';
   };
 
+  /* ═══ EDITORIAL NAV — ILOVEPROMPTS style ═══ */
+  if (isEditorial) {
+    return (
+      <>
+        <nav className="bg-transparent text-black flex justify-between items-center px-[40px] w-full h-20 absolute top-0 z-50">
+          {/* Logo */}
+          <a href="/" className="font-black tracking-tighter no-underline flex items-center" style={{ fontFamily: 'Inter, sans-serif', fontSize: 'clamp(28px, 6vw, 42px)', lineHeight: '1' }}>
+            {"love4prompts".split('').map((char, index) => (
+              <span 
+                key={index} 
+                className={`inline-block transition-all duration-300 ease-out hover:-translate-y-1 ${
+                  char === '4' ? 'text-[#FF6D87] hover:text-black' : 'text-black hover:text-[#FF6D87]'
+                }`}
+              >
+                {char}
+              </span>
+            ))}
+          </a>
+
+          {/* Right Side - Nav Links + User Actions */}
+          <div className="flex items-center gap-12">
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex space-x-10">
+              <a href="/#library" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath === '/' ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Library</a>
+              <a href="/tools" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath.startsWith('/tools') ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Tools</a>
+              <a href="/extension" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath.startsWith('/extension') ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Plug & Play</a>
+              <a href="/submit" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath.startsWith('/submit') ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Submit</a>
+            </div>
+
+            {/* User or LOGIN */}
+            <div className="flex items-center space-x-4">
+              {session ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                    className="hover:text-[#FF6D87] transition-colors cursor-pointer"
+                  >
+                    <Avatar size="sm" src={session.user.user_metadata?.avatar_url} className="border-[2px] border-black bg-[#FF6D87] text-white hover:bg-black transition-colors" />
+                  </button>
+                  {profileDropdownOpen && (
+                    <div className="absolute right-0 mt-3 w-52 bg-white border border-black shadow-[4px_4px_0_#000] z-50">
+                      <div className="px-4 py-2.5 border-b border-black">
+                        <p className="ed-label-ui font-bold text-black truncate">{session.user.user_metadata?.user_name || session.user.email}</p>
+                      </div>
+                      <a href="/dashboard" className="flex items-center gap-2.5 px-4 py-2.5 ed-label-caps text-[#4c4546] hover:bg-black hover:text-white transition-colors no-underline">
+                        Dashboard
+                      </a>
+                      <a href="/settings" className="flex items-center gap-2.5 px-4 py-2.5 ed-label-caps text-[#4c4546] hover:bg-black hover:text-white transition-colors no-underline">
+                        Settings
+                      </a>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 ed-label-caps text-[#FF6D87] hover:bg-[#FF6D87] hover:text-white transition-colors text-left cursor-pointer"
+                      >
+                        Log Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <a
+                  href="/login"
+                  className="bg-[#FF6D87] text-white px-[12px] py-[6px] md:px-[20px] md:py-[10px] ed-label-caps tracking-widest text-[10px] md:text-[12px] hover:bg-black transition-colors font-bold uppercase no-underline inline-block"
+                >
+                  LOGIN
+                </a>
+              )}
+              
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden hover:text-[#FF6D87] transition-colors cursor-pointer ml-4"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+        </nav>
+
+        {/* Mobile Nav for Editorial */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-[#f9f9f9] border-b border-[#7e7576] absolute top-20 left-0 w-full z-40 px-[40px] py-[20px] flex flex-col space-y-4">
+            <a href="/#library" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath === '/' ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Library</a>
+            <a href="/tools" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/tools') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Tools</a>
+            <a href="/extension" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/extension') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Plug & Play</a>
+            <a href="/submit" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/submit') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Submit</a>
+          </div>
+        )}
+        
+        <AuthModal 
+          isOpen={isAuthModalOpen} 
+          onClose={() => setIsAuthModalOpen(false)} 
+        />
+      </>
+    );
+  }
+
+  /* ═══ DEFAULT NAV — Dark theme ═══ */
   return (
     <>
       <header
@@ -197,12 +318,14 @@ export const Header: React.FC = () => {
                 <>
                   <div className="h-px bg-white/[0.04] my-2" />
                   <div className="px-3 py-1.5">
-                    <button
-                      onClick={() => { setIsAuthModalOpen(true); setMobileMenuOpen(false); }}
-                      className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent-cerise)] text-white text-[13px] font-bold hover:brightness-110 active:scale-95 transition-all duration-250 shadow-[0_4px_20px_var(--color-primary-glow)] cursor-pointer"
+                    <a
+                      href="/login"
+                      data-astro-reload
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent-cerise)] text-white text-[13px] font-bold hover:brightness-110 active:scale-95 transition-all duration-250 shadow-[0_4px_20px_var(--color-primary-glow)] cursor-pointer no-underline"
                     >
-                      Sign In / Sign Up
-                    </button>
+                      LOGIN
+                    </a>
                   </div>
                 </>
               )}

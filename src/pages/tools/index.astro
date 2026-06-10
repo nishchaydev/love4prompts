@@ -3,144 +3,154 @@ import Layout from '../../components/layout/Layout.astro';
 ---
 
 <Layout 
-  title="Free AI Prompt Tools — Enhance, Generate, Translate & Reverse Engineer Prompts" 
-  description="Powerful AI prompt tools. Enhance any prompt, generate from scratch, translate between AI tools, or reverse-engineer images into prompts. All free."
+  title="Instruments — Love4Prompts" 
+  description="Precision utilities for prompt engineering. Execute transformations, translate syntax, and generate concepts."
+  theme="editorial"
 >
-  <div class="relative pt-[120px] pb-[80px] px-4 overflow-hidden">
-    <div class="container mx-auto max-w-[1000px] relative z-10">
+  <div class="relative min-h-[85vh] bg-[#ffffff]">
+    
+    {/* Background Grid Pattern */}
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.4]" 
+         style="background-image: linear-gradient(to right, #cfc4c5 1px, transparent 1px), linear-gradient(to bottom, #cfc4c5 1px, transparent 1px); background-size: 40px 40px; background-position: center top;">
+    </div>
+
+    {/* Content Container */}
+    <div class="relative z-10 max-w-[1200px] mx-auto px-[24px] sm:px-[40px] pt-[60px] sm:pt-[100px] pb-[120px]">
       
-      <!-- Hero -->
-      <div class="text-center mb-16 animate-fade-in-up">
-        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-accent-blue)]/10 border border-[var(--color-accent-blue)]/20 text-[var(--color-accent-blue)] text-sm font-bold mb-6 tracking-wide uppercase">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent-blue)] opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent-blue)]"></span>
-          </span>
-          Free AI Tools
+      {/* Header Section */}
+      <div class="flex flex-col mb-[80px]">
+        <div class="border-l-[4px] border-[#FF6D87] pl-[20px] sm:pl-[24px]">
+          <div class="ed-label-caps text-[#4c4546] mb-[24px] tracking-[0.1em]">
+            // SYSTEM.TOOLS.INDEX
+          </div>
+          <h1 class="text-black mb-[24px] tracking-tighter uppercase" 
+              style="font-family: 'Inter', sans-serif; font-size: clamp(48px, 9vw, 110px); font-weight: 900; line-height: 0.9;">
+            Tools<span class="text-[#FF6D87]">.</span>
+          </h1>
+          <p class="ed-body-main text-[#4c4546] max-w-[500px] mb-[16px]">
+            Simple tools to help you write perfect prompts and create better AI images.
+          </p>
+          <p class="text-[#FF6D87] font-bold tracking-widest uppercase text-[12px]">
+            Making your everyday simple!
+          </p>
         </div>
-        <h1 class="text-[clamp(36px,8vw,68px)] leading-[1.1] font-black text-white tracking-tighter mb-4">
-          AI Prompt Tools
-        </h1>
-        <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-[600px] mx-auto leading-relaxed font-medium">
-          Everything you need to craft, enhance, and convert AI prompts. Powered by Claude.
-        </p>
       </div>
 
-      <!-- Tools Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="tools-grid">
+      {/* Grid of Tools */}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-black border border-black shadow-[8px_8px_0_#FF6D87]">
         
-        <!-- Prompt Enhancer -->
-        <a href="/tools/prompt-enhancer" id="tool-enhancer" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-primary)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(255,42,95,0.2)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#ff2a5f] to-[#ff6b6b] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(255,42,95,0.3)] group-hover:shadow-[0_8px_35px_rgba(255,42,95,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>
+        {/* 01: ENHANCER */}
+        <a href="/tools/prompt-enhancer" class="bg-white p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-[#cfc4c5] font-mono group-hover:text-black transition-colors">01</div>
+          <div class="w-[48px] h-[48px] border border-black flex items-center justify-center mb-[40px] bg-white transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-black group-hover:text-white transition-colors">auto_awesome</span>
           </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-primary)] transition-colors">Prompt Enhancer</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Turn any basic prompt into a detailed, optimized prompt for your target AI tool.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-primary)] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </div>
-        </a>
-
-        <!-- Prompt Maker -->
-        <a href="/tools/prompt-maker" id="tool-maker" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-accent-blue)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(0,229,255,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00e5ff] to-[#0088ff] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(0,229,255,0.3)] group-hover:shadow-[0_8px_35px_rgba(0,229,255,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>
-          </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-accent-blue)] transition-colors">Prompt Maker</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Describe your idea in plain English — get a ready-to-use AI prompt instantly.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-accent-blue)] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">PROMPT ENHANCER</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#4c4546] mb-auto leading-relaxed">TURN SIMPLE IDEAS INTO DETAILED, PROFESSIONAL PROMPTS WITH ONE CLICK.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>START ENHANCING</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>
         </a>
 
-        <!-- Prompt Translator -->
-        <a href="/tools/prompt-translator" id="tool-translator" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-accent-purple)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(138,43,226,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#8a2be2] to-[#c060ff] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(138,43,226,0.3)] group-hover:shadow-[0_8px_35px_rgba(138,43,226,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+        {/* 02: MAKER */}
+        <a href="/tools/prompt-maker" class="bg-white p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-[#cfc4c5] font-mono group-hover:text-black transition-colors">02</div>
+          <div class="w-[48px] h-[48px] border border-black flex items-center justify-center mb-[40px] bg-white transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-black group-hover:text-white transition-colors">build</span>
           </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-accent-purple)] transition-colors">Prompt Translator</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Convert any prompt between AI tools — Midjourney to DALL-E, ChatGPT to Claude, and more.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-accent-purple)] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </div>
-        </a>
-
-        <!-- Image to Prompt -->
-        <a href="/tools/image-to-prompt" id="tool-image-to-prompt" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[var(--color-success-green)]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#10b981] to-[#34d399] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(16,185,129,0.3)] group-hover:shadow-[0_8px_35px_rgba(16,185,129,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-          </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[var(--color-success-green)] transition-colors">Image to Prompt</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Upload any AI image and get the reverse-engineered prompt that could recreate it.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[var(--color-success-green)] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">PROMPT BUILDER</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#4c4546] mb-auto leading-relaxed">BUILD CUSTOM PROMPTS STEP-BY-STEP USING OUR EASY VISUAL CREATOR.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>START BUILDING</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>
         </a>
 
-        <!-- Prompt to Image -->
-        <a href="/tools/prompt-to-image" id="tool-prompt-to-image" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[#ff9a00]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(255,154,0,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#ff9a00] to-[#ff5200] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(255,154,0,0.3)] group-hover:shadow-[0_8px_35px_rgba(255,154,0,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+
+        {/* 03: SOCIAL MEDIA AI */}
+        <a href="/tools/social-media" class="bg-white p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-[#cfc4c5] font-mono group-hover:text-black transition-colors">03</div>
+          <div class="w-[48px] h-[48px] border border-black flex items-center justify-center mb-[40px] bg-white transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-black group-hover:text-white transition-colors">post_add</span>
           </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[#ff9a00] transition-colors">Prompt to Image</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Generate stunning AI images instantly directly from your text descriptions.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[#ff9a00] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">SOCIAL MEDIA AI</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#4c4546] mb-auto leading-relaxed">TURN A SIMPLE IDEA INTO A READY-TO-PUBLISH POST FOR LINKEDIN OR TWITTER.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>START WRITING</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>
         </a>
 
-        <!-- LinkedIn Post Generator -->
-        <a href="/linkedin-post-generator" id="tool-linkedin" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[#0a66c2]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(10,102,194,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0a66c2] to-[#004182] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(10,102,194,0.3)] group-hover:shadow-[0_8px_35px_rgba(10,102,194,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        {/* 04: CAPTION MAKER */}
+        <a href="/tools/caption-maker" class="bg-white p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-[#cfc4c5] font-mono group-hover:text-black transition-colors">04</div>
+          <div class="w-[48px] h-[48px] border border-black flex items-center justify-center mb-[40px] bg-white transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-black group-hover:text-white transition-colors">subtitles</span>
           </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[#0a66c2] transition-colors">LinkedIn Post Generator</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Write viral, highly-engaging LinkedIn posts instantly with formatting and hooks.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[#0a66c2] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </div>
-        </a>
-
-        <!-- Instagram Caption Generator -->
-        <a href="/instagram-caption-generator" id="tool-instagram" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[#e1306c]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(225,48,108,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(225,48,108,0.3)] group-hover:shadow-[0_8px_35px_rgba(225,48,108,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-          </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[#e1306c] transition-colors">Insta Caption Generator</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Generate engaging Instagram captions with perfectly crafted hashtags.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[#e1306c] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">CAPTION MAKER</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#4c4546] mb-auto leading-relaxed">WRITE CATCHY, ENGAGING CAPTIONS FOR YOUR INSTAGRAM PHOTOS AND VIDEOS.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>START CAPTIONING</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>
         </a>
 
-        <!-- Coding Prompt Generator -->
-        <a href="/coding-prompt-generator" id="tool-coding" class="group relative flex flex-col p-8 rounded-3xl bg-[var(--color-background-card)] border border-white/[0.06] hover:border-[#10b981]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(16,185,129,0.15)] no-underline">
-          <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#059669] to-[#047857] flex items-center justify-center mb-6 shadow-[0_8px_25px_rgba(5,150,105,0.3)] group-hover:shadow-[0_8px_35px_rgba(5,150,105,0.5)] group-hover:scale-110 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        {/* 05: PROMPT TO IMAGE */}
+        <a href="/tools/prompt-to-image" class="bg-white p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-[#cfc4c5] font-mono group-hover:text-black transition-colors">05</div>
+          <div class="w-[48px] h-[48px] border border-black flex items-center justify-center mb-[40px] bg-white transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-black group-hover:text-white transition-colors">brush</span>
           </div>
-          <h2 class="text-xl font-bold text-white mb-2 group-hover:text-[#10b981] transition-colors">Coding Prompt Generator</h2>
-          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed flex-1">Generate perfectly structured coding prompts for Cursor, Copilot, and Claude.</p>
-          <div class="mt-6 flex items-center gap-2 text-sm font-semibold text-[var(--color-text-muted)] group-hover:text-[#10b981] transition-colors">
-            Use tool
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">PROMPT TO IMAGE</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#4c4546] mb-auto leading-relaxed">TEST YOUR PROMPTS AND GENERATE IMAGES DIRECTLY WITHIN THE APP.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>START GENERATING</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        {/* 06: CHROME EXTENSION */}
+        <a href="/extension" class="bg-white p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-[#cfc4c5] font-mono group-hover:text-black transition-colors">06</div>
+          <div class="w-[48px] h-[48px] border border-black flex items-center justify-center mb-[40px] bg-white transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-black group-hover:text-white transition-colors">extension</span>
+          </div>
+          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">CHROME EXTENSION</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#4c4546] mb-auto leading-relaxed">BRING YOUR FAVORITE PROMPTS DIRECTLY INTO CHATGPT, CLAUDE, AND GEMINI.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>GET THE EXTENSION</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        {/* 07: ARCHIVE */}
+        <a href="/dashboard" class="bg-black p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+          <div class="absolute top-[24px] right-[24px] ed-label-caps text-white font-mono opacity-30">07</div>
+          <div class="w-[48px] h-[48px] border border-white flex items-center justify-center mb-[40px] bg-black transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
+            <span class="material-symbols-outlined text-white group-hover:text-white transition-colors">history</span>
+          </div>
+          <h2 class="text-white tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">MY ARCHIVE</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#cfc4c5] mb-auto leading-relaxed">BROWSE YOUR PERSONAL COLLECTION OF SAVED PROMPTS AND GENERATED IMAGES.</p>
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-white font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+            <span>OPEN ARCHIVE</span>
+            <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>
         </a>
 
       </div>
 
-      <!-- Bottom CTA -->
-      <div class="text-center mt-16 animate-fade-in-up" style="animation-delay: 0.3s;">
-        <p class="text-[var(--color-text-muted)] text-sm mb-4">Looking for ready-made prompts?</p>
-        <a href="/#library" class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 bg-white/5 text-white text-sm font-bold hover:bg-white/10 hover:border-white/20 transition-all duration-300 no-underline">
-          Browse Prompt Library
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      {/* Explore Library CTA */}
+      <div class="mt-[80px] border-[4px] border-black bg-white p-[40px] sm:p-[60px] flex flex-col items-center justify-center text-center shadow-[12px_12px_0_#FF6D87] transition-all duration-300 hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[16px_16px_0_#FF6D87]">
+        <h2 class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] mb-[16px] leading-none">
+          Need Inspiration<span class="text-[#FF6D87]">?</span>
+        </h2>
+        <p class="ed-body-main text-[#4c4546] max-w-[600px] mb-[32px]">
+          See what other creators are making in our community library. Find the perfect prompt to start your next masterpiece.
+        </p>
+        <a href="/#library" class="bg-black text-white px-[32px] py-[16px] font-bold tracking-widest text-[14px] uppercase hover:bg-[#FF6D87] transition-colors duration-300 inline-flex items-center gap-[8px] no-underline">
+          <span>Explore Library</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
         </a>
       </div>
 

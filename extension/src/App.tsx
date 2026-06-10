@@ -12,6 +12,7 @@ function App() {
 
   // Load from storage
   useEffect(() => {
+    if (!chrome?.storage?.local) return;
     chrome.storage.local.get(['enhancementMode', 'tone', 'length', 'memory', 'shadowMode', 'deepThink'], (data) => {
       if (chrome.runtime.lastError) {
         console.error('Failed to load settings:', chrome.runtime.lastError);
@@ -29,37 +30,37 @@ function App() {
   // Save to storage
   const saveMode = (newMode: string) => {
     setMode(newMode);
-    chrome.storage.local.set({ enhancementMode: newMode });
+    if (chrome?.storage?.local) chrome.storage.local.set({ enhancementMode: newMode });
   };
 
   const saveTone = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value);
     setTone(val);
-    chrome.storage.local.set({ tone: val });
+    if (chrome?.storage?.local) chrome.storage.local.set({ tone: val });
   };
 
   const saveLength = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value);
     setLength(val);
-    chrome.storage.local.set({ length: val });
+    if (chrome?.storage?.local) chrome.storage.local.set({ length: val });
   };
 
   const saveMemory = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
     setMemory(val);
-    chrome.storage.local.set({ memory: val });
+    if (chrome?.storage?.local) chrome.storage.local.set({ memory: val });
   };
 
   const toggleShadowMode = () => {
     const newVal = !shadowMode;
     setShadowMode(newVal);
-    chrome.storage.local.set({ shadowMode: newVal });
+    if (chrome?.storage?.local) chrome.storage.local.set({ shadowMode: newVal });
   };
 
   const toggleDeepThink = () => {
     const newVal = !deepThink;
     setDeepThink(newVal);
-    chrome.storage.local.set({ deepThink: newVal });
+    if (chrome?.storage?.local) chrome.storage.local.set({ deepThink: newVal });
   };
 
   return (

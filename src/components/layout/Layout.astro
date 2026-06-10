@@ -2,22 +2,26 @@
 import '../../styles/global.css';
 import { Header } from './Header';
 import { SeoFooter } from './SeoFooter';
+import { EditorialFooter } from './EditorialFooter';
 import { TrendingBar } from './TrendingBar';
-import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
   canonicalUrl?: string;
+  theme?: 'default' | 'editorial';
 }
 
 const { 
   title, 
   description, 
   ogImage = '/default-og.png',
-  canonicalUrl = Astro.url.href 
+  canonicalUrl = Astro.url.href,
+  theme = 'default'
 } = Astro.props;
+
+const isEditorial = theme === 'editorial';
 ---
 
 <!doctype html>
@@ -85,10 +89,10 @@ const {
       ]
     })} />
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
     <!-- Microsoft Clarity - Session Recording & Heatmaps -->
     <script type="text/javascript">
@@ -98,31 +102,143 @@ const {
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window, document, "clarity", "script", "x3b15mgjik");
     </script>
-    <ClientRouter />
   </head>
-  <body class="min-h-screen flex flex-col bg-[var(--color-background-primary)] text-[var(--color-text-primary)] selection:bg-[var(--color-primary)] selection:text-white overflow-x-hidden">
+  <body 
+    transition:animate="none"
+    class:list={[
+    'min-h-screen flex flex-col overflow-x-hidden',
+    isEditorial
+      ? 'editorial-page bg-[#FAEFED] text-[#1a1a1a] selection:bg-[#1a1a1a] selection:text-white'
+      : 'bg-[var(--color-background-primary)] text-[var(--color-text-primary)] selection:bg-[var(--color-primary)] selection:text-white'
+  ]}>
+
+    <!-- Global Splash Loader -->
+    <div id="global-splash-loader" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FAEFED] transition-opacity duration-700 ease-out">
+      <div class="flex items-center justify-center animate-pulse">
+        <span class="font-black tracking-tighter uppercase" style="font-family: 'Inter', sans-serif; font-size: clamp(32px, 8vw, 64px); line-height: 1;">
+          <span class="text-black">love4</span><span class="text-[#FF6D87]">prompts</span>
+        </span>
+      </div>
+    </div>
     
-    <!-- Atmospheric Organic Gradient Mesh Backdrop (Stripi + Wope inspired) -->
-    <div class="absolute top-0 inset-x-0 h-[700px] overflow-hidden pointer-events-none z-0 opacity-[0.35]" aria-hidden="true">
-      <!-- Deep Purple/Indigo Glow Base -->
-      <div class="absolute top-[-15%] left-[10%] w-[80vw] max-w-[700px] h-[500px] rounded-full bg-[var(--color-accent-violet)] opacity-[0.35] blur-[130px]"></div>
-      <!-- Ruby Pink Blob -->
-      <div class="absolute top-[5%] left-[55%] w-[60vw] max-w-[500px] h-[400px] rounded-full bg-[#ea2261] opacity-[0.22] blur-[110px]"></div>
-      <!-- Sherbet Orange Blob -->
-      <div class="absolute top-[-20%] left-[40%] w-[55vw] max-w-[450px] h-[350px] rounded-full bg-[#ff9f43] opacity-[0.18] blur-[100px]"></div>
-      <!-- Lavender/Blue Blob -->
-      <div class="absolute top-[8%] left-[25%] w-[65vw] max-w-[550px] h-[400px] rounded-full bg-[#b9b9f9] opacity-[0.15] blur-[120px]"></div>
-      <!-- Warm Cream Accent Blob -->
-      <div class="absolute top-[-5%] left-[65%] w-[50vw] max-w-[400px] h-[300px] rounded-full bg-[#faf0e6] opacity-[0.1] blur-[90px]"></div>
+    <style is:global>
+      body.loading-locked {
+        overflow: hidden;
+      }
+    </style>
+
+    <script>
+      document.body.classList.add('loading-locked');
+      
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('global-splash-loader');
+        if (loader) {
+          // Add a 1.5s artificial delay before fading out
+          setTimeout(() => {
+            loader.style.opacity = '0';
+            setTimeout(() => {
+              loader.style.display = 'none';
+              document.body.classList.remove('loading-locked');
+            }, 700);
+          }, 1500);
+        }
+      });
+      // Safety fallback (extended to 4000ms to account for the delay)
+      setTimeout(() => {
+        const loader = document.getElementById('global-splash-loader');
+        if (loader && loader.style.display !== 'none') {
+          loader.style.opacity = '0';
+          setTimeout(() => {
+            loader.style.display = 'none';
+            document.body.classList.remove('loading-locked');
+          }, 700);
+        }
+      }, 4000);
+    </script>
+    
+    {!isEditorial && (
+      <div class="absolute top-0 inset-x-0 h-[700px] overflow-hidden pointer-events-none z-0 opacity-[0.35]" aria-hidden="true">
+        <div class="absolute top-[-15%] left-[10%] w-[80vw] max-w-[700px] h-[500px] rounded-full bg-[var(--color-accent-violet)] opacity-[0.35] blur-[130px]"></div>
+        <div class="absolute top-[5%] left-[55%] w-[60vw] max-w-[500px] h-[400px] rounded-full bg-[#ea2261] opacity-[0.22] blur-[110px]"></div>
+        <div class="absolute top-[-20%] left-[40%] w-[55vw] max-w-[450px] h-[350px] rounded-full bg-[#ff9f43] opacity-[0.18] blur-[100px]"></div>
+        <div class="absolute top-[8%] left-[25%] w-[65vw] max-w-[550px] h-[400px] rounded-full bg-[#b9b9f9] opacity-[0.15] blur-[120px]"></div>
+        <div class="absolute top-[-5%] left-[65%] w-[50vw] max-w-[400px] h-[300px] rounded-full bg-[#faf0e6] opacity-[0.1] blur-[90px]"></div>
+      </div>
+    )}
+
+    <div class:list={['relative z-10 flex flex-col min-h-screen', isEditorial ? '' : '']}>
+      <Header client:load isEditorial={isEditorial} currentPath={Astro.url.pathname} />
+      {!isEditorial && <TrendingBar client:load />}
+      {isEditorial ? (
+        <div class="flex-1 flex flex-col">
+          <slot />
+        </div>
+      ) : (
+        <main class="flex-1">
+          <slot />
+        </main>
+      )}
+      {isEditorial ? <EditorialFooter /> : <SeoFooter />}
     </div>
 
-    <div class="relative z-10 flex flex-col min-h-screen">
-      <Header client:load />
-      <TrendingBar client:load />
-      <main class="flex-1" transition:animate="fade">
-        <slot />
-      </main>
-      <SeoFooter />
-    </div>
+    {/* Global Click Sparkle Animation */}
+    <script is:inline>
+      (function() {
+        if (typeof window !== 'undefined' && !window._clickSparkleAttached) {
+          window._clickSparkleAttached = true;
+          document.addEventListener('click', (e) => {
+            const spark = document.createElement('div');
+            spark.className = 'click-sparkle';
+            spark.style.left = e.clientX + 'px';
+            spark.style.top = e.clientY + 'px';
+            document.body.appendChild(spark);
+            
+            // Create 5 rays in a burst
+            for(let i = 0; i < 5; i++) {
+              const ray = document.createElement('div');
+              ray.className = 'sparkle-ray';
+              // Mix colors: mostly black, occasionally pink/cyan
+              const colors = ['#000000', '#000000', '#000000', '#FF6D87', '#1482A3'];
+              ray.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+              ray.style.setProperty('--rot', `${(i * 72)}deg`);
+              spark.appendChild(ray);
+            }
+
+            setTimeout(() => spark.remove(), 400);
+          }, true); // Use capture phase so it bypasses stopPropagation from buttons/links
+        }
+      })();
+    </script>
+    <style is:global>
+      .click-sparkle {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999999;
+        transform: translate(-50%, -50%);
+      }
+      .sparkle-ray {
+        position: absolute;
+        width: 6px;
+        height: 14px;
+        border-radius: 2px;
+        top: 50%;
+        left: 50%;
+        transform-origin: 50% 100%;
+        animation: burst 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+      }
+      @keyframes burst {
+        0% {
+          transform: translate(-50%, -100%) rotate(var(--rot)) translateY(-4px) scale(1);
+          opacity: 1;
+        }
+        40% {
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -100%) rotate(var(--rot)) translateY(-28px) scale(0);
+          opacity: 0;
+        }
+      }
+    </style>
   </body>
 </html>

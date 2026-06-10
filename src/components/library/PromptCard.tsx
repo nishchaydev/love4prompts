@@ -76,9 +76,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden rounded-[20px] bg-[#120A24] border border-[var(--color-border-warm)] shadow-[0_2px_12px_rgba(0,0,0,0.5)] group-hover:shadow-[0_8px_30px_var(--color-primary-glow)] transition-all duration-500 ease-out group-hover:border-[var(--color-primary)]/30">
+      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden bg-[#FAEFED] border-4 border-black shadow-[6px_6px_0px_#000000] hover:shadow-[12px_12px_0px_#FF6D87] hover:-translate-y-2 hover:-rotate-2 transition-all duration-300 ease-out">
         {prompt.image_url && !imageError ? (
-          <div className="relative w-full min-h-[160px] bg-[#120A24] overflow-hidden">
+          <div className="relative w-full min-h-[160px] bg-white overflow-hidden">
             {!imageLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/[0.02] animate-pulse">
                 <div className="w-5 h-5 rounded-full border-2 border-[var(--color-primary)] border-t-transparent animate-spin" />
@@ -99,8 +99,8 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
             />
           </div>
         ) : (
-          <div className="w-full aspect-[3/4] flex items-center justify-center bg-gradient-to-br from-[#170E30] to-[#0A0118] border-b border-white/[0.03]">
-            <span className="text-white/20 font-medium text-xs font-mono uppercase tracking-widest">No image</span>
+          <div className="w-full aspect-[3/4] flex items-center justify-center bg-gray-100 border-b-4 border-black">
+            <span className="text-black/40 font-black text-xs font-mono uppercase tracking-widest">No image</span>
           </div>
         )}
         
@@ -111,7 +111,7 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
         <div className={`absolute top-3 right-3 transition-all duration-300 transform ${isHovered ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}>
           <button 
             onClick={(e) => { e.preventDefault(); onSave?.(prompt.id); }}
-            className="px-4 py-2 rounded-full bg-[var(--color-primary)] text-white font-bold hover:bg-[var(--color-primary-hover)] flex items-center justify-center shadow-[0_0_15px_var(--color-primary-glow)] transition-all duration-300 hover:scale-105 active:scale-95"
+            className="px-4 py-2 bg-[#FF6D87] text-black border-2 border-black font-black uppercase hover:bg-[#1482A3] hover:text-white transition-all duration-300 shadow-[4px_4px_0px_#000] hover:shadow-[2px_2px_0px_#000] hover:translate-y-[2px] hover:translate-x-[2px]"
             aria-label="Save prompt"
           >
             {isSaved ? 'Saved' : 'Save'}
@@ -140,18 +140,18 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
 
       {/* Meta data section */}
       <div className="pt-3 px-1">
-        <h3 className="text-[14px] font-semibold text-white leading-[1.3] line-clamp-2 mb-2 group-hover:text-[var(--color-primary)] transition-colors duration-300">
+        <h3 className="text-[16px] font-black text-black leading-[1.3] line-clamp-2 mb-2 group-hover:text-[#FF6D87] transition-colors duration-300">
           {prompt.title}
         </h3>
         
         {prompt.creator ? (
           <div className="flex items-center gap-2 mt-2">
-            <img src={prompt.creator.avatar} alt={prompt.creator.name} className="w-6 h-6 rounded-full object-cover border border-white/10" width={24} height={24} />
-            <span className="text-[13px] font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">{prompt.creator.name}</span>
+            <img src={prompt.creator.avatar} alt={prompt.creator.name} className="w-6 h-6 object-cover border-2 border-black" width={24} height={24} />
+            <span className="text-[13px] font-bold text-gray-700 hover:text-black transition-colors cursor-pointer">{prompt.creator.name}</span>
           </div>
         ) : (
-          <p className="text-[12px] text-gray-500 font-medium flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] shadow-[0_0_8px_var(--color-primary-glow)]"></span>
+          <p className="text-[12px] text-gray-500 font-bold flex items-center gap-1.5 uppercase">
+            <span className="w-2 h-2 bg-[#1482A3] border border-black shadow-[1px_1px_0px_#000]"></span>
             {prompt.copy_count ? prompt.copy_count.toLocaleString() : prompt.save_count.toLocaleString()} copies
           </p>
         )}

@@ -3,6 +3,7 @@ import Layout from '../../components/layout/Layout.astro';
 import { PromptDetailView } from '../../components/prompt/PromptDetailView';
 import { supabase } from '../../lib/supabase';
 import type { Prompt } from '../../components/library/PromptCard';
+import { PromptCard } from '../../components/library/PromptCard';
 import { mockPrompts } from '../../lib/mock-data';
 
 const { slug } = Astro.params;
@@ -38,21 +39,50 @@ if (typeof prompt.id === 'string' && !prompt.id.startsWith('mock-')) {
 
 const seoTitle = `${prompt.title} - Love4Prompts`;
 const seoDescription = prompt.prompt_text.substring(0, 150) + '...';
+
+// Get 4 random or related prompts for the CTA section
+const relatedPrompts = mockPrompts.filter(p => p.id !== prompt?.id).slice(0, 4);
 ---
 
 <Layout 
   title={seoTitle} 
   description={seoDescription}
   ogImage={prompt.image_url}
+  theme="editorial"
 >
-  <div class="container mx-auto px-4 py-12 sm:py-20 relative">
-    {/* Background Pattern */}
-    <div class="fixed inset-0 z-[-1] opacity-30 pointer-events-none" style="background-image: radial-gradient(#d4d4d4 1px, transparent 1px); background-size: 24px 24px;"></div>
-    <div class="fixed top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-[var(--color-primary)]/5 blur-[120px] z-[-1] pointer-events-none"></div>
+  <PromptDetailView 
+    client:load 
+    prompt={prompt as Prompt} 
+  />
 
-    <PromptDetailView 
-      client:load 
-      prompt={prompt as Prompt} 
-    />
-  </div>
+  {/* CTA / More Prompts Section */}
+  <section className="bg-[#fafafa] border-t border-black py-16 px-4 md:px-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="flex justify-between items-end mb-8">
+        <div>
+          <h2 className="text-black uppercase font-black text-3xl md:text-5xl leading-none tracking-tighter mb-2">
+            More to Explore
+          </h2>
+          <p className="text-[#4c4546] uppercase font-bold tracking-widest text-sm">
+            Keep the inspiration flowing
+          </p>
+        </div>
+        <a href="/#library" className="hidden md:inline-block border-2 border-black bg-white text-black font-bold uppercase tracking-widest text-sm px-6 py-3 rounded-full hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_#000] hover:shadow-none">
+          View Library
+        </a>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {relatedPrompts.map(p => (
+          <PromptCard client:visible prompt={p as Prompt} />
+        ))}
+      </div>
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .fill-icon {
+    font-variation-settings: 'FILL' 1;
+  }
+</style>

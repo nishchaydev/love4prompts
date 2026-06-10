@@ -1,0 +1,77 @@
+---
+import Layout from '../components/layout/Layout.astro';
+import { ArrowRight, Puzzle, Zap, MousePointerClick } from 'lucide-react';
+
+const title = "Plug & Play Extension — Love4Prompts";
+const description = "Get the Love4Prompts browser extension to access all your tools directly from your browser. Click, type, and create anywhere.";
+---
+
+<Layout title={title} description={description} theme="editorial">
+  <div class="flex flex-1 relative bg-[#FAEFED] min-h-screen pt-[120px] px-6 sm:px-[40px]">
+    <main class="relative z-10 max-w-7xl mx-auto pb-[100px] w-full flex flex-col justify-center min-h-[calc(100vh-160px)]">
+      
+      <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 w-full">
+        {/* Left: Headline & CTA */}
+        <div class="flex-1 max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full font-bold tracking-widest text-[12px] uppercase mb-8 shadow-[4px_4px_0_#FF6D87]">
+            <Puzzle size={16} />
+            Browser Extension
+          </div>
+          
+          <h1 class="text-black tracking-tighter uppercase font-black text-[56px] sm:text-[80px] md:text-[100px] mb-6 leading-[0.85]">
+            PLUG <br /> & PLAY
+          </h1>
+          
+          <p class="text-[#4c4546] font-medium text-[20px] sm:text-[24px] mb-12 leading-tight max-w-2xl">
+            Take Love4Prompts everywhere you go. The official browser extension lets you access all your tools without leaving the page you're on. Click, copy, and create in seconds.
+          </p>
+
+          <a href="#" class="inline-flex items-center gap-4 bg-transparent text-black border-4 border-black px-8 py-5 text-[18px] sm:text-[22px] hover:bg-black hover:text-[#FAEFED] transition-colors font-black uppercase no-underline shadow-[8px_8px_0_#FF6D87] hover:shadow-[8px_8px_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-[4px_4px_0_#000] rounded-2xl group">
+            <span class="flex items-center gap-3">
+              Add to Chrome
+            </span>
+            <ArrowRight size={28} className="group-hover:translate-x-2 transition-transform" />
+          </a>
+        </div>
+
+        {/* Right: Features Graphic */}
+        <div class="flex-1 w-full max-w-lg lg:max-w-none relative">
+          <div class="absolute inset-0 bg-[#FF6D87] rotate-3 rounded-[40px] shadow-[12px_12px_0_#000]"></div>
+          <div class="relative bg-white border-4 border-black p-8 sm:p-12 rounded-[40px] shadow-[12px_12px_0_#000] flex flex-col gap-8 transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+            
+            <div class="flex gap-6 items-start">
+              <div class="w-16 h-16 shrink-0 bg-[#f9f9f9] border-2 border-black flex items-center justify-center rounded-xl shadow-[4px_4px_0_#000]">
+                <Zap size={32} className="text-[#FF6D87]" />
+              </div>
+              <div>
+                <h3 class="font-black uppercase text-[24px] mb-2 leading-none tracking-tight">Instant Access</h3>
+                <p class="text-[#4c4546] font-medium leading-tight">Fire up your favorite tools with a single click from your browser toolbar.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+              <div class="w-16 h-16 shrink-0 bg-[#f9f9f9] border-2 border-black flex items-center justify-center rounded-xl shadow-[4px_4px_0_#000]">
+                <MousePointerClick size={32} className="text-black" />
+              </div>
+              <div>
+                <h3 class="font-black uppercase text-[24px] mb-2 leading-none tracking-tight">One-Click Copy</h3>
+                <p class="text-[#4c4546] font-medium leading-tight">Generate your prompts and immediately paste them into ChatGPT, Claude, or Midjourney.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-6 items-start">
+              <div class="w-16 h-16 shrink-0 bg-[#f9f9f9] border-2 border-black flex items-center justify-center rounded-xl shadow-[4px_4px_0_#000]">
+                <Puzzle size={32} className="text-[#1482A3]" />
+              </div>
+              <div>
+                <h3 class="font-black uppercase text-[24px] mb-2 leading-none tracking-tight">Always Synced</h3>
+                <p class="text-[#4c4546] font-medium leading-tight">Your favorite tools and custom prompts are always synced with your Love4Prompts account.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>

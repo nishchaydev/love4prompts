@@ -27,7 +27,7 @@ export const Avatar: React.FC<AvatarProps> = ({ src, alt = "User avatar", size =
 
   return (
     <div className={containerClasses}>
-      <User className="w-1/2 h-1/2 text-[var(--color-text-muted)]" />
+      <User className="w-1/2 h-1/2 opacity-80" />
     </div>
   );
 };

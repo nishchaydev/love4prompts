@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import { Settings, Sparkles, Code, AlignLeft } from 'lucide-react';
 
 const MODES = [
+  { id: 'Auto', label: 'Auto-Detect', icon: <Sparkles size={16} /> },
   { id: 'COSTAR', label: 'COSTAR Framework', icon: <Sparkles size={16} /> },
   { id: 'Token Optimizer', label: 'Token Optimizer', icon: <AlignLeft size={16} /> },
   { id: 'Coding', label: 'Coding / Technical', icon: <Code size={16} /> }
 ];
 
 export default function Popup() {
-  const [mode, setMode] = useState('COSTAR');
+  const [mode, setMode] = useState('Auto');
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
+    if (!chrome?.storage?.local) return;
     chrome.storage.local.get(['enhancementMode'], (result: any) => {
       if (result.enhancementMode) {
         setMode(result.enhancementMode);
@@ -21,6 +23,7 @@ export default function Popup() {
 
   const handleModeChange = (newMode: string) => {
     setMode(newMode);
+    if (!chrome?.storage?.local) return;
     chrome.storage.local.set({ enhancementMode: newMode }, () => {
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);

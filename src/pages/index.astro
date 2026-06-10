@@ -1,18 +1,9 @@
 ---
 import Layout from '../components/layout/Layout.astro';
-import { InteractiveLibrary } from '../components/library/InteractiveLibrary';
-import { TestimonialSection } from '../components/marketing/TestimonialSection';
-import { FeaturesGrid } from '../components/marketing/FeaturesGrid';
-import { HowItWorks } from '../components/marketing/HowItWorks';
-import { UniversalBar } from '../components/hero/UniversalBar';
-import { AnimatedSection } from '../components/ui/AnimatedSection';
 import { supabase } from '../lib/supabase';
+import { PinterestGallery } from '../components/library/PinterestGallery';
 import type { Prompt } from '../components/library/PromptCard';
 import { mockPrompts } from '../lib/mock-data';
-import { TrustedBy } from '../components/marketing/TrustedBy';
-import { ToolsGrid } from '../components/marketing/ToolsGrid';
-import { EmailCapture } from '../components/marketing/EmailCapture';
-
 
 const { data: dbPrompts, error } = await supabase
   .from('prompts')
@@ -23,80 +14,106 @@ const { data: dbPrompts, error } = await supabase
 if (error) console.error('Error fetching prompts:', error);
 
 const prompts = (dbPrompts && dbPrompts.length > 0) ? dbPrompts : mockPrompts;
-const styles = Array.from(new Set(prompts?.map(p => p.style).filter(Boolean) || [])) as string[];
 
-const title = "Love4Prompts — The prompt toolkit for every AI";
-const description = "One search bar. Six AI tools. Enhance, generate, translate, and discover prompts for ChatGPT, Midjourney, Claude, DALL-E, Gemini & Flux. Free, no signup.";
+const title = "Love4Prompts — Making your everyday simple!";
+const description = "Discover ready-to-use tools and prompts that save you time. No complex tech stuff. Just click, type, and get amazing results instantly.";
+
+/* Tile accent colors cycle */
+const accentColors = ['vermillion', 'cobalt', 'primary', 'secondary'] as const;
+const accentHex: Record<string, string> = {
+  vermillion: '#FF3B30',
+  cobalt: '#0047BB',
+  primary: '#000000',
+  secondary: '#FF6D87',
+};
+/* Aspect ratios to match reference variety */
+const aspects = ['aspect-[3/4]', 'aspect-square', 'aspect-video', 'aspect-[4/5]'];
 ---
 
-<Layout title={title} description={description}>
-  <div>
+<Layout title={title} description={description} theme="editorial">
 
-    {/* ═══ HERO ═══════════════════════════════════════════════════ */}
-    <section class="flex flex-col items-center justify-center px-4 pt-1 sm:pt-2 pb-12 sm:pb-20 z-10 relative">
-      <div class="flex flex-col items-center text-center gap-4 sm:gap-5 w-full max-w-[720px] mx-auto">
+  {/* ═══ MAIN CONTENT ═══ */}
+  <div class="flex flex-1 relative bg-[#FAEFED] min-h-screen">
+    {/* Grid Background */}
+    <div 
+      class="absolute inset-0 z-0 pointer-events-none opacity-[0.4]" 
+      style={{
+        backgroundImage: `
+          linear-gradient(to right, #cfc4c5 1px, transparent 1px),
+          linear-gradient(to bottom, #cfc4c5 1px, transparent 1px)
+        `,
+        backgroundSize: '40px 40px',
+        backgroundPosition: 'center top'
+      }}
+    ></div>
+    
+    {/* Main Canvas */}
+    <main class="relative z-10 flex-1 pt-[120px] px-[20px] sm:px-[40px] max-w-7xl mx-auto pb-[100px] w-full">
 
-        {/* Tagline — small, monospace, futuristic */}
-        <p class="text-[11px] font-mono font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-1">
-          Universal Prompt Toolkit
-        </p>
+      {/* Hero Section */}
+      <div class="flex flex-col lg:flex-row items-center gap-12 mb-[120px] mt-0 w-full">
+        {/* Left Content */}
+        <header class="flex-1 max-w-2xl z-10">
+          <h1 class="text-black tracking-tighter uppercase font-black text-[48px] sm:text-[72px] md:text-[80px] mb-[24px] leading-[0.9]">
+            Making <span class="text-[#FF6D87]">your</span> everyday <span class="text-[#FF6D87]">simple!</span>
+          </h1>
+          <p class="text-[#4c4546] font-medium text-[20px] sm:text-[24px] mb-[40px] leading-tight">
+            {"Discover ready-to-use tools and prompts that save you time. No complex tech stuff. Just click, type, and get amazing results instantly.".split('').map((char, index) => {
+              if (char === ' ') return ' ';
+              return (
+                <span class="inline-block transition-all duration-300 ease-out hover:-translate-y-1 hover:text-[#FF6D87]">
+                  {char}
+                </span>
+              );
+            })}
+          </p>
+          <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+            <a href="/tools" class="bg-[#FF6D87] text-white px-[30px] py-[15px] tracking-widest text-[14px] hover:bg-black transition-colors font-bold uppercase no-underline inline-block text-center shadow-[6px_6px_0_#000] rounded-full">
+              EXPLORE TOOLS
+            </a>
+            <a href="#library" class="bg-transparent text-black border-2 border-black px-[30px] py-[15px] tracking-widest text-[14px] hover:bg-black hover:text-[#FAEFED] transition-colors font-bold uppercase no-underline inline-block text-center shadow-[6px_6px_0_#000] hover:shadow-[6px_6px_0_#FF6D87] rounded-full">
+              BROWSE LIBRARY
+            </a>
+            <a href="/submit" class="bg-white text-black border-2 border-black px-[30px] py-[15px] tracking-widest text-[14px] hover:bg-black hover:text-white transition-colors font-bold uppercase no-underline inline-block text-center shadow-[6px_6px_0_#000] hover:shadow-[6px_6px_0_#FF6D87] rounded-full">
+              SUBMIT PROMPT
+            </a>
+          </div>
+        </header>
 
-        {/* H1 — thin, elegant, no gradient spam, tight tracking */}
-        <h1 class="text-[clamp(36px,6vw,60px)] font-light tracking-[-0.045em] leading-[1.05] text-white">
-          Write better prompts.<br />
-          <span class="text-white/30 font-light">Ship better results.</span>
-        </h1>
-
-        {/* Sub — clear, human, no jargon */}
-        <p class="text-[15.5px] text-white/45 max-w-[460px] leading-relaxed font-medium">
-          One console bar that enhances, generates, and translates prompts across every major AI model. Just type.
-        </p>
-
-        {/* UniversalBar */}
-        <div class="w-full mt-4">
-          <UniversalBar client:load />
-        </div>
-
-        {/* Micro-stats — subtle, monospace */}
-        <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] sm:text-[11px] font-bold text-white/35 mt-2 font-mono uppercase tracking-wider">
-          <span class="tabular-nums">6 tools</span>
-          <span class="w-px h-3 bg-white/[0.06] hidden sm:block"></span>
-          <span>Free</span>
-          <span class="w-px h-3 bg-white/[0.06] hidden sm:block"></span>
-          <span>No signup</span>
-          <span class="w-px h-3 bg-white/[0.06] hidden sm:block"></span>
-          <span>Works with 6+ models</span>
+        {/* Right Content - Pinterest Style Floating Grid */}
+        <div class="flex-1 relative w-full h-[500px] lg:h-[600px] hidden lg:block">
+          {prompts.filter(p => p.image_url).slice(0, 5).map((prompt, i) => {
+            // Pinterest-like floating positions
+            const styles = [
+              "top-[20px] left-[0%] w-[40%] h-[240px] z-10", // Top Left
+              "top-[80px] left-[45%] w-[35%] h-[200px] z-20", // Top Right
+              "top-[280px] left-[10%] w-[35%] h-[220px] z-20", // Bottom Left
+              "top-[300px] left-[50%] w-[45%] h-[280px] z-30 scale-110", // Center focus
+              "top-[180px] left-[85%] w-[25%] h-[180px] z-10", // Far Right
+            ];
+            
+            return (
+              <div class={`absolute ${styles[i]} transition-transform hover:scale-105 duration-300 hover:z-50 group`}>
+                <img 
+                  src={prompt.image_url} 
+                  alt={prompt.title}
+                  class="w-full h-full object-cover rounded-[32px] border-[3px] border-black shadow-[6px_6px_0_rgba(0,0,0,1)] group-hover:shadow-[8px_8px_0_#FF6D87] transition-all"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
-    </section>
 
-    {/* ═══ EMAIL CAPTURE ═══════════════════════════════════════ */}
-    <EmailCapture client:load />
-
-    {/* ═══ TOOLS GRID ═════════════════════════════════════════ */}
-    <ToolsGrid client:load />
-
-    {/* ═══ FEATURES ═════════════════════════════════════════════ */}
-    <FeaturesGrid client:visible />
-
-    {/* ═══ HOW IT WORKS ═════════════════════════════════════════ */}
-    <HowItWorks client:visible />
-
-    {/* ═══ TESTIMONIALS ═════════════════════════════════════════ */}
-    <TestimonialSection />
-
-    {/* ═══ LIBRARY ══════════════════════════════════════════════ */}
-    <section class="pb-24" id="library">
-      <AnimatedSection client:visible className="container mx-auto px-4 pt-20 mb-6 border-t border-white/[0.03] text-center">
-        <p class="text-[11px] font-mono font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-2">Explore</p>
-        <h2 class="text-2xl md:text-[32px] font-light text-white tracking-[-0.04em]">Prompt Library</h2>
-        <p class="text-white/30 mt-2 text-[13px] font-medium">
-          Curated prompts across all categories. Copy any. Use instantly.
-        </p>
-      </AnimatedSection>
-      <div class="container mx-auto px-4">
-        <InteractiveLibrary client:load prompts={prompts as Prompt[]} styles={styles} />
+      {/* Pinterest-Style Community Library */}
+      <div id="library" class="pt-[80px] pb-[40px] px-4 md:px-[40px]">
+        <h2 class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] mb-[40px] border-b-[4px] border-black pb-[16px]">
+          Community Library
+        </h2>
+        <PinterestGallery client:load initialPrompts={prompts} />
       </div>
-    </section>
+
+    </main>
   </div>
+
 </Layout>
