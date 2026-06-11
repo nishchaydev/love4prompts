@@ -8,9 +8,7 @@ const CRAZY_PROMPTS = [
   "Describe the taste of the color blue without using food metaphors."
 ];
 
-// Easing token: --ease-out-quart (from references)
 const easeOutQuart: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
-// Easing token: --ease-in-out-cubic (from references)
 const easeInOutCubic: [number, number, number, number] = [0.645, 0.045, 0.355, 1];
 
 export const PaperAirplaneAd = () => {
@@ -19,9 +17,12 @@ export const PaperAirplaneAd = () => {
   const [modalType, setModalType] = useState<'ad' | 'prompt' | null>(null);
   const [randomPrompt, setRandomPrompt] = useState("");
   const [pathData, setPathData] = useState<{ path: string, landX: number, landY: number, rotate: number } | null>(null);
+  
+  // Easter egg state
+  const [clickEffect, setClickEffect] = useState<'flash' | 'egg' | 'pop' | null>(null);
+  const [eggPos, setEggPos] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    // Generate flight path on client to avoid hydration issues
+  const generatePath = () => {
     const w = typeof window !== 'undefined' ? window.innerWidth : 1000;
     const h = typeof window !== 'undefined' ? window.innerHeight : 800;
     
@@ -31,7 +32,7 @@ export const PaperAirplaneAd = () => {
     
     if (rand < 0.35) {
       // Land Left
-      landX = 40;
+      landX = 60;
       landY = Math.random() * (h - 300) + 150;
       rotate = 15;
     } else if (rand < 0.7) {
@@ -46,72 +47,111 @@ export const PaperAirplaneAd = () => {
       rotate = 0;
     }
 
-    // Bezier curve: Start right offscreen -> swoop left -> swoop right -> land
-    const startX = w + 150;
-    const startY = h * 0.1;
-    const cp1x = -w * 0.5; // pull far left
+    // Classic Paper Airplane Loop-de-loop path
+    // Start top left offscreen
+    const startX = -150;
+    const startY = h * 0.2;
+    
+    // Push far right and down
+    const cp1x = w * 0.8;
     const cp1y = h * 0.9;
-    const cp2x = w * 1.2;  // pull back right
-    const cp2y = h * 0.3;
     
+    // Pull far left and up (creates the loop)
+    const cp2x = w * 0.2;
+    const cp2y = -h * 0.2;
+    
+    // The C command creates a perfect smooth loop
     const p = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${landX} ${landY}`;
-    setPathData({ path: p, landX, landY, rotate });
     
-    // Start animation loop
+    return { path: p, landX, landY, rotate };
+  };
+
+  useEffect(() => {
+    setPathData(generatePath());
+    
     const timer = setTimeout(() => {
       setIsVisible(true);
       setIsAnimating(true);
-      
-      // Flight duration is 12 seconds for the longer path
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 12000);
-      
+      setTimeout(() => setIsAnimating(false), 8000); // 8s flight
     }, 2000);
     
     return () => clearTimeout(timer);
   }, []);
 
-  const handleClick = () => {
-    // Only clickable when landed
+  const handleClick = (e: React.MouseEvent) => {
     if (isAnimating || !isVisible) return;
     
-    // Hide plane, show modal
-    setIsVisible(false);
+    // Save position for the egg
+    setEggPos({ x: e.clientX, y: e.clientY });
     
-    if (Math.random() > 0.4) {
-      setModalType('ad');
-    } else {
-      setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
-      setModalType('prompt');
-    }
+    // Hide plane, start sequence
+    setIsVisible(false);
+    setClickEffect('flash');
+    
+    setTimeout(() => {
+      setClickEffect('egg');
+      
+      setTimeout(() => {
+        setClickEffect('pop');
+        
+        setTimeout(() => {
+          setClickEffect(null);
+          if (Math.random() > 0.4) {
+            setModalType('ad');
+          } else {
+            setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
+            setModalType('prompt');
+          }
+        }, 500); // pop duration
+      }, 1200); // egg shake duration
+    }, 150); // flash duration
   };
 
   const closeAd = () => {
     setModalType(null);
-    // Restart flight after some time
     setTimeout(() => {
-      // Regenerate path
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const rand = Math.random();
-      let landX, landY, rotate;
-      if (rand < 0.35) { landX = 40; landY = Math.random() * (h - 300) + 150; rotate = 15; }
-      else if (rand < 0.7) { landX = w - 120; landY = Math.random() * (h - 300) + 150; rotate = -15; }
-      else { landX = Math.random() * (w - 300) + 150; landY = h - 140; rotate = 0; }
-      
-      const p = `M ${w + 150} ${h * 0.2} C ${-w * 0.5} ${h * 0.8}, ${w * 1.2} ${h * 0.2}, ${landX} ${landY}`;
-      setPathData({ path: p, landX, landY, rotate });
-      
+      setPathData(generatePath());
       setIsVisible(true);
       setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 12000);
-    }, 8000);
+      setTimeout(() => setIsAnimating(false), 8000);
+    }, 6000);
   };
 
   return (
     <AnimatePresence>
-      {isVisible && !modalType && pathData && (
+      {/* 1. Screen Flash */}
+      {clickEffect === 'flash' && (
+        <motion.div 
+          className="fixed inset-0 z-[200] bg-white pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.1 }}
+        />
+      )}
+
+      {/* 2. The Easter Egg */}
+      {(clickEffect === 'egg' || clickEffect === 'pop') && (
+        <motion.div 
+          className="fixed z-[150] pointer-events-none text-6xl"
+          style={{ left: eggPos.x - 30, top: eggPos.y - 30 }}
+          initial={{ scale: 0, rotate: -180 }}
+          animate={
+            clickEffect === 'egg' 
+              ? { scale: 1, rotate: [0, -15, 15, -15, 15, 0] } 
+              : { scale: 3, opacity: 0, filter: 'blur(10px)' }
+          }
+          transition={
+            clickEffect === 'egg' 
+              ? { scale: { type: 'spring', bounce: 0.6 }, rotate: { delay: 0.3, duration: 0.5, repeat: Infinity } }
+              : { duration: 0.4, ease: "easeOut" }
+          }
+        >
+          {clickEffect === 'egg' ? '🥚' : '💥'}
+        </motion.div>
+      )}
+
+      {isVisible && !modalType && pathData && !clickEffect && (
         <>
           {/* Dashed Trail of Air */}
           <div className="fixed inset-0 pointer-events-none z-[80]">
@@ -125,7 +165,7 @@ export const PaperAirplaneAd = () => {
                 strokeLinecap="round"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: isAnimating ? 0.8 : 0.2 }}
-                transition={{ duration: 12, ease: "easeInOut" }}
+                transition={{ duration: 8, ease: easeOutQuart }} // Motion Design Easing
               />
             </svg>
           </div>
@@ -140,17 +180,26 @@ export const PaperAirplaneAd = () => {
             } as any}
             initial={{ offsetDistance: '0%', opacity: 0 }}
             animate={{ offsetDistance: '100%', opacity: 1 }}
-            transition={{ duration: 12, ease: "linear" }}
+            transition={{ duration: 8, ease: easeOutQuart }} // Motion Design Easing
             onClick={handleClick}
             whileHover={!isAnimating ? { scale: 1.15 } : {}}
             whileTap={!isAnimating ? { scale: 0.95 } : {}}
           >
             <motion.div
-               animate={!isAnimating ? { y: [0, -10, 0] } : {}}
-               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+               animate={!isAnimating 
+                 ? { y: [0, -10, 0], rotate: [0, 2, -2, 0] } 
+                 : { 
+                     rotate: [0, 15, -15, 0], // Aerodynamic wobble
+                     scale: [0.85, 1.15, 0.95, 1] // 3D depth perception
+                   }
+               }
+               transition={!isAnimating 
+                 ? { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                 : { duration: 4, repeat: Infinity, ease: "easeInOut" }
+               }
                className="relative"
             >
-              {/* Shadow Paper Airplane SVG (Performance Optimized) */}
+              {/* Shadow Paper Airplane SVG */}
               <svg 
                 width="80" height="80" viewBox="0 0 32 32" fill="none" 
                 stroke="#FF6D87" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
