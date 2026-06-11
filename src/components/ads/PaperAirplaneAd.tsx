@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 
 const CRAZY_PROMPTS = [
   "Write a rap battle between a toaster and a microwave.",
@@ -8,95 +8,115 @@ const CRAZY_PROMPTS = [
   "Describe the taste of the color blue without using food metaphors."
 ];
 
-// Easing token: --ease-out-quart (from references)
+// Motion Design Easing Tokens
 const easeOutQuart: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
-// Easing token: --ease-in-out-cubic (from references)
-const easeInOutCubic: [number, number, number, number] = [0.645, 0.045, 0.355, 1];
 
 export const PaperAirplaneAd = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [modalType, setModalType] = useState<'ad' | 'prompt' | null>(null);
   const [randomPrompt, setRandomPrompt] = useState("");
-  const [pathData, setPathData] = useState<{ path: string, landX: number, landY: number, rotate: number } | null>(null);
+  const [pathData, setPathData] = useState<{ path: string, landX: number, landY: number } | null>(null);
 
-  useEffect(() => {
-    // Generate flight path on client to avoid hydration issues
+  // Easter egg state
+  const [clickEffect, setClickEffect] = useState<'flash' | 'egg' | 'pop' | null>(null);
+  const [eggPos, setEggPos] = useState({ x: 0, y: 0 });
+
+  // === ADVANCED MOTION ENGINE ===
+  // Driving both the SVG trail and CSS offset-distance from a single computational source of truth.
+  const flightProgress = useMotionValue(0);
+  const pathLength = useTransform(flightProgress, [0, 1], [0, 1]);
+  const offsetDistance = useTransform(flightProgress, [0, 1], ["0%", "100%"]);
+  const trailOpacity = useTransform(flightProgress, [0, 0.05, 0.9, 1], [0, 0.8, 0.8, 0.2]);
+
+  const generatePath = () => {
     const w = typeof window !== 'undefined' ? window.innerWidth : 1000;
     const h = typeof window !== 'undefined' ? window.innerHeight : 800;
+    
+    // === ADVANCED PHYSICS FLIGHT ENGINE ===
+    // Simulating Phugoid aerodynamics
+    const startX = -150;
+    const startY = h * 0.4;
+    
+    // Target landing zone safely within the visible viewport (preventing footer overlap)
+    const endX = w * 0.5 + (Math.random() * w * 0.4 - w * 0.2);
+    const endY = h * 0.5 + (Math.random() * h * 0.3 - h * 0.15);
 
-    // Decide landing spot
-    const rand = Math.random();
-    let landX, landY, rotate;
+    // Aerodynamic Nodes
+    const thrustX = w * 0.1;
+    const thrustY = h * 0.1;
+    
+    const peak1X = w * 0.3;
+    const peak1Y = h * 0.25;
+    
+    const diveX = w * 0.6;
+    const diveY = h * 0.8;
+    
+    const recoveryX = w * 0.85;
+    const recoveryY = h * 0.45;
+    
+    // Using Quadratic Beziers (Q) chaining into Smooth Quadratics (T) 
+    const p = `M ${startX} ${startY} Q ${thrustX} ${thrustY} ${peak1X} ${peak1Y} T ${diveX} ${diveY} T ${recoveryX} ${recoveryY} T ${endX} ${endY}`;
+    
+    return { path: p, landX: endX, landY: endY };
+  };
 
-    if (rand < 0.35) {
-      // Land Left
-      landX = 40;
-      landY = Math.random() * (h - 300) + 150;
-      rotate = 15;
-    } else if (rand < 0.7) {
-      // Land Right
-      landX = w - 120;
-      landY = Math.random() * (h - 300) + 150;
-      rotate = -15;
-    } else {
-      // Land Bottom
-      landX = Math.random() * (w - 300) + 150;
-      landY = h - 140;
-      rotate = 0;
-    }
-
-    // Bezier curve: Start right offscreen -> swoop left -> swoop right -> land
-    const startX = w + 150;
-    const startY = h * 0.1;
-    const cp1x = -w * 0.5; // pull far left
-    const cp1y = h * 0.9;
-    const cp2x = w * 1.2;  // pull back right
-    const cp2y = h * 0.3;
-
-    const p = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${landX} ${landY}`;
-    setPathData({ path: p, landX, landY, rotate });
-
-    // Start animation loop
-    const timer = setTimeout(() => {
+  const startFlight = () => {
+    setPathData(generatePath());
+    
+    // Reset engine
+    flightProgress.set(0);
+    
+    setTimeout(() => {
       setIsVisible(true);
       setIsAnimating(true);
-
-      // Flight duration is 12 seconds for the longer path
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 12000);
-
+      
+      // Fire the single source of truth animation
+      animate(flightProgress, 1, { 
+        duration: 8, 
+        ease: easeOutQuart,
+        onComplete: () => setIsAnimating(false)
+      });
+      
     }, 2000);
+  };
 
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    startFlight();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleClick = () => {
-    // Only clickable when landed
-    if (isAnimating || !isVisible) return;
-
-    // Hide plane, show modal
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isVisible) return;
+    
+    // Lock coordinates for the Easter Egg explosion
+    setEggPos({ x: e.clientX, y: e.clientY });
+    
+    // Nuke the plane, trigger easter egg
     setIsVisible(false);
-
-    if (Math.random() > 0.4) {
-      setModalType('ad');
-    } else {
-      setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
-      setModalType('prompt');
-    }
+    setIsAnimating(false);
+    setClickEffect('flash');
+    
+    setTimeout(() => {
+      setClickEffect('egg');
+      setTimeout(() => {
+        setClickEffect('pop');
+        setTimeout(() => {
+          setClickEffect(null);
+          if (Math.random() > 0.4) {
+            setModalType('ad');
+          } else {
+            setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
+            setModalType('prompt');
+          }
+        }, 500); // Pop duration
+      }, 1200); // Egg shake duration
+    }, 150); // Flash duration
   };
 
   const closeAd = () => {
     setModalType(null);
-    // Restart flight after some time
-    setTimeout(() => {
-      // Regenerate path
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const rand = Math.random();
-      let landX, landY, rotate;
-      if (rand < 0.35) { landX = 40; landY = Math.random() * (h - 300) + 150; rotate = 15; }
     setTimeout(() => {
       startFlight();
     }, 4000);
@@ -115,16 +135,16 @@ export const PaperAirplaneAd = () => {
         />
       )}
 
-      {/* 2. Shaking Egg & Pop */}
+      {/* 2. Shaking Egg & Pop (Made egg bigger: text-8xl and scale up to 1.5) */}
       {(clickEffect === 'egg' || clickEffect === 'pop') && (
         <motion.div 
-          className="fixed z-[150] pointer-events-none text-6xl"
-          style={{ left: eggPos.x - 30, top: eggPos.y - 30 }}
+          className="fixed z-[150] pointer-events-none text-8xl"
+          style={{ left: eggPos.x - 50, top: eggPos.y - 50 }}
           initial={{ scale: 0, rotate: -180 }}
           animate={
             clickEffect === 'egg' 
-              ? { scale: 1, rotate: [0, -15, 15, -15, 15, 0] } 
-              : { scale: 3, opacity: 0, filter: 'blur(10px)' }
+              ? { scale: 1.5, rotate: [0, -15, 15, -15, 15, 0] } 
+              : { scale: 4, opacity: 0, filter: 'blur(10px)' }
           }
           transition={
             clickEffect === 'egg' 
