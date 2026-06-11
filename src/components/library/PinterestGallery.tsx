@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Prompt } from './PromptCard';
 import { Search, SlidersHorizontal, ArrowDownAZ, Star, Sparkles } from 'lucide-react';
+import { AdSlot } from '../ads/AdSlot';
 
 interface PinterestGalleryProps {
   initialPrompts: Prompt[];
@@ -128,37 +129,45 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
             {filteredPrompts.map((prompt, i) => {
               const hex = accentColors[i % accentColors.length];
               const aspect = aspects[i % aspects.length];
+              const showAd = i > 0 && i % 7 === 0;
               
               return (
-                <div key={prompt.id} className={`relative group bg-white ${aspect} border-4 border-black rounded-[24px] overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[12px_12px_0_#FF6D87] break-inside-avoid inline-block w-full`}>
-                  <a href={`/prompt/${prompt.slug}`} className="block w-full h-full relative">
-                    <img
-                      alt={prompt.title}
-                      className="w-full h-full object-cover"
-                      src={prompt.image_url}
-                      loading={i < 8 ? "eager" : "lazy"}
-                    />
-                    
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-[16px] flex flex-col justify-between pointer-events-none group-hover:pointer-events-auto">
-                      <div className="flex justify-between items-start">
-                        <span className="bg-white text-black px-3 py-1 rounded-full text-[12px] font-bold shadow-[4px_4px_0_#FF6D87] border-2 border-black">
-                          {prompt.style || 'Prompt'}
-                        </span>
-                        <button className="bg-[#FF6D87] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 border-black shadow-[4px_4px_0_#000] hover:bg-black transition-colors">
-                          <Star size={16} />
-                        </button>
-                      </div>
+                <React.Fragment key={prompt.id}>
+                  <div className={`relative group bg-white ${aspect} border-4 border-black rounded-[24px] overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[12px_12px_0_#FF6D87] break-inside-avoid inline-block w-full`}>
+                    <a href={`/prompt/${prompt.slug}`} className="block w-full h-full relative">
+                      <img
+                        alt={prompt.title}
+                        className="w-full h-full object-cover"
+                        src={prompt.image_url}
+                        loading={i < 8 ? "eager" : "lazy"}
+                      />
                       
-                      <div className="bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0_#FF6D87] translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                        <h4 className="font-black uppercase text-[14px] line-clamp-1 mb-1">{prompt.title}</h4>
-                        <p className="text-[12px] text-[#4c4546] line-clamp-2">
-                          {prompt.prompt_text}
-                        </p>
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-[16px] flex flex-col justify-between pointer-events-none group-hover:pointer-events-auto">
+                        <div className="flex justify-between items-start">
+                          <span className="bg-white text-black px-3 py-1 rounded-full text-[12px] font-bold shadow-[4px_4px_0_#FF6D87] border-2 border-black">
+                            {prompt.style || 'Prompt'}
+                          </span>
+                          <button className="bg-[#FF6D87] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 border-black shadow-[4px_4px_0_#000] hover:bg-black transition-colors">
+                            <Star size={16} />
+                          </button>
+                        </div>
+                        
+                        <div className="bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0_#FF6D87] translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                          <h4 className="font-black uppercase text-[14px] line-clamp-1 mb-1">{prompt.title}</h4>
+                          <p className="text-[12px] text-[#4c4546] line-clamp-2">
+                            {prompt.prompt_text}
+                          </p>
+                        </div>
                       </div>
+                    </a>
+                  </div>
+                  {showAd && (
+                    <div className="break-inside-avoid inline-block w-full relative group">
+                      <AdSlot type="medium-rectangle" className="w-full aspect-[4/5] h-auto rounded-[24px] overflow-hidden" label="Sponsor" />
                     </div>
-                  </a>
-                </div>
+                  )}
+                </React.Fragment>
               );
             })}
           </div>

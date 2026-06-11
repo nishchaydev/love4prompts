@@ -125,18 +125,26 @@ import Layout from '../../components/layout/Layout.astro';
         </a>
 
         {/* 07: ARCHIVE */}
-        <a href="/dashboard" class="bg-black p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline">
+        <a href="/dashboard" class="bg-black p-[40px] relative group flex flex-col h-[340px] transition-all duration-300 hover:shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:-translate-x-1 cursor-pointer block no-underline border border-white">
           <div class="absolute top-[24px] right-[24px] ed-label-caps text-black font-mono opacity-30">07</div>
           <div class="w-[48px] h-[48px] border border-white flex items-center justify-center mb-[40px] bg-black transition-colors duration-300 group-hover:bg-[#FF6D87] group-hover:border-[#FF6D87]">
-            <span class="material-symbols-outlined text-black group-hover:text-black transition-colors">history</span>
+            <span class="material-symbols-outlined text-white group-hover:text-black transition-colors">history</span>
           </div>
-          <h2 class="text-black tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">MY ARCHIVE</h2>
+          <h2 class="text-white tracking-tighter uppercase font-black text-[24px] mb-[16px] leading-none">MY ARCHIVE</h2>
           <p class="ed-label-caps text-[10px] tracking-widest text-[#cfc4c5] mb-auto leading-relaxed">BROWSE YOUR PERSONAL COLLECTION OF SAVED PROMPTS AND GENERATED IMAGES.</p>
-          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-black font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
+          <div class="mt-auto pt-[24px] flex items-center gap-[8px] text-white font-bold tracking-widest text-[12px] group-hover:text-[#FF6D87] transition-colors">
             <span>OPEN ARCHIVE</span>
             <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </div>
         </a>
+
+        {/* 08: AD SLOT */}
+        <div class="bg-[#FAEFED] p-[40px] relative flex flex-col h-[340px] items-center justify-center cursor-default block">
+          <div class="absolute top-[16px] right-[16px] ed-label-caps text-white bg-black px-2 py-1 text-[10px]">AD</div>
+          <span class="material-symbols-outlined text-[#FF6D87] text-[48px] mb-4 opacity-50">shopping_bag</span>
+          <h2 class="text-[#4c4546] tracking-widest uppercase font-black text-[16px] mb-2 text-center">SPONSORED</h2>
+          <p class="ed-label-caps text-[10px] tracking-widest text-[#888] text-center max-w-[200px]">ADVERTISE YOUR AI TOOL OR SERVICE HERE.</p>
+        </div>
 
       </div>
 

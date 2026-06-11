@@ -27,10 +27,10 @@ const isEditorial = theme === 'editorial';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="overflow-x-hidden">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -108,7 +108,7 @@ const isEditorial = theme === 'editorial';
   <body 
     transition:animate="none"
     class:list={[
-    'min-h-screen flex flex-col overflow-x-hidden',
+    'min-h-screen flex flex-col overflow-x-hidden w-full relative',
     isEditorial
       ? 'editorial-page bg-[#FAEFED] text-[#1a1a1a] selection:bg-[#1a1a1a] selection:text-white'
       : 'bg-[var(--color-background-primary)] text-[var(--color-text-primary)] selection:bg-[var(--color-primary)] selection:text-white'
@@ -168,16 +168,11 @@ const isEditorial = theme === 'editorial';
       </div>
     )}
 
-    <div class:list={['relative z-10 flex flex-col min-h-screen', isEditorial ? '' : '']}>
+    <div class:list={['relative z-10 flex flex-col min-h-screen w-full', isEditorial ? '' : '']}>
       <Header client:load isEditorial={isEditorial} currentPath={Astro.url.pathname} />
-      {isEditorial && (
-        <div class="w-full flex justify-center py-4 border-b-[3px] border-black bg-white mt-20">
-          <AdSlot type="leaderboard" />
-        </div>
-      )}
       {!isEditorial && <TrendingBar client:load />}
       {isEditorial ? (
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col w-full mt-20">
           <slot />
         </div>
       ) : (

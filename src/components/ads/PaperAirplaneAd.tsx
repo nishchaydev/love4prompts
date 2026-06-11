@@ -93,21 +93,13 @@ export const PaperAirplaneAd = () => {
           style={{ x: '-100px', y: yPos }} // Fallback
         >
           <div className="relative group">
-            {/* Proper SVG Paper Airplane */}
-            <svg 
-              width="60" 
-              height="60" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="black"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-black drop-shadow-[4px_4px_0_rgba(0,0,0,1)] bg-white p-2 border-[2px] border-black rounded-xl"
-            >
-              <path d="M22 2L11 13" />
-              <path d="M22 2L15 22L11 13L2 9L22 2Z" fill="white" />
-            </svg>
+            {/* 3D Paper Airplane */}
+            <img 
+              src="/paper_airplane_3d.png" 
+              alt="3D Paper Airplane"
+              className="w-[80px] h-[80px] object-contain drop-shadow-[4px_4px_0_rgba(0,0,0,1)] hover:drop-shadow-[8px_8px_0_rgba(255,109,135,1)] transition-all duration-300"
+              style={{ filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,1))' }}
+            />
             {!isAnimating && (
               <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity duration-150">
                 Catch me!
