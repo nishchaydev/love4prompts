@@ -62,10 +62,10 @@ export const PaperAirplaneAd = () => {
       setIsVisible(true);
       setIsAnimating(true);
       
-      // Flight duration is 5 seconds for the longer path
+      // Flight duration is 12 seconds for the longer path
       setTimeout(() => {
         setIsAnimating(false);
-      }, 5000);
+      }, 12000);
       
     }, 2000);
     
@@ -105,7 +105,7 @@ export const PaperAirplaneAd = () => {
       
       setIsVisible(true);
       setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 5000);
+      setTimeout(() => setIsAnimating(false), 12000);
     }, 8000);
   };
 
@@ -125,7 +125,7 @@ export const PaperAirplaneAd = () => {
                 strokeLinecap="round"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: isAnimating ? 0.8 : 0.2 }}
-                transition={{ duration: 5, ease: "easeInOut" }}
+                transition={{ duration: 12, ease: "easeInOut" }}
               />
             </svg>
           </div>
@@ -139,7 +139,7 @@ export const PaperAirplaneAd = () => {
             } as any}
             initial={{ offsetDistance: '0%', opacity: 0 }}
             animate={{ offsetDistance: '100%', opacity: 1 }}
-            transition={{ duration: 5, ease: "easeInOut" }}
+            transition={{ duration: 12, ease: "easeInOut" }}
             onClick={handleClick}
             whileHover={!isAnimating ? { scale: 1.15 } : {}}
             whileTap={!isAnimating ? { scale: 0.95 } : {}}
