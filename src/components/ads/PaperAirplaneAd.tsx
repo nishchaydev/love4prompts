@@ -9,13 +9,15 @@ const CRAZY_PROMPTS = [
 ];
 
 // Easing token: --ease-out-quart (from references)
-const easeOutQuart = [0.165, 0.84, 0.44, 1];
+const easeOutQuart: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
 // Easing token: --ease-in-out-cubic (from references)
-const easeInOutCubic = [0.645, 0.045, 0.355, 1];
+const easeInOutCubic: [number, number, number, number] = [0.645, 0.045, 0.355, 1];
 
 export const PaperAirplaneAd = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [modalType, setModalType] = useState<'ad' | 'prompt' | null>(null);
+  const [randomPrompt, setRandomPrompt] = useState("");
   const [pathData, setPathData] = useState<{ path: string, landX: number, landY: number, rotate: number } | null>(null);
 
   useEffect(() => {
