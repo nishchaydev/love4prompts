@@ -44,13 +44,13 @@ export const PaperAirplaneAd = () => {
       rotate = 0;
     }
 
-    // Bezier curve control points
-    const startX = -150;
-    const startY = h * 0.2;
-    const cp1x = w * 0.8;
+    // Bezier curve: Start right offscreen -> swoop left -> swoop right -> land
+    const startX = w + 150;
+    const startY = h * 0.1;
+    const cp1x = -w * 0.5; // pull far left
     const cp1y = h * 0.9;
-    const cp2x = w * 0.2;
-    const cp2y = h * 0.1;
+    const cp2x = w * 1.2;  // pull back right
+    const cp2y = h * 0.3;
     
     const p = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${landX} ${landY}`;
     setPathData({ path: p, landX, landY, rotate });
@@ -60,12 +60,12 @@ export const PaperAirplaneAd = () => {
       setIsVisible(true);
       setIsAnimating(true);
       
-      // Flight duration is 4 seconds
+      // Flight duration is 5 seconds for the longer path
       setTimeout(() => {
         setIsAnimating(false);
-      }, 4000);
+      }, 5000);
       
-    }, 3000);
+    }, 2000);
     
     return () => clearTimeout(timer);
   }, []);
@@ -98,12 +98,12 @@ export const PaperAirplaneAd = () => {
       else if (rand < 0.7) { landX = w - 120; landY = Math.random() * (h - 300) + 150; rotate = -15; }
       else { landX = Math.random() * (w - 300) + 150; landY = h - 140; rotate = 0; }
       
-      const p = `M ${-150} ${h * 0.2} C ${w * 0.8} ${h * 0.9}, ${w * 0.2} ${h * 0.1}, ${landX} ${landY}`;
+      const p = `M ${w + 150} ${h * 0.2} C ${-w * 0.5} ${h * 0.8}, ${w * 1.2} ${h * 0.2}, ${landX} ${landY}`;
       setPathData({ path: p, landX, landY, rotate });
       
       setIsVisible(true);
       setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 4000);
+      setTimeout(() => setIsAnimating(false), 5000);
     }, 8000);
   };
 
@@ -111,19 +111,19 @@ export const PaperAirplaneAd = () => {
     <AnimatePresence>
       {isVisible && !modalType && pathData && (
         <>
-          {/* Dashed Trail */}
+          {/* Dashed Trail of Air */}
           <div className="fixed inset-0 pointer-events-none z-[80]">
             <svg className="w-full h-full" style={{ overflow: 'visible' }}>
               <motion.path 
                 d={pathData.path}
                 fill="none"
-                stroke="#ccc"
-                strokeWidth="3"
-                strokeDasharray="10 10"
+                stroke="#FF6D87"
+                strokeWidth="2"
+                strokeDasharray="8 8"
                 strokeLinecap="round"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: isAnimating ? 0.6 : 0.2 }}
-                transition={{ duration: 4, ease: "easeInOut" }}
+                animate={{ pathLength: 1, opacity: isAnimating ? 0.8 : 0.2 }}
+                transition={{ duration: 5, ease: "easeInOut" }}
               />
             </svg>
           </div>
@@ -137,7 +137,7 @@ export const PaperAirplaneAd = () => {
             } as any}
             initial={{ offsetDistance: '0%', opacity: 0 }}
             animate={{ offsetDistance: '100%', opacity: 1 }}
-            transition={{ duration: 4, ease: "easeInOut" }}
+            transition={{ duration: 5, ease: "easeInOut" }}
             onClick={handleClick}
             whileHover={!isAnimating ? { scale: 1.15 } : {}}
             whileTap={!isAnimating ? { scale: 0.95 } : {}}
@@ -147,14 +147,28 @@ export const PaperAirplaneAd = () => {
                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                className="relative group"
             >
-              <img 
-                src="/paper_airplane_3d.png" 
-                alt="3D Paper Airplane"
-                className="w-[80px] h-[80px] object-contain drop-shadow-[4px_4px_0_rgba(0,0,0,1)] hover:drop-shadow-[8px_8px_0_rgba(255,109,135,1)] transition-all duration-300"
-                style={{ filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,1))' }}
-              />
+              {/* Doodle Paper Airplane SVG */}
+              <svg 
+                width="80" 
+                height="80" 
+                viewBox="0 0 32 32" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="1.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className="text-[#1a1a1a] drop-shadow-[3px_3px_0_#FF6D87] bg-white rounded-full p-2 border-[2px] border-[#1a1a1a]"
+              >
+                <g transform="translate(4, 4)">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </g>
+                <line x1="6" y1="18" x2="2" y2="22"></line>
+                <line x1="12" y1="24" x2="8" y2="28"></line>
+              </svg>
+              
               {!isAnimating && (
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity duration-150 animate-pulse">
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-widest opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity duration-150 shadow-[4px_4px_0_#FF6D87] border-2 border-black animate-pulse">
                   Catch me!
                 </div>
               )}
