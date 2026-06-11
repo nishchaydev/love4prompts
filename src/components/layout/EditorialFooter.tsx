@@ -60,7 +60,7 @@ export const EditorialFooter: React.FC = () => {
           <div className="flex flex-col">
             <h3 className="font-bold mb-4 text-[16px] text-[#FF6D87]">Socials</h3>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">Twitter</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">Instagram</a>
+            <a href="https://www.instagram.com/love4prompts" target="_blank" rel="noopener noreferrer" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">Instagram</a>
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">GitHub</a>
           </div>
 

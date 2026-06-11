@@ -24,12 +24,20 @@ interface GroqVisionRequest {
 // ─── Key rotation with automatic fallback ──────────────────────────
 function getApiKeys(): string[] {
   const keys: string[] = [];
-  const primary = import.meta.env.GROQ_API_KEY;
-  const fallback1 = import.meta.env.GROQ_API_KEY_FALLBACK;
-  const fallback2 = import.meta.env.GROQ_API_KEY_FALLBACK_2;
-  if (primary) keys.push(primary);
-  if (fallback1) keys.push(fallback1);
-  if (fallback2) keys.push(fallback2);
+  const envKeys = [
+    import.meta.env.GROQ_API_KEY,
+    import.meta.env.GROQ_API_KEY_FALLBACK,
+    import.meta.env.GROQ_API_KEY_FALLBACK_2,
+    import.meta.env.GROQ_API_KEY_FALLBACK_3,
+    import.meta.env.GROQ_API_KEY_FALLBACK_4,
+    import.meta.env.GROQ_API_KEY_FALLBACK_5,
+    import.meta.env.GROQ_API_KEY_FALLBACK_6,
+  ];
+  
+  for (const k of envKeys) {
+    if (k) keys.push(k);
+  }
+  
   if (keys.length === 0) {
     throw new Error('No GROQ_API_KEY is set in environment variables.');
   }

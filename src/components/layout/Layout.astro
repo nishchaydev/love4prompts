@@ -188,7 +188,7 @@ const isEditorial = theme === 'editorial';
       document.addEventListener('astro:page-load', hideLoader);
 
       // Safety fallback
-      fallbackTimeout = setTimeout(hideLoader, 4000);
+      fallbackTimeout = window.setTimeout(hideLoader, 4000);
     </script>
     
     {!isEditorial && (
