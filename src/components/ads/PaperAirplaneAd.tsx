@@ -8,7 +8,9 @@ const CRAZY_PROMPTS = [
   "Describe the taste of the color blue without using food metaphors."
 ];
 
+// Easing token: --ease-out-quart (from references)
 const easeOutQuart: [number, number, number, number] = [0.165, 0.84, 0.44, 1];
+// Easing token: --ease-in-out-cubic (from references)
 const easeInOutCubic: [number, number, number, number] = [0.645, 0.045, 0.355, 1];
 
 export const PaperAirplaneAd = () => {
@@ -17,22 +19,19 @@ export const PaperAirplaneAd = () => {
   const [modalType, setModalType] = useState<'ad' | 'prompt' | null>(null);
   const [randomPrompt, setRandomPrompt] = useState("");
   const [pathData, setPathData] = useState<{ path: string, landX: number, landY: number, rotate: number } | null>(null);
-  
-  // Easter egg state
-  const [clickEffect, setClickEffect] = useState<'flash' | 'egg' | 'pop' | null>(null);
-  const [eggPos, setEggPos] = useState({ x: 0, y: 0 });
 
-  const generatePath = () => {
+  useEffect(() => {
+    // Generate flight path on client to avoid hydration issues
     const w = typeof window !== 'undefined' ? window.innerWidth : 1000;
     const h = typeof window !== 'undefined' ? window.innerHeight : 800;
-    
+
     // Decide landing spot
     const rand = Math.random();
     let landX, landY, rotate;
-    
+
     if (rand < 0.35) {
       // Land Left
-      landX = 60;
+      landX = 40;
       landY = Math.random() * (h - 300) + 150;
       rotate = 15;
     } else if (rand < 0.7) {
@@ -47,79 +46,65 @@ export const PaperAirplaneAd = () => {
       rotate = 0;
     }
 
-    // Classic Paper Airplane Loop-de-loop path
-    // Start top left offscreen
-    const startX = -150;
-    const startY = h * 0.2;
-    
-    // Push far right and down
-    const cp1x = w * 0.8;
+    // Bezier curve: Start right offscreen -> swoop left -> swoop right -> land
+    const startX = w + 150;
+    const startY = h * 0.1;
+    const cp1x = -w * 0.5; // pull far left
     const cp1y = h * 0.9;
-    
-    // Pull far left and up (creates the loop)
-    const cp2x = w * 0.2;
-    const cp2y = -h * 0.2;
-    
-    // The C command creates a perfect smooth loop
-    const p = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${landX} ${landY}`;
-    
-    return { path: p, landX, landY, rotate };
-  };
+    const cp2x = w * 1.2;  // pull back right
+    const cp2y = h * 0.3;
 
-  useEffect(() => {
-    setPathData(generatePath());
-    
+    const p = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${landX} ${landY}`;
+    setPathData({ path: p, landX, landY, rotate });
+
+    // Start animation loop
     const timer = setTimeout(() => {
       setIsVisible(true);
       setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 8000); // 8s flight
+
+      // Flight duration is 12 seconds for the longer path
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 12000);
+
     }, 2000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
+    // Only clickable when landed
     if (isAnimating || !isVisible) return;
-    
-    // Save position for the egg
-    setEggPos({ x: e.clientX, y: e.clientY });
-    
-    // Hide plane, start sequence
+
+    // Hide plane, show modal
     setIsVisible(false);
-    setClickEffect('flash');
-    
-    setTimeout(() => {
-      setClickEffect('egg');
-      
-      setTimeout(() => {
-        setClickEffect('pop');
-        
-        setTimeout(() => {
-          setClickEffect(null);
-          if (Math.random() > 0.4) {
-            setModalType('ad');
-          } else {
-            setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
-            setModalType('prompt');
-          }
-        }, 500); // pop duration
-      }, 1200); // egg shake duration
-    }, 150); // flash duration
+
+    if (Math.random() > 0.4) {
+      setModalType('ad');
+    } else {
+      setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
+      setModalType('prompt');
+    }
   };
 
   const closeAd = () => {
     setModalType(null);
+    // Restart flight after some time
     setTimeout(() => {
-      setPathData(generatePath());
-      setIsVisible(true);
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 8000);
-    }, 6000);
+      // Regenerate path
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const rand = Math.random();
+      let landX, landY, rotate;
+      if (rand < 0.35) { landX = 40; landY = Math.random() * (h - 300) + 150; rotate = 15; }
+    setTimeout(() => {
+      startFlight();
+    }, 4000);
   };
 
   return (
     <AnimatePresence>
-      {/* 1. Screen Flash */}
+      {/* 1. Screen Flash Easter Egg */}
       {clickEffect === 'flash' && (
         <motion.div 
           className="fixed inset-0 z-[200] bg-white pointer-events-none"
@@ -130,7 +115,7 @@ export const PaperAirplaneAd = () => {
         />
       )}
 
-      {/* 2. The Easter Egg */}
+      {/* 2. Shaking Egg & Pop */}
       {(clickEffect === 'egg' || clickEffect === 'pop') && (
         <motion.div 
           className="fixed z-[150] pointer-events-none text-6xl"
@@ -163,9 +148,7 @@ export const PaperAirplaneAd = () => {
                 strokeWidth="2"
                 strokeDasharray="8 8"
                 strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: isAnimating ? 0.8 : 0.2 }}
-                transition={{ duration: 8, ease: easeOutQuart }} // Motion Design Easing
+                style={{ pathLength, opacity: trailOpacity }} // Driven by MotionValue!
               />
             </svg>
           </div>
@@ -175,12 +158,10 @@ export const PaperAirplaneAd = () => {
             className="fixed top-0 left-0 z-[90] cursor-pointer"
             style={{ 
               offsetPath: `path('${pathData.path}')`,
-              offsetRotate: isAnimating ? 'auto 45deg' : `${pathData.rotate}deg`,
+              offsetRotate: 'auto', // Perfectly aligns tangent to path
+              offsetDistance: offsetDistance, // Driven by MotionValue!
               willChange: 'offset-distance, transform'
             } as any}
-            initial={{ offsetDistance: '0%', opacity: 0 }}
-            animate={{ offsetDistance: '100%', opacity: 1 }}
-            transition={{ duration: 8, ease: easeOutQuart }} // Motion Design Easing
             onClick={handleClick}
             whileHover={!isAnimating ? { scale: 1.15 } : {}}
             whileTap={!isAnimating ? { scale: 0.95 } : {}}
@@ -189,8 +170,8 @@ export const PaperAirplaneAd = () => {
                animate={!isAnimating 
                  ? { y: [0, -10, 0], rotate: [0, 2, -2, 0] } 
                  : { 
-                     rotate: [0, 15, -15, 0], // Aerodynamic wobble
-                     scale: [0.85, 1.15, 0.95, 1] // 3D depth perception
+                     rotate: [0, 15, -15, 0], // Aerodynamic turbulence wobble
+                     scale: [0.85, 1.15, 0.95, 1] // Z-axis depth scaling
                    }
                }
                transition={!isAnimating 
@@ -199,54 +180,58 @@ export const PaperAirplaneAd = () => {
                }
                className="relative"
             >
-              {/* Shadow Paper Airplane SVG */}
+              {/* Shadow Layer */}
               <svg 
                 width="80" height="80" viewBox="0 0 32 32" fill="none" 
                 stroke="#FF6D87" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
                 className="absolute top-[3px] left-[3px]"
               >
-                <g transform="translate(4, 4)">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                {/* rotate(45) mathematically corrects the SVG coordinate system so the tip natively points 0 deg (Right) */}
+                <g transform="rotate(45 16 16)">
+                  <g transform="translate(4, 4)">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </g>
+                  <line x1="6" y1="18" x2="2" y2="22"></line>
+                  <line x1="12" y1="24" x2="8" y2="28"></line>
                 </g>
-                <line x1="6" y1="18" x2="2" y2="22"></line>
-                <line x1="12" y1="24" x2="8" y2="28"></line>
               </svg>
-              {/* Main Doodle Paper Airplane SVG */}
+              {/* Main SVG */}
               <svg 
                 width="80" height="80" viewBox="0 0 32 32" fill="none" 
                 stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" 
                 className="relative text-[#1a1a1a]"
               >
-                <g transform="translate(4, 4)">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                <g transform="rotate(45 16 16)">
+                  <g transform="translate(4, 4)">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </g>
+                  <line x1="6" y1="18" x2="2" y2="22"></line>
+                  <line x1="12" y1="24" x2="8" y2="28"></line>
                 </g>
-                <line x1="6" y1="18" x2="2" y2="22"></line>
-                <line x1="12" y1="24" x2="8" y2="28"></line>
               </svg>
             </motion.div>
           </motion.div>
 
-          {/* Catch Me Text - Separate to stay upright */}
-          {!isAnimating && (
-             <motion.div 
-               className="fixed top-0 left-0 z-[95] pointer-events-none"
-               style={{ 
-                 offsetPath: `path('${pathData.path}')`,
-                 offsetRotate: '0deg',
-                 offsetDistance: '100%'
-               } as any}
-             >
-                <motion.div 
-                   animate={{ y: [0, -10, 0] }}
-                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                   className="absolute top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-widest whitespace-nowrap shadow-[4px_4px_0_#FF6D87] border-2 border-black animate-pulse"
-                >
-                  Catch me!
-                </motion.div>
-             </motion.div>
-          )}
+          {/* Catch Me Text - Wingman Text */}
+          <motion.div 
+            className="fixed top-0 left-0 z-[95] pointer-events-none"
+            style={{ 
+              offsetPath: `path('${pathData.path}')`,
+              offsetRotate: '0deg', // Always upright
+              offsetDistance: offsetDistance, // Driven by MotionValue!
+              willChange: 'offset-distance, transform'
+            } as any}
+          >
+            <motion.div 
+               animate={{ y: [0, -10, 0] }}
+               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+               className="absolute top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-widest whitespace-nowrap shadow-[4px_4px_0_#FF6D87] border-2 border-black animate-pulse"
+            >
+              Catch me!
+            </motion.div>
+          </motion.div>
         </>
       )}
 
