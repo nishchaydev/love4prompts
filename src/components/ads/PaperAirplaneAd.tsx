@@ -16,97 +16,151 @@ const easeInOutCubic = [0.645, 0.045, 0.355, 1];
 export const PaperAirplaneAd = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [modalType, setModalType] = useState<'ad' | 'prompt' | null>(null);
-  const [randomPrompt, setRandomPrompt] = useState("");
-  const [yPos, setYPos] = useState(100);
+  const [pathData, setPathData] = useState<{ path: string, landX: number, landY: number, rotate: number } | null>(null);
 
   useEffect(() => {
-    const startFlight = () => {
-      setYPos(Math.floor(Math.random() * (window.innerHeight / 2)) + 50);
-      setIsVisible(true);
-    };
+    // Generate flight path on client to avoid hydration issues
+    const w = typeof window !== 'undefined' ? window.innerWidth : 1000;
+    const h = typeof window !== 'undefined' ? window.innerHeight : 800;
     
-    // Initial delay before first flight
-    const timer = setTimeout(startFlight, 3000);
+    // Decide landing spot
+    const rand = Math.random();
+    let landX, landY, rotate;
+    
+    if (rand < 0.35) {
+      // Land Left
+      landX = 40;
+      landY = Math.random() * (h - 300) + 150;
+      rotate = 15;
+    } else if (rand < 0.7) {
+      // Land Right
+      landX = w - 120;
+      landY = Math.random() * (h - 300) + 150;
+      rotate = -15;
+    } else {
+      // Land Bottom
+      landX = Math.random() * (w - 300) + 150;
+      landY = h - 140;
+      rotate = 0;
+    }
+
+    // Bezier curve control points
+    const startX = -150;
+    const startY = h * 0.2;
+    const cp1x = w * 0.8;
+    const cp1y = h * 0.9;
+    const cp2x = w * 0.2;
+    const cp2y = h * 0.1;
+    
+    const p = `M ${startX} ${startY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${landX} ${landY}`;
+    setPathData({ path: p, landX, landY, rotate });
+    
+    // Start animation loop
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+      setIsAnimating(true);
+      
+      // Flight duration is 4 seconds
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 4000);
+      
+    }, 3000);
+    
     return () => clearTimeout(timer);
   }, []);
 
   const handleClick = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+    // Only clickable when landed
+    if (isAnimating || !isVisible) return;
     
-    // Scale up the plane, then show the modal
-    setTimeout(() => {
-      setIsAnimating(false);
-      setIsVisible(false);
-      
-      if (Math.random() > 0.3) {
-        setModalType('ad');
-      } else {
-        setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
-        setModalType('prompt');
-      }
-    }, 800); // Wait for the zoom animation
+    // Hide plane, show modal
+    setIsVisible(false);
+    
+    if (Math.random() > 0.4) {
+      setModalType('ad');
+    } else {
+      setRandomPrompt(CRAZY_PROMPTS[Math.floor(Math.random() * CRAZY_PROMPTS.length)]);
+      setModalType('prompt');
+    }
   };
 
   const closeAd = () => {
     setModalType(null);
+    // Restart flight after some time
     setTimeout(() => {
-      setYPos(Math.floor(Math.random() * (window.innerHeight / 2)) + 50);
+      // Regenerate path
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const rand = Math.random();
+      let landX, landY, rotate;
+      if (rand < 0.35) { landX = 40; landY = Math.random() * (h - 300) + 150; rotate = 15; }
+      else if (rand < 0.7) { landX = w - 120; landY = Math.random() * (h - 300) + 150; rotate = -15; }
+      else { landX = Math.random() * (w - 300) + 150; landY = h - 140; rotate = 0; }
+      
+      const p = `M ${-150} ${h * 0.2} C ${w * 0.8} ${h * 0.9}, ${w * 0.2} ${h * 0.1}, ${landX} ${landY}`;
+      setPathData({ path: p, landX, landY, rotate });
+      
       setIsVisible(true);
-    }, 15000);
+      setIsAnimating(true);
+      setTimeout(() => setIsAnimating(false), 4000);
+    }, 8000);
   };
 
   return (
     <AnimatePresence>
-      {/* The Flying Airplane */}
-      {isVisible && !modalType && (
-        <motion.div 
-          className="fixed z-[90] cursor-pointer"
-          initial={{ x: '-100px', y: yPos, scale: 1, rotate: 0 }}
-          animate={
-            isAnimating 
-              ? { x: '50vw', y: '50vh', scale: 8, rotate: 45, opacity: 0 } 
-              : { x: '120vw', y: yPos, scale: 1, rotate: [0, -5, 5, 0] }
-          }
-          transition={
-            isAnimating
-              ? { duration: 0.8, ease: easeInOutCubic }
-              : { 
-                  x: { duration: 12, ease: "linear" },
-                  rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                }
-          }
-          onClick={handleClick}
-          whileHover={!isAnimating ? { scale: 1.15, rotate: -15, transition: { duration: 0.15, ease: "easeOut" } } : {}}
-          whileTap={!isAnimating ? { scale: 0.95 } : {}}
-          onAnimationComplete={(definition) => {
-            if (definition && typeof definition === 'object' && 'x' in definition && definition.x === '120vw') {
-              // Reset if it flew past screen
-              setIsVisible(false);
-              setTimeout(() => {
-                setYPos(Math.floor(Math.random() * (window.innerHeight / 2)) + 50);
-                setIsVisible(true);
-              }, 10000);
-            }
-          }}
-          style={{ x: '-100px', y: yPos }} // Fallback
-        >
-          <div className="relative group">
-            {/* 3D Paper Airplane */}
-            <img 
-              src="/paper_airplane_3d.png" 
-              alt="3D Paper Airplane"
-              className="w-[80px] h-[80px] object-contain drop-shadow-[4px_4px_0_rgba(0,0,0,1)] hover:drop-shadow-[8px_8px_0_rgba(255,109,135,1)] transition-all duration-300"
-              style={{ filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,1))' }}
-            />
-            {!isAnimating && (
-              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity duration-150">
-                Catch me!
-              </div>
-            )}
+      {isVisible && !modalType && pathData && (
+        <>
+          {/* Dashed Trail */}
+          <div className="fixed inset-0 pointer-events-none z-[80]">
+            <svg className="w-full h-full" style={{ overflow: 'visible' }}>
+              <motion.path 
+                d={pathData.path}
+                fill="none"
+                stroke="#ccc"
+                strokeWidth="3"
+                strokeDasharray="10 10"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: isAnimating ? 0.6 : 0.2 }}
+                transition={{ duration: 4, ease: "easeInOut" }}
+              />
+            </svg>
           </div>
-        </motion.div>
+
+          {/* The Flying Airplane */}
+          <motion.div 
+            className="fixed top-0 left-0 z-[90] cursor-pointer"
+            style={{ 
+              offsetPath: `path('${pathData.path}')`,
+              offsetRotate: 'auto 45deg' 
+            } as any}
+            initial={{ offsetDistance: '0%', opacity: 0 }}
+            animate={{ offsetDistance: '100%', opacity: 1 }}
+            transition={{ duration: 4, ease: "easeInOut" }}
+            onClick={handleClick}
+            whileHover={!isAnimating ? { scale: 1.15 } : {}}
+            whileTap={!isAnimating ? { scale: 0.95 } : {}}
+          >
+            <motion.div
+               animate={!isAnimating ? { y: [0, -10, 0] } : {}}
+               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+               className="relative group"
+            >
+              <img 
+                src="/paper_airplane_3d.png" 
+                alt="3D Paper Airplane"
+                className="w-[80px] h-[80px] object-contain drop-shadow-[4px_4px_0_rgba(0,0,0,1)] hover:drop-shadow-[8px_8px_0_rgba(255,109,135,1)] transition-all duration-300"
+                style={{ filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,1))' }}
+              />
+              {!isAnimating && (
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity duration-150 animate-pulse">
+                  Catch me!
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        </>
       )}
 
       {/* The Modal */}
