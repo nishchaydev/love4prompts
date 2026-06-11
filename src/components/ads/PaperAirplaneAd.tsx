@@ -135,11 +135,12 @@ export const PaperAirplaneAd = () => {
             className="fixed top-0 left-0 z-[90] cursor-pointer"
             style={{ 
               offsetPath: `path('${pathData.path}')`,
-              offsetRotate: 'auto 45deg' 
+              offsetRotate: isAnimating ? 'auto 45deg' : `${pathData.rotate}deg`,
+              willChange: 'offset-distance, transform'
             } as any}
             initial={{ offsetDistance: '0%', opacity: 0 }}
             animate={{ offsetDistance: '100%', opacity: 1 }}
-            transition={{ duration: 12, ease: "easeInOut" }}
+            transition={{ duration: 12, ease: "linear" }}
             onClick={handleClick}
             whileHover={!isAnimating ? { scale: 1.15 } : {}}
             whileTap={!isAnimating ? { scale: 0.95 } : {}}
@@ -147,19 +148,13 @@ export const PaperAirplaneAd = () => {
             <motion.div
                animate={!isAnimating ? { y: [0, -10, 0] } : {}}
                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-               className="relative group"
+               className="relative"
             >
-              {/* Doodle Paper Airplane SVG */}
+              {/* Shadow Paper Airplane SVG (Performance Optimized) */}
               <svg 
-                width="80" 
-                height="80" 
-                viewBox="0 0 32 32" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="1.5" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                className="text-[#1a1a1a] drop-shadow-[3px_3px_0_#FF6D87] bg-white rounded-full p-2 border-[2px] border-[#1a1a1a]"
+                width="80" height="80" viewBox="0 0 32 32" fill="none" 
+                stroke="#FF6D87" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
+                className="absolute top-[3px] left-[3px]"
               >
                 <g transform="translate(4, 4)">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -168,14 +163,41 @@ export const PaperAirplaneAd = () => {
                 <line x1="6" y1="18" x2="2" y2="22"></line>
                 <line x1="12" y1="24" x2="8" y2="28"></line>
               </svg>
-              
-              {!isAnimating && (
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-widest opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity duration-150 shadow-[4px_4px_0_#FF6D87] border-2 border-black animate-pulse">
-                  Catch me!
-                </div>
-              )}
+              {/* Main Doodle Paper Airplane SVG */}
+              <svg 
+                width="80" height="80" viewBox="0 0 32 32" fill="none" 
+                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" 
+                className="relative text-[#1a1a1a]"
+              >
+                <g transform="translate(4, 4)">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </g>
+                <line x1="6" y1="18" x2="2" y2="22"></line>
+                <line x1="12" y1="24" x2="8" y2="28"></line>
+              </svg>
             </motion.div>
           </motion.div>
+
+          {/* Catch Me Text - Separate to stay upright */}
+          {!isAnimating && (
+             <motion.div 
+               className="fixed top-0 left-0 z-[95] pointer-events-none"
+               style={{ 
+                 offsetPath: `path('${pathData.path}')`,
+                 offsetRotate: '0deg',
+                 offsetDistance: '100%'
+               } as any}
+             >
+                <motion.div 
+                   animate={{ y: [0, -10, 0] }}
+                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                   className="absolute top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-widest whitespace-nowrap shadow-[4px_4px_0_#FF6D87] border-2 border-black animate-pulse"
+                >
+                  Catch me!
+                </motion.div>
+             </motion.div>
+          )}
         </>
       )}
 
