@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Prompt } from '../library/PromptCard';
+import { mockPrompts } from '../../lib/mock-data';
 
 const getOptimizedImageUrlDetail = (url: string | null): string => {
   if (!url) return '';
@@ -29,6 +30,7 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isSaving, setIsSaving] = useState(false);
   const [session, setSession] = useState<any>(null);
+  const [isPromptVisible, setIsPromptVisible] = useState(false);
 
   React.useEffect(() => {
     import('../../lib/supabase').then(({ supabase }) => {
@@ -141,6 +143,15 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
   const titleLine1 = titleWords.slice(0, Math.ceil(titleWords.length / 2)).join(' ');
   const titleLine2 = titleWords.slice(Math.ceil(titleWords.length / 2)).join(' ');
 
+  // Group related images by prompt text
+  const relatedImages = mockPrompts
+    .filter(p => p.prompt_text === prompt.prompt_text && p.image_url)
+    .map(p => p.image_url as string);
+    
+  if (relatedImages.length === 0 && prompt.image_url) {
+    relatedImages.push(prompt.image_url);
+  }
+
   return (
     <main className="flex-grow flex flex-col md:flex-row relative overflow-hidden max-w-7xl mx-auto w-full border-x border-black">
       {/* Massive Background Wordmark */}
@@ -153,37 +164,75 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
         </h1>
       </div>
 
-      {/* Left: Hero Image */}
-      <div className="w-full md:w-1/2 p-6 md:p-[40px] relative z-10 flex flex-col justify-center border-b md:border-b-0 md:border-r border-black bg-[#fafafa]">
-        <div className="relative w-full h-[50vh] md:h-[70vh] chromatic-border overflow-hidden group bg-[#111]">
-          {prompt.image_url ? (
-            <img
-              alt={prompt.title}
-              className="absolute inset-0 w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-              style={{ filter: 'contrast(1.25) saturate(1.5)' }}
-              src={getOptimizedImageUrlDetail(prompt.image_url)}
-              loading="eager"
-            />
+      {/* Mobile-only Header */}
+      <div className="block md:hidden w-full p-6 border-b border-black">
+        <h2
+          className="text-black uppercase mb-4 leading-none"
+          style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 'clamp(32px, 8vw, 56px)', lineHeight: '1', letterSpacing: '-0.04em' }}
+        >
+          {titleLine1}<br />{titleLine2}
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {prompt.style && (
+            <span className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{prompt.style.toUpperCase()}</span>
+          )}
+          {prompt.tags.slice(0, 2).map((tag) => (
+            <span key={tag} className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{tag.toUpperCase()}</span>
+          ))}
+          {prompt.model && (
+            <span className="px-2 py-1 border border-[#0047BB] text-[#0047BB] ed-label-caps bg-[#f9f9f9]">{prompt.model.toUpperCase()}</span>
+          )}
+        </div>
+      </div>
+
+      {/* Left: Hero Image(s) */}
+      <div className="w-full md:w-1/2 p-6 md:p-[40px] relative z-10 border-b md:border-b-0 md:border-r border-black bg-[#fafafa]">
+        <div className={`w-full ${relatedImages.length > 1 ? 'columns-2 gap-4' : 'flex justify-center'}`}>
+          {relatedImages.length > 0 ? (
+            relatedImages.map((img, i) => (
+              <div key={i} className={`relative w-full border-4 border-black rounded-[24px] overflow-hidden group bg-[#111] mb-4 break-inside-avoid shadow-[8px_8px_0_#FF6D87]`}>
+                <img
+                  alt={`${prompt.title} - Image ${i + 1}`}
+                  className="w-full h-auto object-cover block transition-transform duration-700 group-hover:scale-105"
+                  style={{ filter: 'contrast(1.15) saturate(1.25)' }}
+                  src={getOptimizedImageUrlDetail(img)}
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+                {/* Image Overlay Metadata */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent text-white flex justify-between items-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div>
+                    <p className="ed-label-caps text-[#cfc4c5] mb-1">REFERENCE</p>
+                    <p className="ed-label-ui text-white">IMG_{i + 1}</p>
+                  </div>
+                  <span className="material-symbols-outlined text-[#FF3B30]">aspect_ratio</span>
+                </div>
+              </div>
+            ))
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full aspect-square flex items-center justify-center border-4 border-black border-dashed rounded-[24px]">
               <span className="ed-label-caps text-[#4c4546]">No image available</span>
             </div>
           )}
-          {/* Image Overlay Metadata */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/90 text-white border-t border-[#FF3B30] flex justify-between items-end backdrop-blur-sm">
-            <div>
-              <p className="ed-label-caps text-[#cfc4c5] mb-1">REFERENCE</p>
-              <p className="ed-label-ui text-white">IMG_{prompt.id.toString().padStart(3, '0')}_{(prompt.style || 'GEN').substring(0, 4).toUpperCase()}</p>
-            </div>
-            <span className="material-symbols-outlined text-[#FF3B30]">aspect_ratio</span>
-          </div>
+        </div>
+
+        {/* Mobile-only CTA */}
+        <div className="block md:hidden w-full mt-6">
+          <a 
+            href={`https://chatgpt.com/?q=${encodeURIComponent("Generate an image using this prompt: " + prompt.prompt_text)}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-full justify-center px-6 py-4 bg-[#FF6D87] border-4 border-black rounded-full font-black uppercase tracking-widest text-white text-[16px] active:bg-black transition-all shadow-[6px_6px_0_#000] active:shadow-[2px_2px_0_#000] active:translate-y-1 flex items-center gap-3"
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+            Create Image!
+          </a>
         </div>
       </div>
 
       {/* Right: Structural Prompt Data */}
       <div className="w-full md:w-1/2 flex flex-col relative z-10">
-        {/* Header Section */}
-        <div className="p-6 md:p-[40px] border-b border-black">
+        {/* Desktop-only Header Section */}
+        <div className="hidden md:block p-[40px] border-b border-black">
           <h2
             className="text-black uppercase mb-[24px] leading-none"
             style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 'clamp(32px, 4vw, 56px)', lineHeight: '1', letterSpacing: '-0.04em' }}
@@ -195,7 +244,7 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
               <span className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{prompt.style.toUpperCase()}</span>
             )}
             {prompt.tags.slice(0, 2).map((tag) => (
-              <span key={tag} className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{tag.toUpperCase()}</span>
+               <span key={tag} className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{tag.toUpperCase()}</span>
             ))}
             {prompt.model && (
               <span className="px-2 py-1 border border-[#0047BB] text-[#0047BB] ed-label-caps bg-[#f9f9f9]">{prompt.model.toUpperCase()}</span>
@@ -218,22 +267,38 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
               {copied ? 'COPIED' : 'COPY PROMPT'}
             </button>
           </div>
-          <div className="bg-[#eeeeee] border border-black p-6 ed-body-main leading-relaxed relative">
-            <div className="absolute top-0 left-0 w-2 h-full bg-[#FF3B30]"></div>
-            <p className="pl-4">
-              {prompt.prompt_text}
-            </p>
+          
+          {/* Mobile hidden prompt toggle */}
+          <div className={`block md:hidden mb-4 ${isPromptVisible ? 'hidden' : ''}`}>
+            <button 
+              onClick={() => setIsPromptVisible(true)} 
+              className="w-full py-4 border-4 border-black border-dashed rounded-[16px] font-black uppercase text-black hover:bg-[#eee] transition-colors"
+            >
+              Click to Reveal Prompt
+            </button>
           </div>
-        </div>
 
-        {/* Parameters Grid */}
-        <div className="px-6 md:px-[40px] grid grid-cols-2 md:grid-cols-4 gap-[1px] bg-black border-b border-black">
-          {Object.entries(params).map(([key, value]) => (
-            <div key={key} className="bg-[#f9f9f9] p-4 flex flex-col gap-2">
-              <span className="ed-label-caps text-[#4c4546]">{key}</span>
-              <span className="ed-label-ui">{value}</span>
+          <div className={`md:block ${isPromptVisible ? 'block' : 'hidden'}`}>
+            <div className="bg-[#eeeeee] border border-black p-6 ed-body-main leading-relaxed relative">
+              <div className="absolute top-0 left-0 w-2 h-full bg-[#FF3B30]"></div>
+              <p className="pl-4">
+                {prompt.prompt_text}
+              </p>
             </div>
-          ))}
+          </div>
+          
+          {/* Desktop-only CTA */}
+          <div className="mt-8 hidden md:flex justify-start">
+            <a 
+              href={`https://chatgpt.com/?q=${encodeURIComponent("Generate an image using this prompt: " + prompt.prompt_text)}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="px-6 py-4 bg-[#FF6D87] border-4 border-black rounded-full font-black uppercase tracking-widest text-white text-[16px] hover:bg-black transition-all hover:-translate-y-1 shadow-[6px_6px_0_#000] hover:shadow-[8px_8px_0_#000] inline-flex items-center gap-3"
+            >
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+              Create Image!
+            </a>
+          </div>
         </div>
 
         {/* Author & Actions */}

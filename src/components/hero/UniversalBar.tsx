@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useOS } from '../../lib/useOS';
+import { springs } from '../../lib/motion';
 
 declare global {
   interface Window {
@@ -714,7 +715,9 @@ export const UniversalBar: React.FC = () => {
             scale: { repeat: Infinity, duration: 4, ease: "easeInOut" },
           }}
         />
-        <div
+        <motion.div
+          layout
+          transition={springs.bouncy}
           className="relative flex items-center w-full h-[56px] md:h-[64px] rounded-2xl px-3 md:px-4"
           style={{
             background: 'rgba(18, 10, 36, 0.75)',
@@ -724,7 +727,6 @@ export const UniversalBar: React.FC = () => {
             boxShadow: isFocused || showPill || isLoading
               ? `0 0 20px ${getHexWithOpacity(ac, 0.15)}, inset 0 0 12px ${getHexWithOpacity(ac, 0.05)}`
               : `0 8px 32px rgba(0,0,0,0.6), 0 0 15px ${getHexWithOpacity(ac, 0.08)}`,
-            transition: 'border-color 100ms ease-out, box-shadow 100ms ease-out',
           }}
         >
           {/* Model selector */}
@@ -871,10 +873,13 @@ export const UniversalBar: React.FC = () => {
             )}
 
             {/* Submit */}
-            <button
+            <motion.button
               type="submit"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={springs.snappy}
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 w-[36px] h-[36px] md:w-[40px] md:h-[40px] rounded-xl flex items-center justify-center text-white transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-20 disabled:cursor-default"
+              className="flex-shrink-0 w-[36px] h-[36px] md:w-[40px] md:h-[40px] rounded-xl flex items-center justify-center text-white transition-all duration-200 disabled:opacity-20 disabled:cursor-default"
               style={{
                 background: `linear-gradient(135deg, ${ac}, ${ac}cc)`,
                 boxShadow: input.trim() ? `0 0 20px ${ac}30` : 'none',
@@ -882,19 +887,20 @@ export const UniversalBar: React.FC = () => {
               aria-label="Execute"
             >
               {isLoading ? <Zap className="w-4 h-4 animate-pulse" /> : <ArrowRight className="w-4 h-4" />}
-            </button>
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
       </form>
 
       {/* ── Result Panel ───────────────────────────────────────────── */}
       <AnimatePresence mode="wait">
         {(resultPrompt || error) && (
           <motion.div
+            layout
             initial={{ opacity: 0, y: -8, scale: 0.99 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.99 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={springs.bouncy}
             className="w-full"
           >
             <div
@@ -1176,24 +1182,27 @@ export const UniversalBar: React.FC = () => {
 
       {/* ── Quick actions (visible always, filtered during result) ──── */}
       {!isLoading && (
-        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide w-full pb-1 px-1">
+        <motion.div layout transition={springs.snappy} className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide w-full pb-1 px-1">
           {(resultPrompt
             ? QUICK_ACTIONS.filter(a => a.starter !== '__LIBRARY__')
             : QUICK_ACTIONS
           ).map((a) => {
             const Icon = a.icon;
             return (
-              <button
+              <motion.button
                 key={a.label}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={springs.snappy}
                 onClick={() => handleChipClick(a.starter)}
-                className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white/40 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white/70 hover:border-white/[0.1] transition-all duration-200 whitespace-nowrap"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[12px] font-semibold text-white/40 bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.06] hover:text-white/70 hover:border-white/[0.1] transition-colors whitespace-nowrap"
               >
                 <Icon className="w-3 h-3" />
                 {a.label}
-              </button>
+              </motion.button>
             );
           })}
-        </div>
+        </motion.div>
       )}
 
       {/* ── Recent prompts chips row ───────────────────────────────── */}

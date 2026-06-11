@@ -70,15 +70,17 @@ export const TrendingBar: React.FC = () => {
             style={{ x: isHovered ? undefined : '0%' }}
           >
             {ALL.map((item, i) => (
-              <a 
+              <motion.a 
                 key={`${item.title}-${i}`} 
                 href={item.url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-[11px] text-white/40 font-medium hover:text-[var(--color-primary)] hover:underline transition-colors duration-200"
+                whileHover={{ scale: 1.05, color: 'var(--color-primary)' }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                className="text-[11px] text-white/40 font-medium hover:underline transition-colors duration-200"
               >
                 {item.title}
-              </a>
+              </motion.a>
             ))}
           </motion.div>
         </div>

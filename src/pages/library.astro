@@ -1,0 +1,62 @@
+---
+import Layout from '../components/layout/Layout.astro';
+import { supabase } from '../lib/supabase';
+import { PinterestGallery } from '../components/library/PinterestGallery';
+import { AdSlot } from '../components/ads/AdSlot';
+import { mockPrompts } from '../lib/mock-data';
+
+const { data: dbPrompts, error } = await supabase
+  .from('prompts')
+  .select('*')
+  .eq('is_public', true)
+  .order('created_at', { ascending: false });
+
+if (error) {
+  console.error('[Library] Supabase fetch error. Using fallback mock data:', error);
+}
+
+const isUsingFallback = !!error || !dbPrompts || dbPrompts.length === 0;
+const prompts = isUsingFallback ? mockPrompts : dbPrompts;
+---
+
+<Layout title="Community Library | love4prompts" 
+  description="Discover, copy, and use battle-tested AI prompts shared by top creators in the love4prompts community." theme="editorial">
+  
+  <div class="flex flex-1 relative min-h-screen overflow-x-hidden">
+    {/* Background Massive Text */}
+    <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none overflow-hidden pt-20">
+      <span 
+        class="text-[#e8e8e8] font-bold tracking-tighter whitespace-nowrap" 
+        style="font-size: clamp(100px, 25vw, 400px); line-height: 0.8;"
+      >
+        ARCHIVE
+      </span>
+    </div>
+
+    <!-- Main Content -->
+    <main class="w-full relative z-10">
+      <div class="px-6 md:px-12 pt-24 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 relative">
+        <div class="flex flex-col">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full font-bold tracking-widest text-[12px] uppercase mb-6 shadow-[4px_4px_0_#FF6D87] border-2 border-black self-start">
+            Community Archive
+          </div>
+          <h1 class="text-black font-black uppercase tracking-tighter text-[48px] md:text-[72px] leading-[0.9] mb-4">
+            The <span class="text-[#FF6D87] drop-shadow-[2px_2px_0_#000]">Library</span>
+          </h1>
+          <p class="text-black font-medium text-[16px] sm:text-[20px] leading-relaxed max-w-2xl mb-0">
+            <strong>By the prompter, to the prompter!</strong> Access thousands of curated, battle-tested AI prompts shared by top creators. Copy, modify, and elevate your AI creations.
+          </p>
+        </div>
+      </div>
+
+      <div class="mx-auto mt-8 mb-8 hidden md:flex justify-center w-full">
+        <AdSlot type="leaderboard" />
+      </div>
+
+      {/* Pinterest-Style Community Library */}
+      <div class="pb-[40px] px-6 md:px-12">
+        <PinterestGallery client:visible initialPrompts={prompts} />
+      </div>
+    </main>
+  </div>
+</Layout>

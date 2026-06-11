@@ -4,6 +4,7 @@ import { Loader2, Copy, Check, ImagePlus, Download } from 'lucide-react';
 import { useModKey } from '../../lib/useOS';
 import { saveToHistory, PromptHistory } from './PromptHistory';
 import { ExampleChips } from './ExampleChips';
+import { springs } from '../../lib/motion';
 
 const EXAMPLE_PROMPTS = [
   'A magical forest with bioluminescent mushrooms at twilight',
@@ -80,7 +81,7 @@ export const PromptToImage: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={springs.gentle}
         className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 sm:p-8"
       >
         <div className="flex flex-col gap-5">
@@ -97,7 +98,7 @@ export const PromptToImage: React.FC = () => {
               onChange={(e) => setPrompt(e.target.value)}
               rows={4}
               placeholder="A futuristic cyberpunk city at night with neon lights reflecting on wet streets..."
-              className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
+              className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-black/30 resize-none font-medium leading-relaxed"
               onKeyDown={(e) => {
                 if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                   e.preventDefault();
@@ -112,10 +113,13 @@ export const PromptToImage: React.FC = () => {
             <ExampleChips examples={EXAMPLE_PROMPTS} onSelect={setPrompt} disabled={isLoading} />
           )}
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={springs.bouncy}
             onClick={handleGenerate}
             disabled={!prompt.trim() || isLoading}
-            className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase shadow-[0_4px_25px_var(--color-primary-glow)] flex items-center justify-center gap-2 cursor-pointer"
           >
             {isLoading ? (
               <>
@@ -129,7 +133,7 @@ export const PromptToImage: React.FC = () => {
                 <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-black/50">{modKey}+⏎</kbd>
               </>
             )}
-          </button>
+          </motion.button>
         </div>
       </motion.div>
 
@@ -139,7 +143,7 @@ export const PromptToImage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ ...springs.gentle, delay: 0.1 }}
             className="mt-6 bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 sm:p-8"
           >
             <div className="flex items-center justify-between mb-5">
@@ -147,16 +151,19 @@ export const PromptToImage: React.FC = () => {
                 Generated Image
               </span>
               {imageUrl && (
-                <a
+                <motion.a
+                  whileHover={{ scale: 1.1, y: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={springs.bouncy}
                   href={imageUrl}
                   download="generated-image.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#FF6D87]/20 hover:-translate-y-1 hover:shadow-[4px_4px_0_#FF6D87] transition-all flex items-center justify-center text-[var(--color-text-muted)] hover:text-black transition-all border-[3px] border-black"
+                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#FF6D87]/20 hover:shadow-[4px_4px_0_#FF6D87] flex items-center justify-center text-[var(--color-text-muted)] hover:text-black border-[3px] border-black"
                   title="Download image"
                 >
                   <Download className="w-4 h-4" />
-                </a>
+                </motion.a>
               )}
             </div>
 
@@ -178,9 +185,12 @@ export const PromptToImage: React.FC = () => {
                   <span className="text-[10px] font-mono font-bold tracking-widest text-[var(--color-text-muted)] uppercase">
                     Used Prompt
                   </span>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={springs.bouncy}
                     onClick={handleCopy}
-                    className="w-7 h-7 rounded-lg bg-black/40 hover:bg-black/70 flex items-center justify-center text-black border border-black/20 border-[2px] transition-all cursor-pointer active:scale-90"
+                    className="w-7 h-7 rounded-lg bg-black/40 hover:bg-black/70 flex items-center justify-center text-black border border-black/20 border-[2px] cursor-pointer"
                     title="Copy prompt"
                   >
                     {copied ? (
@@ -188,9 +198,9 @@ export const PromptToImage: React.FC = () => {
                     ) : (
                       <Copy className="w-3.5 h-3.5" />
                     )}
-                  </button>
+                  </motion.button>
                 </div>
-                <div className="bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 font-mono text-[13px] text-black/80 leading-relaxed select-text">
+                <div className="bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 font-mono text-[13px] text-black/80 leading-relaxed select-text">
                   {prompt}
                 </div>
               </div>

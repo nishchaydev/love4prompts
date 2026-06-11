@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "Love4Prompts Assistant",
   "version": "1.0.0",
+  "author": "Love4Prompts",
   "description": "All-in-one prompt enhancer. Improves user prompts at runtime.",
   "action": {
     "default_popup": "index.html"
@@ -17,7 +18,8 @@
         "*://*.chatgpt.com/*",
         "*://claude.ai/*",
         "*://*.claude.ai/*",
-        "*://gemini.google.com/*"
+        "*://gemini.google.com/*",
+        "*://copilot.microsoft.com/*"
       ],
       "js": ["src/content/index.tsx"],
       "run_at": "document_end"

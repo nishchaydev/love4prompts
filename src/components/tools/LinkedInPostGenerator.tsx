@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { 
   ThumbsUp, MessageSquare, Repeat2, Send, Loader2, Copy, Check, RotateCcw 
 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { springs } from '../../lib/motion';
 
 export const LinkedInPostGenerator: React.FC = () => {
   const [topic, setTopic] = useState('');
@@ -125,9 +127,9 @@ export const LinkedInPostGenerator: React.FC = () => {
                 onChange={(e) => setTopic(e.target.value.slice(0, 500))}
                 rows={4}
                 maxLength={500}
-                placeholder="e.g. I just launched my first product after 6 months of nights and weekends..."
+                placeholder="/// TYPE YOUR TOPIC OR IDEA HERE..."
                 disabled={loading}
-                className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
+                className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#FF6D87] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[180px]"
               />
               <span className="text-[10px] text-black/30 font-mono self-end">
                 {topic.length} / 500
@@ -143,19 +145,22 @@ export const LinkedInPostGenerator: React.FC = () => {
                 {['Professional', 'Storytelling', 'Thought Leadership', 'Casual'].map((t) => {
                   const isActive = tone === t;
                   return (
-                    <button
+                    <motion.button
                       key={t}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={springs.bouncy}
                       type="button"
                       onClick={() => setTone(t)}
                       disabled={loading}
-                      className={`py-2.5 px-3 rounded-xl text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer ${
+                      className={`py-2.5 px-3 rounded-xl text-xs font-semibold tracking-tight cursor-pointer ${
                         isActive
-                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
-                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black text-black/60 hover:text-black hover:border-black/20 border-[2px]'
+                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)]'
+                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
                       }`}
                     >
                       {t}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -170,19 +175,22 @@ export const LinkedInPostGenerator: React.FC = () => {
                 {['Question', 'Bold Statement', 'Personal Story'].map((h) => {
                   const isActive = hookStyle === h;
                   return (
-                    <button
+                    <motion.button
                       key={h}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={springs.bouncy}
                       type="button"
                       onClick={() => setHookStyle(h)}
                       disabled={loading}
-                      className={`py-2.5 px-1 text-center rounded-xl text-[11px] font-semibold tracking-tight transition-all duration-200 cursor-pointer ${
+                      className={`py-2.5 px-1 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
                         isActive
-                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
-                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black text-black/60 hover:text-black hover:border-black/20 border-[2px]'
+                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)]'
+                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
                       }`}
                     >
                       {h}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -194,7 +202,9 @@ export const LinkedInPostGenerator: React.FC = () => {
                 <span className="text-[13px] font-semibold text-black">End with a call to action?</span>
                 <span className="text-[10px] text-black/30">Append a call to action at the bottom of the post</span>
               </div>
-              <button
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                transition={springs.bouncy}
                 type="button"
                 onClick={() => setIncludeCTA(!includeCTA)}
                 disabled={loading}
@@ -207,14 +217,17 @@ export const LinkedInPostGenerator: React.FC = () => {
                     includeCTA ? 'translate-x-5' : 'translate-x-0'
                   }`}
                 />
-              </button>
+              </motion.button>
             </div>
 
             {/* Generate button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={springs.bouncy}
               type="submit"
               disabled={loading || !topic.trim()}
-              className="w-full h-12 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-sm tracking-wide transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full h-12 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-sm tracking-wide shadow-[0_4px_25px_var(--color-primary-glow)] flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -224,7 +237,7 @@ export const LinkedInPostGenerator: React.FC = () => {
               ) : (
                 'Generate LinkedIn Post'
               )}
-            </button>
+            </motion.button>
 
           </form>
         </div>
@@ -316,10 +329,13 @@ export const LinkedInPostGenerator: React.FC = () => {
               
               <div className="grid grid-cols-2 gap-3">
                 {/* Copy Button */}
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={springs.bouncy}
                   type="button"
                   onClick={handleCopy}
-                  className="h-11 rounded-xl border border-black/20 border-[2px] hover:border-black/30 border-[2px] bg-white/5 hover:bg-[#FF6D87]/20 hover:-translate-y-1 hover:shadow-[4px_4px_0_#FF6D87] transition-all text-black font-bold text-xs tracking-wide flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.97]"
+                  className="h-11 rounded-xl border border-black/20 border-[2px] hover:border-black/30 bg-white/5 hover:bg-[#FF6D87]/20 hover:shadow-[4px_4px_0_#FF6D87] text-black font-bold text-xs tracking-wide flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {copied ? (
                     <>
@@ -332,17 +348,20 @@ export const LinkedInPostGenerator: React.FC = () => {
                       Copy Post
                     </>
                   )}
-                </button>
+                </motion.button>
 
                 {/* Regenerate Button */}
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={springs.bouncy}
                   type="button"
                   onClick={() => handleGenerate()}
-                  className="h-11 rounded-xl border border-[var(--color-border-warm)] bg-[var(--color-primary-surface)] text-[var(--color-primary)] font-bold text-xs tracking-wide flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/15 transition-all cursor-pointer active:scale-[0.97]"
+                  className="h-11 rounded-xl border border-[var(--color-border-warm)] border-[2px] bg-[var(--color-primary-surface)] text-[var(--color-primary)] font-bold text-xs tracking-wide flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/15 cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4" />
                   Regenerate
-                </button>
+                </motion.button>
               </div>
             </div>
           )}

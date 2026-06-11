@@ -7,7 +7,7 @@ const description = "Get the Love4Prompts browser extension to access all your t
 ---
 
 <Layout title={title} description={description} theme="editorial">
-  <div class="flex flex-1 relative bg-[#FAEFED] min-h-screen pt-[120px] px-6 sm:px-[40px]">
+  <div class="flex flex-1 relative min-h-screen pt-[120px] px-6 sm:px-[40px]">
     <main class="relative z-10 max-w-7xl mx-auto pb-[100px] w-full flex flex-col justify-center min-h-[calc(100vh-160px)]">
       
       <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 w-full">
@@ -23,15 +23,24 @@ const description = "Get the Love4Prompts browser extension to access all your t
           </h1>
           
           <p class="text-[#4c4546] font-medium text-[20px] sm:text-[24px] mb-12 leading-tight max-w-2xl">
-            Take Love4Prompts everywhere you go. The official browser extension lets you access all your tools without leaving the page you're on. Click, copy, and create in seconds.
+            Take Love4Prompts everywhere you go. Choose your preferred browser below to access all your tools without leaving the page you're on. Click, copy, and create in seconds.
           </p>
 
-          <a href="#" class="inline-flex items-center gap-4 bg-transparent text-black border-4 border-black px-8 py-5 text-[18px] sm:text-[22px] hover:bg-black hover:text-[#FAEFED] transition-colors font-black uppercase no-underline shadow-[8px_8px_0_#FF6D87] hover:shadow-[8px_8px_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-[4px_4px_0_#000] rounded-2xl group">
-            <span class="flex items-center gap-3">
-              Add to Chrome
-            </span>
-            <ArrowRight size={28} className="group-hover:translate-x-2 transition-transform" />
-          </a>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener noreferrer" class="magnetic-btn inline-flex items-center justify-between gap-4 bg-transparent text-black border-4 border-black px-8 py-5 text-[18px] sm:text-[20px] hover:bg-black hover:text-[#FAEFED] transition-colors font-black uppercase no-underline shadow-[8px_8px_0_#FF6D87] hover:shadow-[8px_8px_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-[4px_4px_0_#000] rounded-2xl group flex-1">
+              <span class="flex items-center gap-3">
+                Add to Chrome
+              </span>
+              <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
+            </a>
+
+            <a href="https://microsoftedge.microsoft.com/addons" target="_blank" rel="noopener noreferrer" class="magnetic-btn inline-flex items-center justify-between gap-4 bg-transparent text-black border-4 border-black px-8 py-5 text-[18px] sm:text-[20px] hover:bg-black hover:text-[#FAEFED] transition-colors font-black uppercase no-underline shadow-[8px_8px_0_#1482A3] hover:shadow-[8px_8px_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-[4px_4px_0_#000] rounded-2xl group flex-1">
+              <span class="flex items-center gap-3">
+                Add to Edge
+              </span>
+              <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
+            </a>
+          </div>
         </div>
 
         {/* Right: Features Graphic */}

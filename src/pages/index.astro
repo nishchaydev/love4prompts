@@ -33,82 +33,167 @@ const aspects = ['aspect-[3/4]', 'aspect-square', 'aspect-video', 'aspect-[4/5]'
 
 <Layout title={title} description={description} theme="editorial">
 
-  {/* ═══ MAIN CONTENT ═══ */}
-  <div class="flex flex-1 relative bg-[#FAEFED] min-h-screen">
-    {/* Grid Background */}
-    <div 
-      class="absolute inset-0 z-0 pointer-events-none opacity-[0.4]" 
-      style={{
-        backgroundImage: `
-          linear-gradient(to right, #cfc4c5 1px, transparent 1px),
-          linear-gradient(to bottom, #cfc4c5 1px, transparent 1px)
-        `,
-        backgroundSize: '40px 40px',
-        backgroundPosition: 'center top'
-      }}
-    ></div>
+  <div class="flex flex-1 relative min-h-screen">
+
     
     {/* Main Canvas */}
-    <main class="relative z-10 flex-1 pt-[120px] px-[20px] sm:px-[40px] max-w-7xl mx-auto pb-[100px] w-full">
+    <main class="relative z-10 flex-1 pt-[40px] lg:pt-[60px] xl:pt-[80px] px-[20px] sm:px-[40px] max-w-7xl mx-auto pb-[60px] w-full">
 
-      {/* Hero Section */}
-      <div class="flex flex-col lg:flex-row items-center gap-12 mb-[120px] mt-0 w-full">
-        {/* Left Content */}
-        <header class="flex-1 max-w-2xl z-10">
-          <h1 class="text-black tracking-tighter uppercase font-black text-[48px] sm:text-[72px] md:text-[80px] mb-[24px] leading-[0.9]">
-            Making <span class="text-[#FF6D87]">your</span> everyday <span class="text-[#FF6D87]">simple!</span>
+      {/* Neo-Brutalist SaaS Hero Section */}
+      <section class="relative w-full pb-[60px] lg:pb-[80px] flex flex-col items-center text-center">
+        {/* Decorative Grid Background */}
+        <div class="absolute inset-0 z-0 pointer-events-none" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 32px 32px; opacity: 0.1;"></div>
+
+        {/* Floating Side Visuals (Hidden on small screens) */}
+        {/* Left Side */}
+        <div class="hidden md:block absolute -left-8 lg:-left-4 xl:left-4 top-[10%] w-[120px] lg:w-[160px] xl:w-[200px] -rotate-6 z-0 hover:rotate-0 transition-transform duration-300">
+          <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] lg:shadow-[6px_6px_0_#000] rounded-[12px]">
+            <img src="/images/cards/caption_maker.png" class="w-full h-[100px] lg:h-[120px] xl:h-[150px] object-cover rounded-[6px] border-[2px] border-black" alt="Viral Photos" />
+            <p class="font-black text-[8px] lg:text-[10px] uppercase mt-2 text-center tracking-widest">Viral Photos</p>
+          </div>
+        </div>
+
+        {/* Right Side */}
+        <div class="hidden md:block absolute -right-8 lg:-right-4 xl:right-4 top-[5%] w-[110px] lg:w-[140px] xl:w-[180px] rotate-3 z-0 hover:rotate-0 transition-transform duration-300">
+          <div class="bg-[#FFD166] border-[3px] border-black p-2 shadow-[4px_4px_0_#000] lg:shadow-[6px_6px_0_#000] rounded-[12px]">
+             <img src="/images/cards/library.png" class="w-full h-[80px] lg:h-[100px] xl:h-[120px] object-cover rounded-[6px] border-[2px] border-black" alt="Image Library" />
+             <p class="font-black text-[8px] lg:text-[10px] uppercase mt-2 text-center tracking-widest">Image Library</p>
+          </div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-4 flex flex-col items-center">
+          {/* Pill Badge */}
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-[2px] border-black shadow-[4px_4px_0_#000] mb-4 transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0_#000]">
+            <span class="w-3 h-3 rounded-full bg-[#FF6D87] border-[2px] border-black animate-pulse"></span>
+            <span class="text-[12px] font-black tracking-widest text-black uppercase">The Ultimate Prompt Toolkit</span>
+          </div>
+
+          <h1 class="text-black uppercase font-black text-[32px] sm:text-[40px] md:text-[56px] lg:text-[64px] xl:text-[72px] leading-[0.95] mb-4 max-w-[850px] relative z-10">
+            MAKE AI YOUR ULTIMATE <br class="hidden sm:block" /> <span class="text-[#1482A3] drop-shadow-[2px_2px_0_#000] md:drop-shadow-[4px_4px_0_#000] tracking-tighter">GROWTH ENGINE.</span>
           </h1>
-          <p class="text-[#4c4546] font-medium text-[20px] sm:text-[24px] mb-[40px] leading-tight">
-            {"Discover ready-to-use tools and prompts that save you time. No complex tech stuff. Just click, type, and get amazing results instantly.".split(' ').map((word, wordIndex, arr) => (
-              <>
-                <span class="inline-block whitespace-nowrap">
-                  {word.split('').map((char) => (
-                    <span class="inline-block transition-all duration-300 ease-out hover:-translate-y-1 hover:text-[#FF6D87]">
-                      {char}
-                    </span>
-                  ))}
-                </span>
-                {wordIndex !== arr.length - 1 && ' '}
-              </>
+
+          <p class="text-black font-medium text-[16px] sm:text-[20px] leading-relaxed max-w-2xl mx-auto mb-6">
+            {"Build better prompts, generate perfect images, and automate your workflow with the industry's most powerful collection of ready-to-use AI tools.".split('').map((char, index) => (
+              char === ' ' ? ' ' : <span class="inline-block transition-all duration-300 ease-out hover:-translate-y-1 hover:text-[#FF6D87] cursor-default">{char}</span>
             ))}
           </p>
-          <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4">
-            <a href="/tools" class="bg-[#FF6D87] text-white px-[30px] py-[15px] tracking-widest text-[14px] hover:bg-black transition-colors font-bold uppercase no-underline inline-block text-center shadow-[6px_6px_0_#000] rounded-full">
-              EXPLORE TOOLS
+
+          <div class="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto relative z-20">
+            <a href="/tools" class="magnetic-btn bg-[#FF6D87] text-white px-6 py-3 rounded-full font-black text-[16px] uppercase tracking-wide border-[3px] border-black shadow-[4px_4px_0_#000] hover:bg-[#FFD166] hover:text-black hover:shadow-[4px_4px_0_#1482A3] transition-all duration-300">
+              Start for free
             </a>
-            <a href="#library" class="bg-transparent text-black border-2 border-black px-[30px] py-[15px] tracking-widest text-[14px] hover:bg-black hover:text-[#FAEFED] transition-colors font-bold uppercase no-underline inline-block text-center shadow-[6px_6px_0_#000] hover:shadow-[6px_6px_0_#FF6D87] rounded-full">
-              BROWSE LIBRARY
-            </a>
-            <a href="/submit" class="bg-white text-black border-2 border-black px-[30px] py-[15px] tracking-widest text-[14px] hover:bg-black hover:text-white transition-colors font-bold uppercase no-underline inline-block text-center shadow-[6px_6px_0_#000] hover:shadow-[6px_6px_0_#FF6D87] rounded-full">
-              SUBMIT PROMPT
+            <a href="/library" class="magnetic-btn bg-white text-black px-6 py-3 rounded-full font-black text-[16px] uppercase tracking-wide border-[3px] border-black shadow-[4px_4px_0_#000] hover:bg-[#06D6A0] hover:shadow-[4px_4px_0_#FF6D87] transition-all duration-300">
+              Browse Library
             </a>
           </div>
-        </header>
-
-        {/* Right Content - Pinterest Style Floating Grid */}
-        <div class="flex-1 relative w-full h-[500px] lg:h-[600px] hidden lg:block">
-          {prompts.filter(p => p.image_url).slice(0, 5).map((prompt, i) => {
-            // Pinterest-like floating positions
-            const styles = [
-              "top-[20px] left-[0%] w-[40%] h-[240px] z-10", // Top Left
-              "top-[80px] left-[45%] w-[35%] h-[200px] z-20", // Top Right
-              "top-[280px] left-[10%] w-[35%] h-[220px] z-20", // Bottom Left
-              "top-[300px] left-[50%] w-[45%] h-[280px] z-30 scale-110", // Center focus
-              "top-[180px] left-[85%] w-[25%] h-[180px] z-10", // Far Right
-            ];
-            
-            return (
-              <div class={`absolute ${styles[i]} transition-transform hover:scale-105 duration-300 hover:z-50 group`}>
-                <img 
-                  src={prompt.image_url} 
-                  alt={prompt.title}
-                  class="w-full h-full object-cover rounded-[32px] border-[3px] border-black shadow-[6px_6px_0_rgba(0,0,0,1)] group-hover:shadow-[8px_8px_0_#FF6D87] transition-all"
-                />
-              </div>
-            );
-          })}
         </div>
-      </div>
+
+        {/* Feature Cards (Brutalist Bento Box) */}
+        <div class="relative z-10 w-full max-w-6xl mx-auto mt-20 md:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 text-left px-4">
+          
+          {/* Card 1 */}
+          <a href="/tools/prompt-maker" class="relative group block cursor-pointer">
+            {/* Top Pop Card */}
+            <div class="hidden md:block absolute left-1/4 -translate-x-1/2 -top-6 w-[120px] lg:w-[140px] rotate-3 z-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:-translate-y-10 group-hover:-translate-x-4">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/prompt_maker.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Style Engine" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Style Engine</p>
+              </div>
+            </div>
+            {/* Edge Pop Card */}
+            <div class="hidden md:block absolute -left-4 lg:-left-8 top-10 w-[120px] lg:w-[140px] -rotate-6 z-0 transition-transform duration-500 ease-out group-hover:-rotate-12 group-hover:-translate-x-8">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/caption_maker.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Everyday AI" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Everyday AI</p>
+              </div>
+            </div>
+            {/* Center Pop Card */}
+            <div class="hidden md:block absolute top-0 left-8 w-[120px] lg:w-[140px] rotate-2 z-0 transition-transform duration-500 ease-out group-hover:-rotate-2 group-hover:-translate-y-6 group-hover:-translate-x-2">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/library.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Photography" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Photography</p>
+              </div>
+            </div>
+            <div class="relative z-10 bg-white border-[3px] border-black rounded-[20px] p-5 shadow-[6px_6px_0_#000] group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#FF6D87] transition-all duration-300 h-full flex flex-col">
+              <h3 class="text-[20px] font-black text-black mb-1 uppercase tracking-tight">Prompt Maker</h3>
+              <p class="text-gray-700 font-medium mb-4 text-[14px] leading-snug flex-1">Generate perfect Midjourney prompts with our visual builder and styling engine.</p>
+              <div class="w-full h-32 bg-[#FAEFED] rounded-[12px] border-[2px] border-black overflow-hidden relative shadow-[3px_3px_0_#000]">
+                 <img src="/images/cards/prompt_maker.png" class="w-full h-full object-cover" alt="Prompt Maker Illustration" />
+              </div>
+            </div>
+          </a>
+
+          {/* Card 2 */}
+          <a href="/instagram-caption-generator" class="relative group md:-translate-y-4 block cursor-pointer">
+            {/* Top Left Pop Card */}
+            <div class="hidden md:block absolute left-1/4 -translate-x-1/2 -top-4 w-[120px] lg:w-[140px] -rotate-3 z-0 transition-transform duration-500 ease-out group-hover:-translate-y-10 group-hover:-rotate-6 group-hover:-translate-x-4">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/caption_maker.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Social" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Social</p>
+              </div>
+            </div>
+            {/* Top Right Pop Card */}
+            <div class="hidden md:block absolute right-1/4 translate-x-1/2 -top-2 w-[120px] lg:w-[140px] rotate-3 z-0 transition-transform duration-500 ease-out group-hover:-translate-y-10 group-hover:rotate-6 group-hover:translate-x-4">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/prompt_maker.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Magic Output" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Magic Output</p>
+              </div>
+            </div>
+            {/* Center Pop Card */}
+            <div class="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 w-[120px] lg:w-[140px] rotate-0 z-0 transition-transform duration-500 ease-out group-hover:-translate-y-12">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/library.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Trending" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Trending</p>
+              </div>
+            </div>
+            <div class="relative z-10 bg-[#FAEFED] border-[3px] border-black rounded-[20px] p-5 shadow-[6px_6px_0_#000] group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#06D6A0] transition-all duration-300 h-full flex flex-col">
+              <div>
+                <div class="inline-block bg-[#06D6A0] text-black text-[10px] font-black px-2 py-0.5 border-[2px] border-black shadow-[2px_2px_0_#000] rounded-full mb-2 uppercase tracking-widest">New Feature</div>
+                <h3 class="text-[20px] font-black text-black mb-1 uppercase tracking-tight">Caption Maker</h3>
+              </div>
+              <p class="text-gray-700 font-medium mb-4 text-[14px] leading-snug flex-1">Generate viral, highly-engaging captions perfectly tailored for any social platform.</p>
+              <div class="w-full h-24 bg-white rounded-[12px] border-[2px] border-black overflow-hidden relative shadow-[3px_3px_0_#000]">
+                 <img src="/images/cards/caption_maker.png" class="w-full h-full object-cover" alt="Caption Maker Illustration" />
+              </div>
+            </div>
+          </a>
+
+          {/* Card 3 */}
+          <div class="relative group cursor-pointer block">
+            {/* Top Pop Card */}
+            <div class="hidden md:block absolute right-1/4 translate-x-1/2 -top-6 w-[120px] lg:w-[140px] rotate-6 z-0 transition-transform duration-500 ease-out group-hover:rotate-2 group-hover:-translate-y-10 group-hover:translate-x-4">
+               <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                 <img src="/images/cards/prompt_maker.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Prompt Tools" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Prompt Tools</p>
+              </div>
+            </div>
+            {/* Edge Pop Card */}
+            <div class="hidden md:block absolute -right-2 lg:-right-6 top-16 w-[120px] lg:w-[140px] rotate-3 z-0 transition-transform duration-500 ease-out group-hover:rotate-12 group-hover:translate-x-8">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/caption_maker.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Love4prompts !" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Love4prompts !</p>
+              </div>
+            </div>
+            {/* Center Pop Card */}
+            <div class="hidden md:block absolute top-0 right-8 w-[120px] lg:w-[140px] -rotate-2 z-0 transition-transform duration-500 ease-out group-hover:rotate-2 group-hover:-translate-y-6 group-hover:translate-x-2">
+              <div class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]">
+                <img src="/images/cards/library.png" class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black" alt="Team" />
+                 <p class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black">Team</p>
+              </div>
+            </div>
+            <div class="relative z-10 bg-[#1482A3] border-[3px] border-black rounded-[20px] p-5 shadow-[6px_6px_0_#000] group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#FFD166] transition-all duration-300 h-full flex flex-col">
+              <h3 class="text-[20px] font-black text-white mb-1 uppercase tracking-tight">The Library</h3>
+              <p class="text-white font-medium mb-4 text-[14px] leading-snug flex-1">Access thousands of curated, battle-tested AI prompts shared by top creators.</p>
+              <div class="w-full h-32 bg-white rounded-[12px] border-[2px] border-black overflow-hidden relative shadow-[3px_3px_0_#000]">
+                 <img src="/images/cards/library.png" class="w-full h-full object-cover" alt="Library Illustration" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
 
       {/* Hero Leaderboard Ad */}
       <div class="mx-auto mt-8 mb-16 hidden md:flex justify-center w-full">
@@ -118,11 +203,18 @@ const aspects = ['aspect-[3/4]', 'aspect-square', 'aspect-video', 'aspect-[4/5]'
         <AdSlot type="banner" />
       </div>
 
-      {/* Pinterest-Style Community Library */}
+      {/* Pinterest-Style Love4prompts ! */}
       <div id="library" class="pt-[80px] pb-[40px] px-4 md:px-[40px]">
         <h2 class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] mb-[40px] border-b-[4px] border-black pb-[16px]">
-          Community Library
+          {"Love4prompts !".split('').map((char, index) => (
+            char === ' ' ? ' ' : <span class={`inline-block transition-all duration-300 ease-out cursor-default ${char === '!' ? 'hover:animate-bounce hover:text-[#FF6D87]' : `hover:-translate-y-2 ${char === '4' ? 'text-[#FF6D87] hover:text-black' : 'hover:text-[#FF6D87]'}`}`}>{char}</span>
+          ))}
         </h2>
+        <p class="text-gray-600 font-bold tracking-widest text-[14px] uppercase mb-8">
+          {"by the prompter to the prompter !".split('').map((char, index) => (
+            char === ' ' ? ' ' : <span class={`inline-block transition-all duration-300 ease-out cursor-default ${char === '!' ? 'hover:animate-bounce hover:text-[#FF6D87]' : 'hover:-translate-y-1 hover:text-[#FF6D87]'}`}>{char}</span>
+          ))}
+        </p>
         <PinterestGallery client:load initialPrompts={prompts} />
       </div>
 

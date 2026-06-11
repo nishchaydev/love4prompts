@@ -53,6 +53,7 @@ export const EditorialFooter: React.FC = () => {
             <a href="/dashboard" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">Dashboard</a>
             <a href="/submit" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">Submit Prompt</a>
             <a href="/#library" className="text-[#ccc] hover:text-[#FF6D87] mb-3 text-[14px] transition-colors no-underline">Library</a>
+            <a href="/404" className="text-[#ccc] hover:text-[#FFD166] mb-3 text-[14px] font-black uppercase transition-colors no-underline">Find Yourself</a>
           </div>
 
           {/* Column 3 */}
@@ -72,14 +73,19 @@ export const EditorialFooter: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto mt-[60px] pt-[20px] border-t border-[#333] flex flex-col sm:flex-row justify-between items-center text-[#888] text-[12px]">
-        <div>
-          &copy; {new Date().getFullYear()} LOVE4PROMPTS
-        </div>
-        <div className="flex space-x-6 mt-4 sm:mt-0">
-          <a href="/terms" className="hover:text-white transition-colors no-underline">Terms of service</a>
-          <a href="/privacy" className="hover:text-white transition-colors no-underline">Privacy policy</a>
-          <a href="/non-user-notice" className="hover:text-white transition-colors no-underline">Non-user notice</a>
+      <div className="max-w-[1200px] mx-auto mt-[60px] pt-[20px] border-t border-[#333] flex flex-col text-[#888] text-[12px]">
+        <p className="mb-4 text-[#FF6D87] font-bold uppercase tracking-widest text-[10px] sm:text-[12px]">
+          Disclaimer: Human avatars and persons shown on this site are AI-generated and not real people.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div>
+            &copy; {new Date().getFullYear()} LOVE4PROMPTS
+          </div>
+          <div className="flex space-x-6">
+            <a href="/terms" className="hover:text-white transition-colors no-underline">Terms of service</a>
+            <a href="/privacy" className="hover:text-white transition-colors no-underline">Privacy policy</a>
+            <a href="/non-user-notice" className="hover:text-white transition-colors no-underline">Non-user notice</a>
+          </div>
         </div>
       </div>
     </footer>

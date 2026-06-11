@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, X, Copy, Check, Trash2 } from 'lucide-react';
+import { springs } from '../../lib/motion';
 
 interface HistoryEntry {
   input: string;
@@ -74,7 +75,6 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
 
   const toolLabels: Record<string, string> = {
     'prompt-enhancer': 'Enhancer',
-    'prompt-translator': 'Translator',
     'prompt-maker': 'Maker',
     'image-to-prompt': 'Img→Prompt',
     'prompt-to-image': 'Prompt→Img',
@@ -95,14 +95,17 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
   return (
     <>
       {/* Trigger button */}
-      <button
+      <motion.button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border-[3px] border-black bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black transition-all cursor-pointer"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={springs.bouncy}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border-[3px] border-black bg-gray-50 shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black cursor-pointer"
         aria-label="View prompt history"
       >
         <Clock className="w-3 h-3" />
         History
-      </button>
+      </motion.button>
 
       {/* Drawer */}
       <AnimatePresence>
@@ -122,8 +125,8 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-[var(--color-background-primary)] border-l border-black border-[2px] shadow-[-8px_0_40px_rgba(0,0,0,0.5)] z-[70] flex flex-col"
+              transition={springs.snappy}
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-gray-50 border-l-[3px] border-black shadow-[-8px_0_40px_rgba(0,0,0,0.2)] z-[70] flex flex-col"
             >
               {/* Header */}
               <div className="flex items-center justify-between p-5 border-b border-black border-[2px]">
@@ -138,20 +141,24 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
                 </div>
                 <div className="flex items-center gap-2">
                   {entries.length > 0 && (
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={handleClear}
-                      className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-red-400/60 hover:text-red-400 hover:bg-red-400/10 transition-all cursor-pointer"
+                      className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-red-400/60 hover:text-red-400 hover:bg-red-400/10 cursor-pointer"
                     >
                       <Trash2 className="w-3 h-3" />
                       Clear
-                    </button>
+                    </motion.button>
                   )}
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setIsOpen(false)}
-                    className="p-1.5 rounded-lg hover:bg-white/[0.05] text-black/40 hover:text-black transition-all cursor-pointer"
+                    className="p-1.5 rounded-lg hover:bg-black/[0.05] text-black/40 hover:text-black cursor-pointer"
                   >
                     <X className="w-4 h-4" />
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 
@@ -170,7 +177,7 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      className="rounded-xl border-[3px] border-black bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] p-4 group hover:border-black/20 border-[2px] transition-colors"
+                      className="rounded-xl border-[3px] border-black bg-white shadow-[4px_4px_0_rgba(0,0,0,1)] p-4 group hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#FF6D87] transition-all"
                     >
                       {/* Meta row */}
                       <div className="flex items-center justify-between mb-2">
@@ -190,27 +197,31 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
 
                       {/* Output preview */}
                       {entry.output && (
-                        <p className="text-[12px] text-black/70 line-clamp-3 mb-3 leading-relaxed bg-gray-50 border-[2px] border-black rounded-lg p-2.5 border border-white/[0.03]">
+                        <p className="text-[12px] text-black/70 line-clamp-3 mb-3 leading-relaxed bg-gray-50 border-[2px] border-black rounded-lg p-2.5">
                           {entry.output}
                         </p>
                       )}
 
                       {/* Actions */}
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                           onClick={() => handleCopy(entry.output || entry.input, i)}
-                          className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-black/40 hover:text-black hover:bg-white/[0.05] transition-all cursor-pointer"
+                          className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-black/40 hover:text-black hover:bg-black/[0.05] cursor-pointer"
                         >
                           {copiedIdx === i ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
                           {copiedIdx === i ? 'Copied' : 'Copy'}
-                        </button>
+                        </motion.button>
                         {onReuse && (
-                          <button
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => { onReuse(entry); setIsOpen(false); }}
-                            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-[var(--color-primary)] hover:bg-[var(--color-primary-surface)] transition-all cursor-pointer"
+                            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-[var(--color-primary)] hover:bg-[var(--color-primary-surface)] cursor-pointer"
                           >
                             Reuse →
-                          </button>
+                          </motion.button>
                         )}
                       </div>
                     </motion.div>

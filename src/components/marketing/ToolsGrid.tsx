@@ -4,6 +4,7 @@ import {
   Wand2, Sparkles, ArrowRightLeft, Image, Camera,
   Code2, ArrowUpRight
 } from 'lucide-react';
+import { springs, variants } from '../../lib/motion';
 
 const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -51,12 +52,6 @@ const TOOLS_DATA = [
     href: "/tools/prompt-maker"
   },
   {
-    icon: ArrowRightLeft,
-    name: "Prompt Translator",
-    description: "Convert prompts between AI models",
-    href: "/tools/prompt-translator"
-  },
-  {
     icon: Image,
     name: "Image to Prompt",
     description: "Reverse-engineer any image into a prompt",
@@ -88,28 +83,8 @@ const TOOLS_DATA = [
   }
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06
-    }
-  }
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 100,
-      damping: 16
-    }
-  }
-};
+const containerVariants = variants.staggerContainer;
+const cardVariants = variants.springUp;
 
 export const ToolsGrid: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -153,8 +128,10 @@ export const ToolsGrid: React.FC = () => {
               key={index}
               href={tool.href}
               variants={cardVariants}
-              whileHover={{ y: -4, transition: { duration: 0.15 } }}
-              className="group flex flex-col justify-between text-left bg-[var(--color-background-card)]/40 hover:bg-[var(--color-background-elevated)]/60 border border-[var(--color-border)] hover:border-[var(--color-border-warm)] rounded-3xl p-6 gap-6 transition-all duration-300 hover:shadow-[0_8px_30px_var(--color-primary-glow)] no-underline relative overflow-hidden backdrop-blur-xl"
+              whileHover={{ y: -8, scale: 1.02 }}
+              whileTap={{ scale: 0.95 }}
+              transition={springs.bouncy}
+              className="group flex flex-col justify-between text-left bg-[var(--color-background-card)]/40 hover:bg-[var(--color-background-elevated)]/60 border border-[var(--color-border)] hover:border-[var(--color-border-warm)] rounded-3xl p-6 gap-6 hover:shadow-[0_8px_30px_var(--color-primary-glow)] no-underline relative overflow-hidden backdrop-blur-xl"
             >
               {/* Inner card content */}
               <div className="flex flex-col gap-4">

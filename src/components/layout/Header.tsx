@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, LayoutGroup } from 'framer-motion';
 import type { Session } from '@supabase/supabase-js';
 import {
   User, LogOut, LayoutDashboard, Menu, X,
@@ -12,7 +13,7 @@ import { Avatar } from '../ui/Avatar';
 const TOOLS = [
   { label: 'Prompt Enhancer', href: '/tools/prompt-enhancer', icon: Wand2, desc: 'Optimize & polish prompts for all models' },
   { label: 'Prompt Maker', href: '/tools/prompt-maker', icon: Sparkles, desc: 'Generate high-quality custom prompts' },
-  { label: 'Prompt Translator', href: '/tools/prompt-translator', icon: ArrowRightLeft, desc: 'Convert prompts between platforms' },
+
   { label: 'Image to Prompt', href: '/tools/image-to-prompt', icon: Image, desc: 'Extract descriptive prompts from images' },
   { label: 'Prompt to Image', href: '/tools/prompt-to-image', icon: Palette, desc: 'Generate visual art from text' },
   { label: 'Chrome Extension', href: '/extension', icon: Puzzle, desc: 'Use AI prompts anywhere on the web' },
@@ -26,6 +27,8 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activePath, setActivePath] = useState(currentPath);
+  const [activeHash, setActiveHash] = useState('');
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
   const toolsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,9 +57,19 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
 
   useEffect(() => {
     setActivePath(window.location.pathname);
-    const handlePageLoad = () => setActivePath(window.location.pathname);
+    setActiveHash(window.location.hash);
+    const handlePageLoad = () => {
+      setActivePath(window.location.pathname);
+      setActiveHash(window.location.hash);
+    };
+    const handleHashChange = () => setActiveHash(window.location.hash);
+    
     document.addEventListener('astro:page-load', handlePageLoad);
-    return () => document.removeEventListener('astro:page-load', handlePageLoad);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      document.removeEventListener('astro:page-load', handlePageLoad);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -86,9 +99,18 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
   if (isEditorial) {
     return (
       <>
-        <nav className="bg-transparent text-black flex justify-between items-center px-[40px] w-full h-20 absolute top-0 z-50">
+      <LayoutGroup>
+        <nav 
+          onMouseLeave={() => setHoveredPath(null)}
+          className="bg-transparent text-black flex justify-between items-center px-[40px] w-full h-20 absolute top-0 z-50"
+        >
           {/* Logo */}
-          <a href="/" className="font-black tracking-tighter no-underline flex items-center" style={{ fontFamily: 'Inter, sans-serif', fontSize: 'clamp(28px, 6vw, 42px)', lineHeight: '1' }}>
+          <a 
+            href="/" 
+            onMouseEnter={() => setHoveredPath('/')}
+            className="font-black tracking-tighter no-underline flex items-center relative pb-1" 
+            style={{ fontFamily: 'Inter, sans-serif', fontSize: 'clamp(28px, 6vw, 42px)', lineHeight: '1' }}
+          >
             {"love4prompts".split('').map((char, index) => (
               <span 
                 key={index} 
@@ -99,16 +121,47 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
                 {char}
               </span>
             ))}
+            {((hoveredPath === '/' || (!hoveredPath && activePath === '/'))) && (
+              <motion.div
+                layoutId="nav-indicator"
+                className="absolute -bottom-1 left-0 right-0 h-[4px] bg-[#FF6D87]"
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              />
+            )}
           </a>
 
           {/* Right Side - Nav Links + User Actions */}
           <div className="flex items-center gap-12">
             {/* Desktop Nav Links */}
-            <div className="hidden md:flex space-x-10">
-              <a href="/#library" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath === '/' ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Library</a>
-              <a href="/tools" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath.startsWith('/tools') ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Tools</a>
-              <a href="/extension" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath.startsWith('/extension') ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Plug & Play</a>
-              <a href="/submit" className={`ed-label-caps no-underline pb-1 uppercase transition-colors border-b-[3px] ${activePath.startsWith('/submit') ? 'text-black border-[#FF6D87]' : 'text-[#4c4546] border-transparent hover:border-black'}`}>Submit</a>
+            <div className="hidden md:flex space-x-10 relative">
+              {[
+                { name: 'Library', path: '/library', match: (p: string) => p.startsWith('/library') },
+                { name: 'Tools', path: '/tools', match: (p: string) => p.startsWith('/tools') || p.endsWith('-generator') || p === '/image-to-prompt' || p === '/prompt-to-image' },
+                { name: 'Plug & Play', path: '/extension', match: (p: string) => p.startsWith('/extension') },
+                { name: 'Submit', path: '/submit', match: (p: string) => p.startsWith('/submit') }
+              ].map((item) => {
+                const isActive = item.match(activePath);
+                const isHovered = hoveredPath === item.path;
+                const isNavIndicatorTarget = hoveredPath ? isHovered : isActive;
+
+                return (
+                  <a 
+                    key={item.name}
+                    href={item.path} 
+                    onMouseEnter={() => setHoveredPath(item.path)}
+                    className={`ed-label-caps no-underline pb-1 uppercase transition-colors relative group ${isActive || isHovered ? 'text-black' : 'text-[#4c4546]'}`}
+                  >
+                    {item.name}
+                    {isNavIndicatorTarget && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute bottom-0 left-0 right-0 h-[4px] bg-[#FF6D87]"
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </a>
+                );
+              })}
             </div>
 
             {/* User or LOGIN */}
@@ -161,11 +214,12 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
             </div>
           </div>
         </nav>
+      </LayoutGroup>
 
         {/* Mobile Nav for Editorial */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-[#f9f9f9] border-b border-[#7e7576] absolute top-20 left-0 w-full z-40 px-[40px] py-[20px] flex flex-col space-y-4">
-            <a href="/#library" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath === '/' ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Library</a>
+            <a href="/library" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/library') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Library</a>
             <a href="/tools" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/tools') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Tools</a>
             <a href="/extension" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/extension') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Plug & Play</a>
             <a href="/submit" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/submit') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Submit</a>
@@ -214,7 +268,7 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-1 ml-6">
             <a 
-              href="/#library" 
+              href="/library" 
               className="px-4 py-1.5 rounded-full text-[13px] font-semibold text-white/50 hover:text-white hover:bg-white/[0.03] border border-transparent hover:border-white/[0.04] transition-all duration-200 no-underline"
             >
               Library
@@ -295,7 +349,7 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
                 );
               })}
               <div className="h-px bg-white/[0.04] my-2" />
-              <a href="/#library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
+              <a href="/library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
               <a href="/pricing" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Pro</a>
               
               {session ? (

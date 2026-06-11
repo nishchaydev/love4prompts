@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { springs } from '../../lib/motion';
 
 interface Props {
   examples: string[];
@@ -27,9 +28,11 @@ export const ExampleChips: React.FC<Props> = ({ examples, onSelect, disabled }) 
             onClick={() => !disabled && onSelect(example)}
             disabled={disabled}
             initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.3 }}
-            className="px-3 py-1.5 rounded-full text-[11px] font-medium border-[3px] border-black bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-surface)] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed select-none max-w-[250px] truncate"
+            animate={{ opacity: 1, y: 0, transition: { delay: i * 0.06, duration: 0.3 } }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={springs.bouncy}
+            className="px-3 py-1.5 rounded-full text-[11px] font-medium border-[2px] border-black bg-gray-50 shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-surface)] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed select-none max-w-[250px] truncate"
             title={example}
           >
             {example}

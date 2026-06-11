@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Loader2, Copy, Check, ExternalLink, ImagePlus } from 'lucide-react';
 import { getRemainingUses, recordUse, hasReachedLimit } from '../../lib/rate-limit';
 import { AI_MODELS } from '../hero/logos';
+import { springs } from '../../lib/motion';
 
 const TOOL_SLUG = 'image-to-prompt';
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
@@ -173,10 +174,10 @@ export const ImageToPrompt: React.FC = () => {
           /* ── PHASE 1: UPLOAD ZONE ── */
           <motion.div
             key="upload-phase"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.2 } }}
+            transition={springs.gentle}
             className="max-w-xl mx-auto"
           >
             <div
@@ -225,9 +226,9 @@ export const ImageToPrompt: React.FC = () => {
           /* ── PHASE 2: SPLIT VIEW ── */
           <motion.div
             key="split-phase"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={springs.gentle}
             className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch"
           >
             {/* LEFT: Image Preview */}
@@ -312,7 +313,7 @@ export const ImageToPrompt: React.FC = () => {
                   )}
                 </div>
 
-                <div className="w-full flex-1 bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 font-mono text-[13px] text-black/90 whitespace-pre-wrap leading-relaxed min-h-[200px] overflow-y-auto max-h-[360px] select-text">
+                <div tabIndex={0} className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#FF6D87] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[140px] overflow-y-auto max-h-[360px] select-text">
                   {loading ? (
                     <div className="flex flex-col gap-3 py-1">
                       <div className="h-3.5 w-full bg-white/[0.03] rounded animate-pulse" />
@@ -326,7 +327,7 @@ export const ImageToPrompt: React.FC = () => {
                     </motion.span>
                   ) : (
                     <span className="text-black/15 italic text-[12px]">
-                      Click "Analyze Image" to extract the prompt...
+                      /// Extracted prompt will appear here...
                     </span>
                   )}
                 </div>

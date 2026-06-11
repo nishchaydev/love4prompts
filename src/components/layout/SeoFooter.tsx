@@ -40,7 +40,6 @@ export const SeoFooter: React.FC = () => {
             <h3 className="font-black text-[#FF6D87] text-[16px] uppercase tracking-widest mb-2">AI Tools</h3>
             <a href="/tools/prompt-enhancer" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Prompt Enhancer</a>
             <a href="/tools/prompt-maker" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Prompt Maker</a>
-            <a href="/tools/prompt-translator" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Prompt Translator</a>
             <a href="/tools/image-to-prompt" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Image to Prompt</a>
             <a href="/tools" className="text-white bg-[#FF6D87] border-2 border-black w-max px-2 py-1 font-black text-[12px] uppercase mt-2 no-underline hover:bg-[#1482A3] transition-colors">All Tools</a>
           </div>
@@ -70,14 +69,20 @@ export const SeoFooter: React.FC = () => {
             <a href="/terms" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Terms of Service</a>
             <a href="/privacy" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Privacy Policy</a>
             <a href="/non-user-notice" className="text-[#ccc] text-[14px] font-bold hover:text-[#1482A3] hover:translate-x-1 transition-all duration-200 no-underline">Non-user Notice</a>
+            <a href="/404" className="text-[#FFD166] text-[14px] font-black uppercase hover:text-[#FF6D87] hover:translate-x-1 transition-all duration-200 no-underline mt-2">Find Yourself</a>
           </div>
         </div>
 
         {/* Bottom Footer row */}
-        <div className="border-t-4 border-[#333] pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-[#888] font-bold text-[12px] uppercase">
-            &copy; {new Date().getFullYear()} LOVE4PROMPTS. All rights reserved.
+        <div className="border-t-4 border-[#333] pt-6 flex flex-col gap-4">
+          <p className="text-[#FF6D87] font-bold uppercase tracking-widest text-[10px] sm:text-[12px]">
+            Disclaimer: Human avatars and persons shown on this site are AI-generated and not real people.
           </p>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-[#888] font-bold text-[12px] uppercase">
+              &copy; {new Date().getFullYear()} LOVE4PROMPTS. All rights reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -6,6 +6,7 @@ import { AI_MODELS_EXTENDED } from '../hero/logos';
 import { useModKey } from '../../lib/useOS';
 import { saveToHistory, PromptHistory } from './PromptHistory';
 import { ExampleChips } from './ExampleChips';
+import { springs } from '../../lib/motion';
 
 const TOOL_SLUG = 'prompt-maker';
 
@@ -34,9 +35,9 @@ type WizardStep = 1 | 2 | 3 | 'result';
 export const PromptMaker: React.FC = () => {
   const [step, setStep] = useState<WizardStep>(1);
   const [description, setDescription] = useState('');
-  const [useCase, setUseCase] = useState('');
+  const [useCase, setUseCase] = useState('Code Generation');
   const [targetModel, setTargetModel] = useState('ChatGPT');
-  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
+  const [selectedStyles, setSelectedStyles] = useState<string[]>(['Professional']);
   const [extraContext, setExtraContext] = useState('');
 
   const [result, setResult] = useState('');
@@ -186,7 +187,7 @@ export const PromptMaker: React.FC = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.25 }}
+              transition={springs.gentle}
               className="flex flex-col flex-1 gap-5"
             >
               <div>
@@ -210,8 +211,8 @@ export const PromptMaker: React.FC = () => {
                   onChange={(e) => setDescription(e.target.value.slice(0, 500))}
                   rows={6}
                   maxLength={500}
-                  placeholder="e.g., I want a professional LinkedIn post about the future of remote work..."
-                  className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed min-h-[160px]"
+                  placeholder="/// TYPE YOUR IMAGINATION HERE..."
+                  className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#FF6D87] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[160px]"
                 />
                 <span className="absolute bottom-3 right-4 text-[10px] text-[var(--color-text-muted)] font-mono">
                   {description.length} / 500
@@ -224,14 +225,17 @@ export const PromptMaker: React.FC = () => {
               )}
 
               <div className="flex justify-end">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={springs.bouncy}
                   onClick={goNext}
                   disabled={!description.trim()}
-                  className="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_15px_var(--color-primary-glow)] flex items-center gap-2 cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase shadow-[0_4px_15px_var(--color-primary-glow)] flex items-center gap-2 cursor-pointer"
                 >
                   Next
                   <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           )}
@@ -245,7 +249,7 @@ export const PromptMaker: React.FC = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.25 }}
+              transition={springs.gentle}
               className="flex flex-col flex-1 gap-5"
             >
               <div>
@@ -266,18 +270,21 @@ export const PromptMaker: React.FC = () => {
                   {USE_CASES.map((uc) => {
                     const isActive = useCase === uc.id;
                     return (
-                      <button
+                      <motion.button
                         key={uc.id}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={springs.bouncy}
                         onClick={() => setUseCase(uc.id)}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all duration-200 cursor-pointer select-none ${
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border cursor-pointer select-none ${
                           isActive
                             ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] text-[var(--color-primary)]'
-                            : 'border-black border-[2px] bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black'
+                            : 'border-[2px] border-black bg-gray-50 shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black'
                         }`}
                       >
                         <span className="text-lg">{uc.icon}</span>
                         <span className="text-[10px] font-bold">{uc.label}</span>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -293,39 +300,48 @@ export const PromptMaker: React.FC = () => {
                     const isActive = targetModel === model.id;
                     const Icon = model.icon;
                     return (
-                      <button
+                      <motion.button
                         key={model.id}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={springs.bouncy}
                         onClick={() => setTargetModel(model.id)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all duration-200 cursor-pointer select-none ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold rounded-full border cursor-pointer select-none ${
                           isActive
                             ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] text-[var(--color-primary)]'
-                            : 'border-black border-[2px] bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black'
+                            : 'border-[2px] border-black bg-gray-50 shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black'
                         }`}
                       >
                         <Icon className="w-3 h-3" />
                         {model.label}
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
               </div>
 
               <div className="flex justify-between mt-auto">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={springs.bouncy}
                   onClick={goBack}
-                  className="px-5 py-2.5 rounded-xl border-[3px] border-black bg-transparent text-gray-700 hover:text-black hover:border-black/30 border-[2px] font-bold text-xs tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl border-[2px] border-black bg-transparent text-gray-700 hover:text-black hover:border-black/30 font-bold text-xs tracking-wider uppercase flex items-center gap-2 cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Back
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={springs.bouncy}
                   onClick={goNext}
                   disabled={!useCase}
-                  className="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_15px_var(--color-primary-glow)] flex items-center gap-2 cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase shadow-[0_4px_15px_var(--color-primary-glow)] flex items-center gap-2 cursor-pointer"
                 >
                   Next
                   <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           )}
@@ -339,7 +355,7 @@ export const PromptMaker: React.FC = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.25 }}
+              transition={springs.gentle}
               className="flex flex-col flex-1 gap-5"
             >
               <div>
@@ -360,18 +376,21 @@ export const PromptMaker: React.FC = () => {
                   {STYLE_CHIPS.map((style) => {
                     const isSelected = selectedStyles.includes(style);
                     return (
-                      <button
+                      <motion.button
                         key={style}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={springs.bouncy}
                         onClick={() => toggleStyle(style)}
                         disabled={loading}
-                        className={`rounded-full px-3.5 py-1.5 text-xs font-semibold cursor-pointer border transition-all select-none duration-150 ${
+                        className={`rounded-full px-3.5 py-1.5 text-xs font-semibold cursor-pointer border select-none ${
                           isSelected
                             ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] text-[var(--color-primary)]'
-                            : 'border-black border-[2px] bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black'
+                            : 'border-[2px] border-black bg-gray-50 shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black'
                         }`}
                       >
                         {style}
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -387,8 +406,8 @@ export const PromptMaker: React.FC = () => {
                   onChange={(e) => setExtraContext(e.target.value.slice(0, 300))}
                   rows={3}
                   maxLength={300}
-                  placeholder="Any specific requirements, tone, audience, or constraints..."
-                  className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-3.5 text-[13px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
+                  placeholder="e.g., Keep the tone encouraging, use clear analogies, and ask me questions..."
+                  className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-3.5 text-[13px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-black/30 resize-none font-medium leading-relaxed"
                 />
               </div>
 
@@ -409,7 +428,7 @@ export const PromptMaker: React.FC = () => {
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${
                           i < usedUses
                             ? 'bg-[var(--color-primary)] shadow-[0_0_8px_var(--color-primary)]'
-                            : 'bg-white/10 border border-black/30 border-[2px]'
+                            : 'bg-white/10 border-[2px] border-black/30'
                         }`}
                       />
                     ))}
@@ -420,18 +439,24 @@ export const PromptMaker: React.FC = () => {
                 </div>
 
                 <div className="flex justify-between">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={springs.bouncy}
                     onClick={goBack}
                     disabled={loading}
-                    className="px-5 py-2.5 rounded-xl border-[3px] border-black bg-transparent text-gray-700 hover:text-black hover:border-black/30 border-[2px] font-bold text-xs tracking-wider uppercase transition-all flex items-center gap-2 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl border-[2px] border-black bg-transparent text-gray-700 hover:text-black hover:border-black/30 font-bold text-xs tracking-wider uppercase flex items-center gap-2 cursor-pointer"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     Back
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={springs.bouncy}
                     onClick={handleGenerate}
                     disabled={loading || remainingUses === 0}
-                    className="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_15px_var(--color-primary-glow)] flex items-center justify-center gap-2 cursor-pointer min-w-[160px]"
+                    className="px-6 py-2.5 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase shadow-[0_4px_15px_var(--color-primary-glow)] flex items-center justify-center gap-2 cursor-pointer min-w-[160px]"
                   >
                     {loading ? (
                       <>
@@ -444,7 +469,7 @@ export const PromptMaker: React.FC = () => {
                         <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-black/50">{modKey}+⏎</kbd>
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             </motion.div>
@@ -454,9 +479,9 @@ export const PromptMaker: React.FC = () => {
           {step === 'result' && (
             <motion.div
               key="result"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={springs.gentle}
               className="flex flex-col flex-1 gap-5"
             >
               <div className="flex items-center justify-between">
@@ -468,23 +493,29 @@ export const PromptMaker: React.FC = () => {
                     Your prompt is ready
                   </h2>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={springs.bouncy}
                   onClick={handleStartOver}
-                  className="px-4 py-2 rounded-xl border-[3px] border-black bg-transparent text-gray-700 hover:text-black hover:border-black/30 border-[2px] font-bold text-[11px] tracking-wider uppercase transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-xl border-[2px] border-black bg-transparent text-gray-700 hover:text-black hover:border-black/30 font-bold text-[11px] tracking-wider uppercase flex items-center gap-1.5 cursor-pointer"
                 >
                   <RotateCcw className="w-3 h-3" />
                   Start Over
-                </button>
+                </motion.button>
               </div>
 
               {/* Output text */}
               <div className="relative flex-1">
-                <div className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 font-mono text-[13px] text-black/90 whitespace-pre-wrap leading-relaxed min-h-[200px] overflow-y-auto max-h-[360px] select-text">
+                <div className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 font-mono text-[13px] text-black/90 whitespace-pre-wrap leading-relaxed min-h-[200px] overflow-y-auto max-h-[360px] select-text">
                   {result}
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={springs.bouncy}
                   onClick={handleCopy}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/60 hover:bg-black/90 backdrop-blur-sm flex items-center justify-center text-black border border-black/20 border-[2px] transition-all cursor-pointer active:scale-90"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/60 hover:bg-black/90 backdrop-blur-sm flex items-center justify-center text-black border-[2px] border-black/20 cursor-pointer"
                   title="Copy Prompt"
                 >
                   {copied ? (
@@ -492,7 +523,7 @@ export const PromptMaker: React.FC = () => {
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
-                </button>
+                </motion.button>
               </div>
 
               {/* Tips section */}

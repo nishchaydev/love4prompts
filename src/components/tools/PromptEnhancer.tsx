@@ -7,6 +7,7 @@ import { useModKey } from '../../lib/useOS';
 import { saveToHistory } from './PromptHistory';
 import { PromptHistory } from './PromptHistory';
 import { ExampleChips } from './ExampleChips';
+import { springs } from '../../lib/motion';
 
 const TOOL_SLUG = 'prompt-enhancer';
 
@@ -175,20 +176,23 @@ export const PromptEnhancer: React.FC = () => {
               {AI_MODELS.map((model) => {
                 const isActive = selectedModel === model.id;
                 return (
-                  <button
+                  <motion.button
                     key={model.id}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={springs.bouncy}
                     type="button"
                     onClick={() => setSelectedModel(model.id)}
                     disabled={loading}
-                    className={`flex-none px-4 py-1.5 text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer select-none rounded-full flex items-center gap-1.5 ${
+                    className={`flex-none px-4 py-1.5 text-xs font-semibold tracking-tight cursor-pointer select-none rounded-full flex items-center gap-1.5 ${
                       isActive
-                        ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
+                        ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)]'
                         : 'text-gray-700 hover:text-black bg-transparent'
                     }`}
                   >
                     <model.icon className="w-3.5 h-3.5" />
                     {model.label}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -209,8 +213,8 @@ export const PromptEnhancer: React.FC = () => {
                   rows={6}
                   maxLength={1000}
                   disabled={loading}
-                  placeholder="Type any rough idea — we'll make it significantly better..."
-                  className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed min-h-[180px]"
+                  placeholder="/// TYPE YOUR ROUGH IDEA HERE..."
+                  className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#FF6D87] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[180px]"
                   onKeyDown={(e) => {
                     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                       e.preventDefault();
@@ -238,19 +242,22 @@ export const PromptEnhancer: React.FC = () => {
                 {ENHANCEMENT_CHIPS.map((chip) => {
                   const isSelected = selectedChips.includes(chip.id);
                   return (
-                    <button
+                    <motion.button
                       key={chip.id}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={springs.bouncy}
                       type="button"
                       onClick={() => handleToggleChip(chip.id)}
                       disabled={loading}
-                      className={`rounded-full px-3 py-1.5 text-xs font-semibold cursor-pointer border transition-all select-none duration-150 ${
+                      className={`rounded-full px-3 py-1.5 text-xs font-semibold cursor-pointer border select-none ${
                         isSelected
                           ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] text-[var(--color-primary)]'
                           : 'border-black border-[2px] bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black'
                       }`}
                     >
                       {chip.label}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -285,10 +292,13 @@ export const PromptEnhancer: React.FC = () => {
             )}
 
             {/* Enhance Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={springs.bouncy}
               onClick={handleSubmit}
               disabled={loading || !prompt.trim() || remainingUses === 0}
-              className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase shadow-[0_4px_25px_var(--color-primary-glow)] flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -301,7 +311,7 @@ export const PromptEnhancer: React.FC = () => {
                   <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-black/50">{modKey}+⏎</kbd>
                 </>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
 
@@ -353,7 +363,7 @@ export const PromptEnhancer: React.FC = () => {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2 }}
+                      transition={springs.gentle}
                       className="flex flex-col flex-1 gap-3.5"
                     >
                       <div className="relative flex-1">
@@ -373,9 +383,12 @@ export const PromptEnhancer: React.FC = () => {
 
                         {/* Copy Button */}
                         {result && !loading && (
-                          <button
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={springs.bouncy}
                             onClick={handleCopy}
-                            className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/60 hover:bg-black/90 backdrop-blur-sm flex items-center justify-center text-black border border-black/20 border-[2px] transition-all cursor-pointer active:scale-90"
+                            className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/60 hover:bg-black/90 backdrop-blur-sm flex items-center justify-center text-black border border-black/20 border-[2px] cursor-pointer"
                             title="Copy Prompt"
                           >
                             {copied ? (
@@ -383,7 +396,7 @@ export const PromptEnhancer: React.FC = () => {
                             ) : (
                               <Copy className="w-4 h-4" />
                             )}
-                          </button>
+                          </motion.button>
                         )}
                       </div>
 
@@ -408,7 +421,7 @@ export const PromptEnhancer: React.FC = () => {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2 }}
+                      transition={springs.gentle}
                       className="flex flex-col flex-1 py-1"
                     >
                       {loading ? (

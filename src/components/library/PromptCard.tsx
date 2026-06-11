@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Bookmark, BookmarkCheck, Copy, Check, Share2 } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { motion } from 'framer-motion';
+import { springs } from '../../lib/motion';
 
 export interface Prompt {
   id: string;
@@ -21,7 +22,7 @@ export interface Prompt {
     name: string;
     avatar: string;
     handle: string;
-  };
+  } | null;
 }
 
 interface PromptCardProps {
@@ -68,33 +69,31 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      transition={springs.gentle}
       className="group relative w-full flex flex-col mb-6 break-inside-avoid"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <a href={`/prompt/${prompt.slug}`} className="block relative w-full overflow-hidden bg-[#FAEFED] border-4 border-black shadow-[6px_6px_0px_#000000] hover:shadow-[12px_12px_0px_#FF6D87] hover:-translate-y-2 hover:-rotate-2 transition-all duration-300 ease-out">
+      <motion.a 
+        href={`/prompt/${prompt.slug}`} 
+        whileHover={{ y: -8, rotate: -2, boxShadow: "12px 12px 0px #FF6D87" }}
+        whileTap={{ scale: 0.95, y: 0, rotate: 0, boxShadow: "4px 4px 0px #000000" }}
+        transition={springs.bouncy}
+        className="block relative w-full overflow-hidden bg-[#FAEFED] border-4 border-black shadow-[6px_6px_0px_#000000] transition-colors duration-300"
+      >
         {prompt.image_url && !imageError ? (
           <div className="relative w-full min-h-[160px] bg-white overflow-hidden">
-            {!imageLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/[0.02] animate-pulse">
-                <div className="w-5 h-5 rounded-full border-2 border-[var(--color-primary)] border-t-transparent animate-spin" />
-              </div>
-            )}
             <img 
               src={optimizedUrl} 
               alt={prompt.title} 
               width={400}
               height={300}
-              className={`w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
-                imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-              }`}
+              className="w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-105"
               loading={isAboveFold ? "eager" : "lazy"}
               {...(isAboveFold ? { fetchPriority: "high" } as any : {})}
-              onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
           </div>
@@ -111,8 +110,9 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
         <div className={`absolute top-3 right-3 transition-all duration-300 transform ${isHovered ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}>
           <button 
             onClick={(e) => { e.preventDefault(); onSave?.(prompt.id); }}
-            className="px-4 py-2 bg-[#FF6D87] text-black border-2 border-black font-black uppercase hover:bg-[#1482A3] hover:text-white transition-all duration-300 shadow-[4px_4px_0px_#000] hover:shadow-[2px_2px_0px_#000] hover:translate-y-[2px] hover:translate-x-[2px]"
-            aria-label="Save prompt"
+            className="px-4 py-2 bg-[#FF6D87] text-black border-2 border-black font-black uppercase hover:bg-[#1482A3] hover:text-white transition-all duration-300 shadow-[4px_4px_0px_#000] hover:shadow-[2px_2px_0px_#000] hover:translate-y-[2px] hover:translate-x-[2px] focus:outline-none focus:ring-2 focus:ring-black"
+            aria-label={isSaved ? "Remove from saved prompts" : "Save prompt"}
+            aria-pressed={isSaved}
           >
             {isSaved ? 'Saved' : 'Save'}
           </button>
@@ -122,21 +122,22 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
         <div className={`absolute bottom-3 left-3 right-3 flex justify-between items-center transition-all duration-300 transform ${isHovered ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-2 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white rounded-full text-sm font-bold hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-lg hover:scale-105 active:scale-95"
+            aria-label="Copy Prompt"
+            className="flex items-center gap-2 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white rounded-full text-sm font-bold hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
           >
-            {copied ? <Check className="w-4 h-4 text-[var(--color-success-green)]" /> : <Copy className="w-4 h-4" />}
+            {copied ? <Check className="w-4 h-4 text-[var(--color-success-green)]" aria-hidden="true" /> : <Copy className="w-4 h-4" aria-hidden="true" />}
             {copied ? 'Copied!' : 'Copy Prompt'}
           </button>
           
           <button 
             onClick={(e) => { e.preventDefault(); }}
-            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white flex items-center justify-center hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95"
+            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white flex items-center justify-center hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
             aria-label="Share prompt"
           >
-             <Share2 className="w-4 h-4" />
+             <Share2 className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
-      </a>
+      </motion.a>
 
       {/* Meta data section */}
       <div className="pt-3 px-1">
