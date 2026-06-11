@@ -73,8 +73,8 @@ export const PaperAirplaneAd = () => {
       
       // Fire the single source of truth animation
       animate(flightProgress, 1, { 
-        duration: 8, 
-        ease: easeOutQuart,
+        duration: 10, 
+        ease: [0.645, 0.045, 0.355, 1], // easeInOutCubic - fast but incredibly smooth
         onComplete: () => setIsAnimating(false)
       });
       
