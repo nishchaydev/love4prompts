@@ -168,7 +168,7 @@ export const PromptEnhancer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
         
         {/* LEFT ZONE — INPUT */}
-        <div className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-6 flex flex-col justify-between h-full gap-5">
+        <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 flex flex-col justify-between h-full gap-5">
           <div className="flex flex-col gap-5">
             {/* AI Model horizontal tabs */}
             <div className="flex items-center overflow-x-auto no-scrollbar gap-2 pb-1 border-b border-white/[0.04]">
@@ -182,8 +182,8 @@ export const PromptEnhancer: React.FC = () => {
                     disabled={loading}
                     className={`flex-none px-4 py-1.5 text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer select-none rounded-full flex items-center gap-1.5 ${
                       isActive
-                        ? 'bg-[var(--color-primary)] text-white shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
-                        : 'text-[var(--color-text-secondary)] hover:text-white bg-transparent'
+                        ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
+                        : 'text-gray-700 hover:text-black bg-transparent'
                     }`}
                   >
                     <model.icon className="w-3.5 h-3.5" />
@@ -210,7 +210,7 @@ export const PromptEnhancer: React.FC = () => {
                   maxLength={1000}
                   disabled={loading}
                   placeholder="Type any rough idea — we'll make it significantly better..."
-                  className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-xl p-4 text-[13.5px] text-white focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed min-h-[180px]"
+                  className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed min-h-[180px]"
                   onKeyDown={(e) => {
                     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                       e.preventDefault();
@@ -246,7 +246,7 @@ export const PromptEnhancer: React.FC = () => {
                       className={`rounded-full px-3 py-1.5 text-xs font-semibold cursor-pointer border transition-all select-none duration-150 ${
                         isSelected
                           ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] text-[var(--color-primary)]'
-                          : 'border-[var(--color-border)] bg-[var(--color-background-elevated)] text-[var(--color-text-secondary)] hover:text-white hover:border-white/15'
+                          : 'border-black border-[2px] bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black'
                       }`}
                     >
                       {chip.label}
@@ -267,7 +267,7 @@ export const PromptEnhancer: React.FC = () => {
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       i < usedUses
                         ? 'bg-[var(--color-primary)] shadow-[0_0_8px_var(--color-primary)]'
-                        : 'bg-white/10 border border-white/20'
+                        : 'bg-white/10 border border-black/30 border-[2px]'
                     }`}
                   />
                 ))}
@@ -288,7 +288,7 @@ export const PromptEnhancer: React.FC = () => {
             <button
               onClick={handleSubmit}
               disabled={loading || !prompt.trim() || remainingUses === 0}
-              className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-white/20 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -298,7 +298,7 @@ export const PromptEnhancer: React.FC = () => {
               ) : (
                 <>
                   Enhance Prompt
-                  <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-white/50">{modKey}+⏎</kbd>
+                  <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-black/50">{modKey}+⏎</kbd>
                 </>
               )}
             </button>
@@ -306,17 +306,17 @@ export const PromptEnhancer: React.FC = () => {
         </div>
 
         {/* RIGHT ZONE — OUTPUT */}
-        <div className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-6 flex flex-col h-full gap-5">
+        <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 flex flex-col h-full gap-5">
           
           {loading || result ? (
             <div className="flex flex-col flex-1 h-full gap-4">
               {/* Tab switcher */}
-              <div className="border-b border-[var(--color-border)] w-full flex gap-6">
+              <div className="border-b border-black border-[2px] w-full flex gap-6">
                 <button
                   type="button"
                   onClick={() => setActiveTab('enhanced')}
                   className={`text-sm font-bold pb-2 cursor-pointer transition-colors relative ${
-                    activeTab === 'enhanced' ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-white'
+                    activeTab === 'enhanced' ? 'text-black' : 'text-[var(--color-text-muted)] hover:text-black'
                   }`}
                 >
                   Enhanced Prompt
@@ -331,7 +331,7 @@ export const PromptEnhancer: React.FC = () => {
                   type="button"
                   onClick={() => setActiveTab('changed')}
                   className={`text-sm font-bold pb-2 cursor-pointer transition-colors relative ${
-                    activeTab === 'changed' ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-white'
+                    activeTab === 'changed' ? 'text-black' : 'text-[var(--color-text-muted)] hover:text-black'
                   }`}
                 >
                   What Changed
@@ -358,7 +358,7 @@ export const PromptEnhancer: React.FC = () => {
                     >
                       <div className="relative flex-1">
                         {/* Scrollable text container */}
-                        <div className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-xl p-4 overflow-y-auto max-h-[360px] font-mono text-[13px] text-white/95 whitespace-pre-wrap leading-relaxed select-text min-h-[220px]">
+                        <div className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 overflow-y-auto max-h-[360px] font-mono text-[13px] text-black/95 whitespace-pre-wrap leading-relaxed select-text min-h-[220px]">
                           {loading ? (
                             <div className="flex flex-col gap-3 py-1">
                               <div className="h-3.5 w-11/12 bg-white/[0.03] rounded skeleton-shimmer-line animate-pulse" />
@@ -375,7 +375,7 @@ export const PromptEnhancer: React.FC = () => {
                         {result && !loading && (
                           <button
                             onClick={handleCopy}
-                            className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/60 hover:bg-black/90 backdrop-blur-sm flex items-center justify-center text-white border border-white/10 transition-all cursor-pointer active:scale-90"
+                            className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-black/60 hover:bg-black/90 backdrop-blur-sm flex items-center justify-center text-black border border-black/20 border-[2px] transition-all cursor-pointer active:scale-90"
                             title="Copy Prompt"
                           >
                             {copied ? (
@@ -413,16 +413,16 @@ export const PromptEnhancer: React.FC = () => {
                     >
                       {loading ? (
                         <div className="flex flex-col gap-4 py-2">
-                          <div className="h-10 w-full bg-white/[0.02] rounded skeleton-shimmer-line animate-pulse" />
-                          <div className="h-10 w-5/6 bg-white/[0.02] rounded skeleton-shimmer-line animate-pulse" />
-                          <div className="h-10 w-11/12 bg-white/[0.02] rounded skeleton-shimmer-line animate-pulse" />
+                          <div className="h-10 w-full bg-gray-50 border-[2px] border-black rounded skeleton-shimmer-line animate-pulse" />
+                          <div className="h-10 w-5/6 bg-gray-50 border-[2px] border-black rounded skeleton-shimmer-line animate-pulse" />
+                          <div className="h-10 w-11/12 bg-gray-50 border-[2px] border-black rounded skeleton-shimmer-line animate-pulse" />
                         </div>
                       ) : improvements.length > 0 ? (
                         <div className="flex flex-col gap-3.5">
                           {improvements.map((bullet, idx) => (
                             <div
                               key={idx}
-                              className="text-sm text-[var(--color-text-secondary)] border-l-2 border-[var(--color-primary)] pl-3.5 py-0.5 font-medium leading-relaxed"
+                              className="text-sm text-gray-700 border-l-2 border-[var(--color-primary)] pl-3.5 py-0.5 font-medium leading-relaxed"
                             >
                               ✓ {bullet}
                             </div>
@@ -441,10 +441,10 @@ export const PromptEnhancer: React.FC = () => {
           ) : (
             // Empty State
             <div className="flex-1 flex flex-col items-center justify-center py-16 text-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-[var(--color-text-muted)]">
+              <div className="w-12 h-12 rounded-2xl bg-gray-50 border-[2px] border-black border border-white/[0.04] flex items-center justify-center text-[var(--color-text-muted)]">
                 <Wand2 className="w-6 h-6" />
               </div>
-              <p className="text-sm font-semibold text-white">Ready to enhance</p>
+              <p className="text-sm font-semibold text-black">Ready to enhance</p>
               <p className="text-[12.5px] text-[var(--color-text-muted)] max-w-[260px] leading-relaxed">
                 Your enhanced prompt and explanations will appear here after generation.
               </p>

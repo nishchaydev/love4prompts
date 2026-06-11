@@ -2,6 +2,7 @@
 import Layout from '../components/layout/Layout.astro';
 import { supabase } from '../lib/supabase';
 import { PinterestGallery } from '../components/library/PinterestGallery';
+import { AdSlot } from '../components/ads/AdSlot';
 import type { Prompt } from '../components/library/PromptCard';
 import { mockPrompts } from '../lib/mock-data';
 
@@ -107,6 +108,14 @@ const aspects = ['aspect-[3/4]', 'aspect-square', 'aspect-video', 'aspect-[4/5]'
             );
           })}
         </div>
+      </div>
+
+      {/* Hero Leaderboard Ad */}
+      <div class="mx-auto mt-8 mb-16 hidden md:flex justify-center w-full">
+        <AdSlot type="leaderboard" />
+      </div>
+      <div class="mx-auto mt-8 mb-16 flex md:hidden justify-center w-full">
+        <AdSlot type="banner" />
       </div>
 
       {/* Pinterest-Style Community Library */}

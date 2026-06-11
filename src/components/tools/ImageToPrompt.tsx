@@ -187,7 +187,7 @@ export const ImageToPrompt: React.FC = () => {
               className={`relative flex flex-col items-center justify-center gap-5 py-20 px-8 rounded-3xl border-2 border-dashed cursor-pointer transition-all duration-300 ${
                 dragOver
                   ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] scale-[1.01]'
-                  : 'border-white/[0.08] bg-[var(--color-background-card)] hover:border-white/15 hover:bg-[var(--color-background-elevated)]'
+                  : 'border-white/[0.08] bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] hover:border-black hover:bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)]'
               }`}
             >
               <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 ${
@@ -198,7 +198,7 @@ export const ImageToPrompt: React.FC = () => {
                 <Upload className="w-7 h-7" />
               </div>
               <div className="text-center">
-                <p className="text-sm font-bold text-white mb-1.5">
+                <p className="text-sm font-bold text-black mb-1.5">
                   {dragOver ? 'Drop to analyze' : 'Drop an image or click to upload'}
                 </p>
                 <p className="text-[12px] text-[var(--color-text-muted)] font-medium">
@@ -231,14 +231,14 @@ export const ImageToPrompt: React.FC = () => {
             className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch"
           >
             {/* LEFT: Image Preview */}
-            <div className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-5 flex flex-col gap-4">
+            <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-5 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[var(--color-primary-surface)] border border-[var(--color-border-warm)] flex items-center justify-center text-[var(--color-primary)]">
                     <ImagePlus className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-[12px] font-bold text-white truncate max-w-[200px]">{fileName}</p>
+                    <p className="text-[12px] font-bold text-black truncate max-w-[200px]">{fileName}</p>
                     <p className="text-[10px] text-[var(--color-text-muted)] font-mono">{fileSize}</p>
                   </div>
                 </div>
@@ -251,7 +251,7 @@ export const ImageToPrompt: React.FC = () => {
                 </button>
               </div>
 
-              <div className="relative rounded-xl overflow-hidden bg-black/20 border border-[var(--color-border)] flex-1 flex items-center justify-center">
+              <div className="relative rounded-xl overflow-hidden bg-black/20 border-[3px] border-black flex-1 flex items-center justify-center">
                 <img
                   src={preview}
                   alt="Uploaded preview"
@@ -261,7 +261,7 @@ export const ImageToPrompt: React.FC = () => {
             </div>
 
             {/* RIGHT: Controls + Output */}
-            <div className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-6 flex flex-col gap-5">
+            <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 flex flex-col gap-5">
               {/* Target model pills */}
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-mono font-bold tracking-widest text-[var(--color-text-muted)] uppercase">
@@ -280,7 +280,7 @@ export const ImageToPrompt: React.FC = () => {
                         className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold rounded-full border transition-all duration-200 cursor-pointer select-none ${
                           isActive
                             ? 'border-[var(--color-primary)] bg-[var(--color-primary-surface)] text-[var(--color-primary)]'
-                            : 'border-[var(--color-border)] bg-[var(--color-background-elevated)] text-[var(--color-text-secondary)] hover:text-white hover:border-white/15'
+                            : 'border-black border-[2px] bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black'
                         }`}
                       >
                         <Icon className="w-3 h-3" />
@@ -300,7 +300,7 @@ export const ImageToPrompt: React.FC = () => {
                   {result && !loading && (
                     <button
                       onClick={handleCopy}
-                      className="w-7 h-7 rounded-lg bg-black/40 hover:bg-black/70 flex items-center justify-center text-white border border-white/10 transition-all cursor-pointer active:scale-90"
+                      className="w-7 h-7 rounded-lg bg-black/40 hover:bg-black/70 flex items-center justify-center text-black border border-black/20 border-[2px] transition-all cursor-pointer active:scale-90"
                       title="Copy"
                     >
                       {copied ? (
@@ -312,7 +312,7 @@ export const ImageToPrompt: React.FC = () => {
                   )}
                 </div>
 
-                <div className="w-full flex-1 bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-xl p-4 font-mono text-[13px] text-white/90 whitespace-pre-wrap leading-relaxed min-h-[200px] overflow-y-auto max-h-[360px] select-text">
+                <div className="w-full flex-1 bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 font-mono text-[13px] text-black/90 whitespace-pre-wrap leading-relaxed min-h-[200px] overflow-y-auto max-h-[360px] select-text">
                   {loading ? (
                     <div className="flex flex-col gap-3 py-1">
                       <div className="h-3.5 w-full bg-white/[0.03] rounded animate-pulse" />
@@ -325,7 +325,7 @@ export const ImageToPrompt: React.FC = () => {
                       {result}
                     </motion.span>
                   ) : (
-                    <span className="text-white/15 italic text-[12px]">
+                    <span className="text-black/15 italic text-[12px]">
                       Click "Analyze Image" to extract the prompt...
                     </span>
                   )}
@@ -349,7 +349,7 @@ export const ImageToPrompt: React.FC = () => {
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${
                           i < usedUses
                             ? 'bg-[var(--color-primary)] shadow-[0_0_8px_var(--color-primary)]'
-                            : 'bg-white/10 border border-white/20'
+                            : 'bg-white/10 border border-black/30 border-[2px]'
                         }`}
                       />
                     ))}
@@ -362,7 +362,7 @@ export const ImageToPrompt: React.FC = () => {
                 <button
                   onClick={handleAnalyze}
                   disabled={loading || !imageData || remainingUses === 0}
-                  className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-white/20 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {loading ? (
                     <>

@@ -97,7 +97,7 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
       {/* Trigger button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border border-[var(--color-border)] bg-[var(--color-background-elevated)] text-[var(--color-text-secondary)] hover:text-white hover:border-white/15 transition-all cursor-pointer"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border-[3px] border-black bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-black transition-all cursor-pointer"
         aria-label="View prompt history"
       >
         <Clock className="w-3 h-3" />
@@ -123,16 +123,16 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-[var(--color-background-primary)] border-l border-[var(--color-border)] shadow-[-8px_0_40px_rgba(0,0,0,0.5)] z-[70] flex flex-col"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-[var(--color-background-primary)] border-l border-black border-[2px] shadow-[-8px_0_40px_rgba(0,0,0,0.5)] z-[70] flex flex-col"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-5 border-b border-[var(--color-border)]">
+              <div className="flex items-center justify-between p-5 border-b border-black border-[2px]">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-[var(--color-primary)]" />
-                  <h2 className="text-sm font-bold text-white tracking-tight">
+                  <h2 className="text-sm font-bold text-black tracking-tight">
                     Prompt History
                   </h2>
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-[var(--color-text-muted)] bg-white/[0.04]">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold text-[var(--color-text-muted)] bg-gray-100 border-[2px] border-black">
                     {entries.length}
                   </span>
                 </div>
@@ -148,7 +148,7 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
                   )}
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-1.5 rounded-lg hover:bg-white/[0.05] text-white/40 hover:text-white transition-all cursor-pointer"
+                    className="p-1.5 rounded-lg hover:bg-white/[0.05] text-black/40 hover:text-black transition-all cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -159,9 +159,9 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {entries.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                    <Clock className="w-8 h-8 text-white/10 mb-3" />
-                    <p className="text-[13px] text-white/30 font-medium">No history yet</p>
-                    <p className="text-[11px] text-white/15 mt-1">Your prompts will appear here after use</p>
+                    <Clock className="w-8 h-8 text-black/10 mb-3" />
+                    <p className="text-[13px] text-black/30 font-medium">No history yet</p>
+                    <p className="text-[11px] text-black/15 mt-1">Your prompts will appear here after use</p>
                   </div>
                 ) : (
                   entries.map((entry, i) => (
@@ -170,7 +170,7 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
-                      className="rounded-xl border border-[var(--color-border)] bg-[var(--color-background-card)] p-4 group hover:border-white/10 transition-colors"
+                      className="rounded-xl border-[3px] border-black bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] p-4 group hover:border-black/20 border-[2px] transition-colors"
                     >
                       {/* Meta row */}
                       <div className="flex items-center justify-between mb-2">
@@ -179,18 +179,18 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
                             {toolLabels[entry.tool] || entry.tool}
                           </span>
                           {entry.model && (
-                            <span className="text-[10px] text-white/30 font-mono">{entry.model}</span>
+                            <span className="text-[10px] text-black/30 font-mono">{entry.model}</span>
                           )}
                         </div>
-                        <span className="text-[10px] text-white/20 font-mono">{formatTime(entry.timestamp)}</span>
+                        <span className="text-[10px] text-black/20 font-mono">{formatTime(entry.timestamp)}</span>
                       </div>
 
                       {/* Input */}
-                      <p className="text-[12px] text-white/50 line-clamp-2 mb-2 leading-relaxed">{entry.input}</p>
+                      <p className="text-[12px] text-black/50 line-clamp-2 mb-2 leading-relaxed">{entry.input}</p>
 
                       {/* Output preview */}
                       {entry.output && (
-                        <p className="text-[12px] text-white/70 line-clamp-3 mb-3 leading-relaxed bg-white/[0.02] rounded-lg p-2.5 border border-white/[0.03]">
+                        <p className="text-[12px] text-black/70 line-clamp-3 mb-3 leading-relaxed bg-gray-50 border-[2px] border-black rounded-lg p-2.5 border border-white/[0.03]">
                           {entry.output}
                         </p>
                       )}
@@ -199,7 +199,7 @@ export const PromptHistory: React.FC<Props> = ({ toolSlug, onReuse }) => {
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => handleCopy(entry.output || entry.input, i)}
-                          className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-white/40 hover:text-white hover:bg-white/[0.05] transition-all cursor-pointer"
+                          className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-black/40 hover:text-black hover:bg-white/[0.05] transition-all cursor-pointer"
                         >
                           {copiedIdx === i ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
                           {copiedIdx === i ? 'Copied' : 'Copy'}

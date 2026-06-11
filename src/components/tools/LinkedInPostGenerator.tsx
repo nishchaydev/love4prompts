@@ -111,7 +111,7 @@ export const LinkedInPostGenerator: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
         {/* LEFT COLUMN: INPUTS */}
-        <div className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-3xl p-6 flex flex-col gap-6">
+        <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-3xl p-6 flex flex-col gap-6">
           <form onSubmit={handleGenerate} className="flex flex-col gap-6">
             
             {/* Topic text area */}
@@ -127,9 +127,9 @@ export const LinkedInPostGenerator: React.FC = () => {
                 maxLength={500}
                 placeholder="e.g. I just launched my first product after 6 months of nights and weekends..."
                 disabled={loading}
-                className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-2xl p-4 text-[13.5px] text-white focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
+                className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
               />
-              <span className="text-[10px] text-white/30 font-mono self-end">
+              <span className="text-[10px] text-black/30 font-mono self-end">
                 {topic.length} / 500
               </span>
             </div>
@@ -150,8 +150,8 @@ export const LinkedInPostGenerator: React.FC = () => {
                       disabled={loading}
                       className={`py-2.5 px-3 rounded-xl text-xs font-semibold tracking-tight transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-[var(--color-primary)] text-white shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
-                          : 'bg-[var(--color-background-elevated)] border border-[var(--color-border)] text-white/60 hover:text-white hover:border-white/10'
+                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
+                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black text-black/60 hover:text-black hover:border-black/20 border-[2px]'
                       }`}
                     >
                       {t}
@@ -177,8 +177,8 @@ export const LinkedInPostGenerator: React.FC = () => {
                       disabled={loading}
                       className={`py-2.5 px-1 text-center rounded-xl text-[11px] font-semibold tracking-tight transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-[var(--color-primary)] text-white shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
-                          : 'bg-[var(--color-background-elevated)] border border-[var(--color-border)] text-white/60 hover:text-white hover:border-white/10'
+                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] scale-[1.02]'
+                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black text-black/60 hover:text-black hover:border-black/20 border-[2px]'
                       }`}
                     >
                       {h}
@@ -189,10 +189,10 @@ export const LinkedInPostGenerator: React.FC = () => {
             </div>
 
             {/* CTA Toggle switch */}
-            <div className="flex items-center justify-between bg-[var(--color-background-elevated)] border border-[var(--color-border)] p-4 rounded-2xl">
+            <div className="flex items-center justify-between bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black p-4 rounded-2xl">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[13px] font-semibold text-white">End with a call to action?</span>
-                <span className="text-[10px] text-white/30">Append a call to action at the bottom of the post</span>
+                <span className="text-[13px] font-semibold text-black">End with a call to action?</span>
+                <span className="text-[10px] text-black/30">Append a call to action at the bottom of the post</span>
               </div>
               <button
                 type="button"
@@ -214,7 +214,7 @@ export const LinkedInPostGenerator: React.FC = () => {
             <button
               type="submit"
               disabled={loading || !topic.trim()}
-              className="w-full h-12 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-white/20 text-white font-bold text-sm tracking-wide transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full h-12 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-sm tracking-wide transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -233,7 +233,7 @@ export const LinkedInPostGenerator: React.FC = () => {
         <div className="flex flex-col gap-5">
           
           {/* LinkedIn Mockup Card */}
-          <div className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden">
+          <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden">
             
             {/* Header row */}
             <div className="flex items-center gap-3 border-b border-white/[0.04] pb-3.5">
@@ -241,13 +241,13 @@ export const LinkedInPostGenerator: React.FC = () => {
                 LP
               </div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-bold text-white leading-tight">Your Name</span>
-                <span className="text-[11px] text-white/40 leading-tight">Your Headline &bull; Just now</span>
+                <span className="text-sm font-bold text-black leading-tight">Your Name</span>
+                <span className="text-[11px] text-black/40 leading-tight">Your Headline &bull; Just now</span>
               </div>
             </div>
 
             {/* Post body */}
-            <div className="min-h-[200px] text-sm text-[var(--color-text-primary)] leading-relaxed whitespace-pre-wrap select-text py-1">
+            <div className="min-h-[200px] text-sm text-black font-bold leading-relaxed whitespace-pre-wrap select-text py-1">
               {loading ? (
                 // Shimmer state
                 <div className="flex flex-col gap-3.5 py-2">
@@ -281,10 +281,10 @@ export const LinkedInPostGenerator: React.FC = () => {
             </div>
 
             {/* Divider line */}
-            <div className="h-px bg-white/[0.04]" />
+            <div className="h-px bg-gray-100 border-[2px] border-black" />
 
             {/* Fake actions row */}
-            <div className="flex items-center justify-between px-1 text-white/30 text-xs font-semibold">
+            <div className="flex items-center justify-between px-1 text-black/30 text-xs font-semibold">
               <div className="flex items-center gap-1.5 transition-colors cursor-default">
                 <ThumbsUp className="w-4 h-4" />
                 <span>Like</span>
@@ -319,7 +319,7 @@ export const LinkedInPostGenerator: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="h-11 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold text-xs tracking-wide flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.97]"
+                  className="h-11 rounded-xl border border-black/20 border-[2px] hover:border-black/30 border-[2px] bg-white/5 hover:bg-[#FF6D87]/20 hover:-translate-y-1 hover:shadow-[4px_4px_0_#FF6D87] transition-all text-black font-bold text-xs tracking-wide flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.97]"
                 >
                   {copied ? (
                     <>

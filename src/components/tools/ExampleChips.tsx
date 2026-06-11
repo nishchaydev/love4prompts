@@ -29,7 +29,7 @@ export const ExampleChips: React.FC<Props> = ({ examples, onSelect, disabled }) 
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.06, duration: 0.3 }}
-            className="px-3 py-1.5 rounded-full text-[11px] font-medium border border-[var(--color-border)] bg-[var(--color-background-elevated)] text-[var(--color-text-secondary)] hover:text-white hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-surface)] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed select-none max-w-[250px] truncate"
+            className="px-3 py-1.5 rounded-full text-[11px] font-medium border-[3px] border-black bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-gray-700 hover:text-black hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-surface)] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed select-none max-w-[250px] truncate"
             title={example}
           >
             {example}

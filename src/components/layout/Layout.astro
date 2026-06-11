@@ -4,6 +4,8 @@ import { Header } from './Header';
 import { SeoFooter } from './SeoFooter';
 import { EditorialFooter } from './EditorialFooter';
 import { TrendingBar } from './TrendingBar';
+import { PaperAirplaneAd } from '../ads/PaperAirplaneAd';
+import { AdSlot } from '../ads/AdSlot';
 
 interface Props {
   title: string;
@@ -18,7 +20,7 @@ const {
   description, 
   ogImage = '/default-og.png',
   canonicalUrl = Astro.url.href,
-  theme = 'default'
+  theme = 'editorial'
 } = Astro.props;
 
 const isEditorial = theme === 'editorial';
@@ -168,6 +170,11 @@ const isEditorial = theme === 'editorial';
 
     <div class:list={['relative z-10 flex flex-col min-h-screen', isEditorial ? '' : '']}>
       <Header client:load isEditorial={isEditorial} currentPath={Astro.url.pathname} />
+      {isEditorial && (
+        <div class="w-full flex justify-center py-4 border-b-[3px] border-black bg-white mt-20">
+          <AdSlot type="leaderboard" />
+        </div>
+      )}
       {!isEditorial && <TrendingBar client:load />}
       {isEditorial ? (
         <div class="flex-1 flex flex-col">
@@ -240,5 +247,6 @@ const isEditorial = theme === 'editorial';
         }
       }
     </style>
+    <PaperAirplaneAd client:load />
   </body>
 </html>

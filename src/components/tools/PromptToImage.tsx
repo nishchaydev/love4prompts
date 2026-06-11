@@ -81,7 +81,7 @@ export const PromptToImage: React.FC = () => {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-6 sm:p-8"
+        className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 sm:p-8"
       >
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
@@ -97,7 +97,7 @@ export const PromptToImage: React.FC = () => {
               onChange={(e) => setPrompt(e.target.value)}
               rows={4}
               placeholder="A futuristic cyberpunk city at night with neon lights reflecting on wet streets..."
-              className="w-full bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-xl p-4 text-[13.5px] text-white focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
+              className="w-full bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] focus:border-transparent transition-all placeholder-white/20 resize-none font-medium leading-relaxed"
               onKeyDown={(e) => {
                 if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                   e.preventDefault();
@@ -115,7 +115,7 @@ export const PromptToImage: React.FC = () => {
           <button
             onClick={handleGenerate}
             disabled={!prompt.trim() || isLoading}
-            className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-white/20 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full h-11 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-xs tracking-wider uppercase transition-all shadow-[0_4px_25px_var(--color-primary-glow)] active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
           >
             {isLoading ? (
               <>
@@ -126,7 +126,7 @@ export const PromptToImage: React.FC = () => {
               <>
                 <ImagePlus className="w-4 h-4" />
                 Generate Image
-                <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-white/50">{modKey}+⏎</kbd>
+                <kbd className="ml-2 px-1.5 py-0.5 rounded text-[9px] font-mono bg-white/10 border border-white/15 text-black/50">{modKey}+⏎</kbd>
               </>
             )}
           </button>
@@ -140,7 +140,7 @@ export const PromptToImage: React.FC = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-6 bg-[var(--color-background-card)] border border-[var(--color-border)] rounded-2xl p-6 sm:p-8"
+            className="mt-6 bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-6 sm:p-8"
           >
             <div className="flex items-center justify-between mb-5">
               <span className="text-[10px] font-mono font-bold tracking-widest text-[var(--color-success-green)] uppercase">
@@ -152,7 +152,7 @@ export const PromptToImage: React.FC = () => {
                   download="generated-image.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-[var(--color-text-muted)] hover:text-white transition-all border border-[var(--color-border)]"
+                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-[#FF6D87]/20 hover:-translate-y-1 hover:shadow-[4px_4px_0_#FF6D87] transition-all flex items-center justify-center text-[var(--color-text-muted)] hover:text-black transition-all border-[3px] border-black"
                   title="Download image"
                 >
                   <Download className="w-4 h-4" />
@@ -160,7 +160,7 @@ export const PromptToImage: React.FC = () => {
               )}
             </div>
 
-            <div className="relative w-full aspect-square max-w-2xl mx-auto rounded-xl overflow-hidden border border-[var(--color-border)] bg-[var(--color-background-elevated)] flex items-center justify-center">
+            <div className="relative w-full aspect-square max-w-2xl mx-auto rounded-xl overflow-hidden border-[3px] border-black bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] flex items-center justify-center">
               {isLoading ? (
                 <div className="flex flex-col items-center gap-3 text-[var(--color-text-muted)]">
                   <Loader2 className="w-8 h-8 animate-spin text-[var(--color-primary)]" />
@@ -180,7 +180,7 @@ export const PromptToImage: React.FC = () => {
                   </span>
                   <button
                     onClick={handleCopy}
-                    className="w-7 h-7 rounded-lg bg-black/40 hover:bg-black/70 flex items-center justify-center text-white border border-white/10 transition-all cursor-pointer active:scale-90"
+                    className="w-7 h-7 rounded-lg bg-black/40 hover:bg-black/70 flex items-center justify-center text-black border border-black/20 border-[2px] transition-all cursor-pointer active:scale-90"
                     title="Copy prompt"
                   >
                     {copied ? (
@@ -190,7 +190,7 @@ export const PromptToImage: React.FC = () => {
                     )}
                   </button>
                 </div>
-                <div className="bg-[var(--color-background-elevated)] border border-[var(--color-border)] rounded-xl p-4 font-mono text-[13px] text-white/80 leading-relaxed select-text">
+                <div className="bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-xl p-4 font-mono text-[13px] text-black/80 leading-relaxed select-text">
                   {prompt}
                 </div>
               </div>
