@@ -1,12 +1,13 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL = 'llama-3.3-70b-versatile';
-const VISION_MODEL = 'llama-3.2-11b-vision-preview';
+const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 
 interface GroqTextRequest {
   systemPrompt: string;
   userMessage: string;
   maxTokens?: number;
   responseFormat?: { type: 'json_object' };
+  model?: string;
 }
 
 interface GroqResponse {
@@ -107,7 +108,7 @@ async function fetchWithFallback(
 // ─── Public API ────────────────────────────────────────────────────
 export async function callGroq(request: GroqTextRequest): Promise<GroqResponse> {
   const payload: Record<string, any> = {
-    model: MODEL,
+    model: request.model || MODEL,
     max_tokens: request.maxTokens ?? 2048,
     messages: [
       { role: 'system', content: request.systemPrompt },

@@ -148,14 +148,8 @@ const isEditorial = theme === 'editorial';
 
     <script>
       // Make it visible immediately on initial load if we don't have ViewTransitions history
-      if (!document.referrer || new URL(document.referrer).origin !== window.location.origin) {
-        const loader = document.getElementById('global-splash-loader');
-        if (loader) {
-          loader.style.opacity = '1';
-          loader.style.pointerEvents = 'auto';
-          document.body.classList.add('loading-locked');
-        }
-      }
+      // Removed to improve LCP (Largest Contentful Paint)
+
 
       // Hide loader function
       let loaderHidden = false;

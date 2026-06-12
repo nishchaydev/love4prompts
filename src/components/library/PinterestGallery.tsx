@@ -14,18 +14,7 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeSort, setActiveSort] = useState('Newest');
   const [searchQuery, setSearchQuery] = useState('');
-  const [cols, setCols] = useState<number>(0);
-
-  useEffect(() => {
-    const updateCols = () => {
-      if (window.innerWidth < 1024) setCols(2);
-      else if (window.innerWidth < 1280) setCols(3);
-      else setCols(4);
-    };
-    updateCols();
-    window.addEventListener('resize', updateCols);
-    return () => window.removeEventListener('resize', updateCols);
-  }, []);
+  // Window resize listener removed for CSS-only masonry
 
   // Derived state
   const filteredPrompts = useMemo(() => {
@@ -53,7 +42,11 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
 
     // Sorting
     if (activeSort === 'Newest') {
-      result = result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      const safeGetTimestamp = (dateStr: any) => {
+        const ts = new Date(dateStr || 0).getTime();
+        return isNaN(ts) ? 0 : ts;
+      };
+      result = result.sort((a, b) => safeGetTimestamp(b.created_at) - safeGetTimestamp(a.created_at));
     } else if (activeSort === 'A-Z') {
       result = result.sort((a, b) => a.title.localeCompare(b.title));
     }
@@ -146,93 +139,65 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
 
         {/* Masonry Grid */}
         {filteredPrompts.length > 0 ? (
-          cols === 0 ? (
-            <div className="columns-2 lg:columns-3 xl:columns-4 gap-6 w-full">
-              {filteredPrompts.slice(0, 10).map((prompt, i) => (
-                <div key={prompt.id} className="break-inside-avoid inline-block w-full mb-6 relative group bg-white border-4 border-black rounded-[24px] overflow-hidden">
-                   <a href={`/prompt/${prompt.slug}`} className="block w-full h-full flex flex-col relative">
-                     <img
-                       alt={prompt.title}
-                       className="w-full h-auto object-cover block border-b-2 border-black md:border-b-0"
-                       src={prompt.image_url}
-                       loading={i < 8 ? "eager" : "lazy"}
-                     />
-                     {/* Mobile Details Bar */}
-                     <div className="md:hidden bg-white p-3 flex flex-col gap-1">
-                       <div className="flex justify-between items-start gap-2">
-                         <h4 className="font-black uppercase text-[12px] line-clamp-1 leading-tight">{prompt.title}</h4>
-                       </div>
-                     </div>
-                   </a>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex gap-6 w-full items-start">
-              {Array.from({ length: cols }).map((_, colIndex) => (
-                <div key={colIndex} className="flex flex-col gap-6 w-full flex-1 min-w-0">
-                  {filteredPrompts.filter((_, i) => i % cols === colIndex).map((prompt) => {
-                    const originalIndex = filteredPrompts.indexOf(prompt);
-                    const showAd = originalIndex > 0 && originalIndex % 7 === 0;
-                    
-                    return (
-                      <React.Fragment key={prompt.id}>
-                        <div className={`relative group bg-white border-4 border-black rounded-[24px] overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[12px_12px_0_#FF6D87] w-full break-inside-avoid`}>
-                          <a href={`/prompt/${prompt.slug}`} className="block w-full h-full flex flex-col relative">
-                            <div className="relative w-full h-auto">
-                              <img
-                                alt={prompt.title}
-                                className="w-full h-auto object-cover block"
-                                src={prompt.image_url}
-                                loading={originalIndex < 8 ? "eager" : "lazy"}
-                              />
-                              
-                              {/* Hover Overlay (Desktop) */}
-                              <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-[16px] flex-col justify-between pointer-events-none group-hover:pointer-events-auto">
-                                <div className="flex justify-between items-start">
-                                  <span className="bg-white text-black px-3 py-1 rounded-full text-[12px] font-bold shadow-[4px_4px_0_#FF6D87] border-2 border-black">
-                                    {prompt.style || 'Prompt'}
-                                  </span>
-                                  <button className="bg-[#FF6D87] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 border-black shadow-[4px_4px_0_#000] hover:bg-black transition-colors">
-                                    <Star size={16} />
-                                  </button>
-                                </div>
-                                
-                                <div className="bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0_#FF6D87] translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                  <h4 className="font-black uppercase text-[14px] line-clamp-1 mb-1">{prompt.title}</h4>
-                                  <p className="text-[12px] text-[#4c4546] line-clamp-2">
-                                    {prompt.prompt_text}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Mobile Details Bar */}
-                            <div className="md:hidden bg-white border-t-2 border-black p-3 flex flex-col gap-1">
-                              <div className="flex justify-between items-start gap-2">
-                                <h4 className="font-black uppercase text-[12px] line-clamp-1 leading-tight">{prompt.title}</h4>
-                                <span className="shrink-0 bg-[#FF6D87] text-white px-2 py-0.5 rounded-full text-[8px] font-bold border border-black">
-                                  {prompt.style || 'PROMPT'}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-[#4c4546] line-clamp-1 leading-tight">
-                                {prompt.prompt_text}
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                        {showAd && (
-                          <div className="w-full relative group break-inside-avoid">
-                            <AdSlot type="medium-rectangle" className="w-full aspect-[4/5] h-auto rounded-[24px] overflow-hidden" label="Sponsor" />
+          <div className="columns-2 lg:columns-3 xl:columns-4 gap-6 w-full">
+            {filteredPrompts.map((prompt, i) => {
+              const showAd = i > 0 && i % 7 === 0;
+              return (
+                <React.Fragment key={prompt.id}>
+                  <div className="break-inside-avoid inline-block w-full mb-6 relative group bg-white border-4 border-black rounded-[24px] overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[12px_12px_0_#FF6D87]">
+                    <a href={`/prompt/${prompt.slug}`} className="block w-full h-full flex flex-col relative">
+                      <div className="relative w-full h-auto">
+                        <img
+                          alt={prompt.title}
+                          className="w-full h-auto object-cover block"
+                          src={prompt.image_url || undefined}
+                          loading={i < 8 ? "eager" : "lazy"}
+                          fetchPriority={i < 8 ? "high" : "auto"}
+                        />
+                        
+                        {/* Hover Overlay (Desktop) */}
+                        <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-[16px] flex-col justify-between pointer-events-none group-hover:pointer-events-auto">
+                          <div className="flex justify-between items-start">
+                            <span className="bg-white text-black px-3 py-1 rounded-full text-[12px] font-bold shadow-[4px_4px_0_#FF6D87] border-2 border-black">
+                              {prompt.style || 'Prompt'}
+                            </span>
+                            <button className="bg-[#FF6D87] text-white w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 border-black shadow-[4px_4px_0_#000] hover:bg-black transition-colors">
+                              <Star size={16} />
+                            </button>
                           </div>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          )
+                          
+                          <div className="bg-white border-2 border-black p-3 rounded-xl shadow-[4px_4px_0_#FF6D87] translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <h4 className="font-black uppercase text-[14px] line-clamp-1 mb-1">{prompt.title}</h4>
+                            <p className="text-[12px] text-[#4c4546] line-clamp-2">
+                              {prompt.prompt_text}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Mobile Details Bar */}
+                      <div className="md:hidden bg-white border-t-2 border-black p-3 flex flex-col gap-1">
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className="font-black uppercase text-[12px] line-clamp-1 leading-tight">{prompt.title}</h4>
+                          <span className="shrink-0 bg-[#FF6D87] text-white px-2 py-0.5 rounded-full text-[8px] font-bold border border-black">
+                            {prompt.style || 'PROMPT'}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-[#4c4546] line-clamp-1 leading-tight">
+                          {prompt.prompt_text}
+                        </p>
+                      </div>
+                    </a>
+                  </div>
+                  {showAd && (
+                    <div className="w-full relative group break-inside-avoid mb-6 inline-block">
+                      <AdSlot type="medium-rectangle" className="w-full aspect-[4/5] h-auto rounded-[24px] overflow-hidden" label="Sponsor" />
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-[400px] border-4 border-black border-dashed rounded-[32px] bg-white/50">
             <Search size={48} className="text-[#ccc] mb-4" />

@@ -18,6 +18,7 @@ export interface Prompt {
   view_count: number;
   save_count: number;
   copy_count?: number;
+  created_at?: string;
   creator?: {
     name: string;
     avatar: string;

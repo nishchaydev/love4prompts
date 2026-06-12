@@ -83,75 +83,72 @@ export const FeaturesGrid: React.FC = () => {
   const [hoveredModel, setHoveredModel] = useState<string | null>(null);
 
   return (
-    <section className="py-16 sm:py-24 border-t border-white/[0.03] relative overflow-hidden" ref={ref}>
-      <div className="container mx-auto px-4 max-w-[1100px]">
+    <section className="py-16 sm:py-24 border-t-[4px] border-black bg-white relative overflow-hidden" ref={ref}>
+      <div className="container mx-auto px-4 max-w-[1200px]">
         {/* Section Header */}
         <motion.div
-          className="mb-16"
+          className="mb-16 text-center"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3 font-mono">
+          <div className="inline-block bg-[#06D6A0] text-black text-[12px] font-black px-4 py-1.5 border-[3px] border-black shadow-[4px_4px_0_#000] rounded-full mb-6 uppercase tracking-widest">
             Interactive Showcase
-          </p>
-          <h2 className="text-3xl md:text-[44px] font-black text-white tracking-[-0.04em] leading-tight max-w-[600px]">
+          </div>
+          <h2 className="text-[32px] sm:text-[40px] md:text-[56px] font-black text-black tracking-[-0.04em] leading-[0.95] max-w-[800px] mx-auto uppercase">
             Designed for impact.<br />
-            <span className="text-white/30">Built for precision.</span>
+            <span className="text-[#FF6D87] drop-shadow-[2px_2px_0_#000] tracking-tighter">Built for precision.</span>
           </h2>
         </motion.div>
 
         {/* Asymmetric Bento-Inspired Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Panel 1: Prompt Optimizer (Asymmetrical width 2/3) */}
           <motion.div
-            className="lg:col-span-2 bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            className="lg:col-span-2 bg-[#FFD166] border-[3px] border-black rounded-[24px] p-6 md:p-8 flex flex-col justify-between relative shadow-[6px_6px_0_#000]"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            {/* Background Mesh Flare */}
-            <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-[var(--color-primary)]/10 rounded-full blur-[80px] pointer-events-none" />
-
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-full bg-[var(--color-primary)]/10 flex items-center justify-center border border-[var(--color-primary)]/20">
-                  <Wand2 className="w-4 h-4 text-[var(--color-primary)]" />
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-[3px] border-black shadow-[2px_2px_0_#000]">
+                  <Wand2 className="w-5 h-5 text-black" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white tracking-tight">Active Prompt Optimizer</h3>
-                  <p className="text-[12px] text-white/40">Watch plain text transform to production-ready prompts</p>
+                  <h3 className="text-[18px] font-black text-black tracking-tight uppercase">Active Prompt Optimizer</h3>
+                  <p className="text-[13px] text-black/80 font-bold">Watch plain text transform to production-ready prompts</p>
                 </div>
               </div>
 
               {/* Console Workspace */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 bg-[var(--color-background-primary)]/60 backdrop-blur-md border border-white/[0.03] rounded-2xl p-4 min-h-[200px]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 bg-white border-[3px] border-black shadow-[4px_4px_0_#000] rounded-[16px] p-6 min-h-[220px]">
                 {/* Left pane: input */}
-                <div className="flex flex-col justify-between">
+                <div className="flex flex-col justify-between border-b-[3px] md:border-b-0 md:border-r-[3px] border-black pb-4 md:pb-0 md:pr-6">
                   <div>
-                    <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest block mb-2">User Input</span>
+                    <span className="text-[11px] font-black text-black uppercase tracking-widest block mb-2 bg-[#06D6A0] inline-block px-2 py-0.5 border-[2px] border-black rounded">User Input</span>
                     <input
                       type="text"
                       value={optInput}
                       onChange={(e) => setOptInput(e.target.value)}
                       disabled={isOptimizing}
-                      className="w-full bg-transparent text-[13px] text-white font-medium outline-none border-b border-white/[0.06] pb-2 focus:border-[var(--color-primary)] transition-colors"
+                      className="w-full bg-transparent text-[15px] text-black font-bold outline-none border-b-[3px] border-black/20 pb-2 focus:border-black transition-colors"
                       placeholder="Type a basic prompt..."
                     />
                   </div>
                   <button
                     onClick={runOptimization}
                     disabled={isOptimizing || !optInput.trim()}
-                    className="mt-6 self-start px-4 py-2 rounded-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-white/20 text-white text-[12px] font-bold transition-all flex items-center gap-2 shadow-[0_0_15px_var(--color-primary-glow)] active:scale-95 cursor-pointer"
+                    className="mt-6 self-start px-5 py-3 rounded-full bg-[#1482A3] hover:bg-[#0f6c8a] disabled:bg-black/10 disabled:text-black/40 disabled:border-black/20 disabled:shadow-none text-white text-[13px] font-black uppercase transition-all flex items-center gap-2 border-[3px] border-black shadow-[4px_4px_0_#000] active:translate-y-1 active:shadow-[0_0_0_#000] cursor-pointer"
                   >
                     {isOptimizing ? (
                       <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <RefreshCw className="w-4 h-4 animate-spin" />
                         Optimizing...
                       </>
                     ) : (
                       <>
-                        <Play className="w-3 h-3 fill-current" />
+                        <Play className="w-4 h-4 fill-current" />
                         Optimize Prompt
                       </>
                     )}
@@ -159,32 +156,32 @@ export const FeaturesGrid: React.FC = () => {
                 </div>
 
                 {/* Right pane: optimized result */}
-                <div className="border-t md:border-t-0 md:border-l border-white/[0.04] pt-4 md:pt-0 md:pl-4 flex flex-col justify-between">
+                <div className="pt-4 md:pt-0 md:pl-2 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-mono text-[var(--color-primary)] uppercase tracking-widest block mb-2">Optimized Output</span>
+                    <span className="text-[11px] font-black text-white bg-[#FF6D87] uppercase tracking-widest block mb-2 px-2 py-0.5 border-[2px] border-black rounded inline-block">Optimized Output</span>
                     {isOptimizing ? (
-                      <div className="space-y-2 py-1">
-                        <div className="h-3 w-full bg-white/[0.03] rounded animate-pulse" />
-                        <div className="h-3 w-4/5 bg-white/[0.03] rounded animate-pulse" />
-                        <div className="h-3 w-5/6 bg-white/[0.03] rounded animate-pulse" />
+                      <div className="space-y-3 py-2">
+                        <div className="h-4 w-full bg-black/10 rounded animate-pulse" />
+                        <div className="h-4 w-4/5 bg-black/10 rounded animate-pulse" />
+                        <div className="h-4 w-5/6 bg-black/10 rounded animate-pulse" />
                       </div>
                     ) : optResult ? (
                       <motion.p
-                        className="text-[12px] text-white/80 leading-relaxed font-medium"
+                        className="text-[14px] text-black leading-relaxed font-bold"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                       >
                         {optResult}
                       </motion.p>
                     ) : (
-                      <p className="text-[12px] text-white/20 italic">Click Optimize to see result...</p>
+                      <p className="text-[14px] text-black/40 font-bold italic">Click Optimize to see result...</p>
                     )}
                   </div>
 
                   {optResult && (
-                    <div className="flex gap-1.5 mt-4">
-                      <span className="text-[9px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full">v5.2</span>
-                      <span className="text-[9px] font-mono bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 px-2 py-0.5 rounded-full">Cinematic</span>
+                    <div className="flex gap-2 mt-6">
+                      <span className="text-[10px] font-black bg-[#06D6A0] text-black border-[2px] border-black px-3 py-1 rounded-full uppercase">v5.2</span>
+                      <span className="text-[10px] font-black bg-[#1482A3] text-white border-[2px] border-black px-3 py-1 rounded-full uppercase">Cinematic</span>
                     </div>
                   )}
                 </div>
@@ -194,27 +191,27 @@ export const FeaturesGrid: React.FC = () => {
 
           {/* Panel 2: Rank/Impact Tracker (Asymmetrical width 1/3) */}
           <motion.div
-            className="bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] rounded-3xl p-6 flex flex-col justify-between shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+            className="bg-[#1482A3] border-[3px] border-black rounded-[24px] p-6 flex flex-col justify-between shadow-[6px_6px_0_#000]"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-[3px] border-black shadow-[2px_2px_0_#000]">
+                  <TrendingUp className="w-5 h-5 text-black" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white tracking-tight">Impact & Analytics</h3>
-                  <p className="text-[12px] text-white/40 font-medium">Interactive performance metrics</p>
+                  <h3 className="text-[18px] font-black text-white tracking-tight uppercase">Impact & Analytics</h3>
+                  <p className="text-[13px] text-white/80 font-bold">Interactive performance metrics</p>
                 </div>
               </div>
 
               {/* Slider Controls */}
-              <div className="mt-6 bg-[var(--color-background-primary)]/60 backdrop-blur-md border border-white/[0.03] rounded-2xl p-4 flex flex-col gap-4">
+              <div className="mt-6 bg-white border-[3px] border-black shadow-[4px_4px_0_#000] rounded-[16px] p-5 flex flex-col gap-5">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-[10px] font-mono text-white/30 uppercase tracking-widest">Visibility Index</span>
-                  <span className="text-2xl font-black text-emerald-400 font-mono tracking-tighter" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  <span className="text-[11px] font-black text-black uppercase tracking-widest bg-[#FFD166] px-2 py-0.5 border-[2px] border-black rounded">Visibility Index</span>
+                  <span className="text-3xl font-black text-black tracking-tighter" style={{ fontVariantNumeric: 'tabular-nums' }}>
                     {sliderVal}%
                   </span>
                 </div>
@@ -225,60 +222,58 @@ export const FeaturesGrid: React.FC = () => {
                   max="99"
                   value={sliderVal}
                   onChange={(e) => setSliderVal(Number(e.target.value))}
-                  className="w-full accent-[var(--color-primary)] h-1 rounded-full cursor-pointer bg-white/10"
+                  className="w-full accent-black h-2 rounded-full cursor-pointer bg-black/10 border-2 border-black"
                 />
 
                 {/* Glowing Sparkline Chart */}
-                <div className="h-16 flex items-end justify-between gap-1.5 pt-4">
+                <div className="h-20 flex items-end justify-between gap-2 pt-4">
                   {chartPoints.map((h, i) => (
                     <div key={i} className="flex-1 flex flex-col items-center">
                       <motion.div
-                        className="w-full rounded-t-md relative bg-gradient-to-t from-[var(--color-primary)] to-[#ea2261]"
-                        style={{ height: `${(h / 99) * 45}px` }}
-                        animate={{ height: `${(h / 99) * 45}px` }}
+                        className="w-full rounded-t-sm border-[2px] border-b-0 border-black relative bg-[#FF6D87]"
+                        style={{ height: `${(h / 99) * 55}px` }}
+                        animate={{ height: `${(h / 99) * 55}px` }}
                         transition={{ type: 'spring', stiffness: 100 }}
-                      >
-                        {i === chartPoints.length - 1 && (
-                          <div className="absolute top-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
-                        )}
-                      </motion.div>
+                      />
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            <p className="text-[11px] text-white/30 leading-relaxed mt-4">
+            <p className="text-[13px] text-white/90 leading-relaxed mt-6 font-bold">
               Drag the visibility index to forecast the quality and search rank score of your generated prompt outputs.
             </p>
           </motion.div>
 
           {/* Panel 3: Intelligent Model Router (Full width 3/3) */}
           <motion.div
-            className="lg:col-span-3 bg-[var(--color-background-card)]/40 backdrop-blur-xl border border-[var(--color-border)] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden"
+            className="lg:col-span-3 bg-[#FF6D87] border-[3px] border-black rounded-[24px] p-6 md:p-10 flex flex-col md:flex-row justify-between items-center gap-10 shadow-[6px_6px_0_#000]"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="max-w-[450px]">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-full bg-[#ff9f43]/10 flex items-center justify-center border border-[#ff9f43]/20">
-                  <Cpu className="w-4 h-4 text-[#ff9f43]" />
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border-[3px] border-black shadow-[2px_2px_0_#000]">
+                  <Cpu className="w-5 h-5 text-black" />
                 </div>
-                <h3 className="text-base font-bold text-white tracking-tight">Intelligent LLM & Image Router</h3>
+                <h3 className="text-[20px] font-black text-black tracking-tight uppercase leading-tight">Intelligent LLM & Image Router</h3>
               </div>
-              <p className="text-[13px] text-white/40 leading-relaxed">
+              <p className="text-[15px] text-black leading-relaxed font-bold">
                 One console input automatically routes optimized configurations to the appropriate target. Hover over any target to preview routing channel pathways.
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                 {[
                   'Automatic Target Selection',
                   'Dynamic Formatting Conversion',
                   'API & Console Ready',
                   'Multi-Model Syncing',
                 ].map((text) => (
-                  <div key={text} className="flex items-center gap-2 text-[12px] font-medium text-white/60">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <div key={text} className="flex items-center gap-3 text-[14px] font-black text-black uppercase">
+                    <div className="w-6 h-6 rounded-full bg-[#06D6A0] border-[2px] border-black flex items-center justify-center shadow-[1px_1px_0_#000]">
+                      <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />
+                    </div>
                     <span>{text}</span>
                   </div>
                 ))}
@@ -286,19 +281,19 @@ export const FeaturesGrid: React.FC = () => {
             </div>
 
             {/* Router Interactive Diagram */}
-            <div className="flex-1 w-full max-w-[400px] bg-[var(--color-background-primary)]/60 backdrop-blur-md border border-white/[0.03] rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center relative min-h-[180px] sm:min-h-[220px]">
+            <div className="flex-1 w-full max-w-[400px] bg-white border-[3px] border-black shadow-[6px_6px_0_#000] rounded-[20px] p-6 sm:p-8 flex flex-col items-center justify-center relative min-h-[220px] sm:min-h-[280px] overflow-hidden">
               {/* Central Input Node */}
-              <div className="w-12 h-12 rounded-full bg-[var(--color-primary)]/25 border border-[var(--color-primary)]/40 flex items-center justify-center z-10 shadow-[0_0_20px_var(--color-primary-glow)]">
-                <span className="text-[11px] font-mono font-bold text-white">L4</span>
+              <div className="w-14 h-14 rounded-full bg-[#FFD166] border-[3px] border-black flex items-center justify-center z-10 shadow-[4px_4px_0_#000]">
+                <span className="text-[14px] font-black text-black">L4</span>
               </div>
 
               {/* Surrounding Target Nodes (Symmetrical 5-Node Layout) */}
               {[
-                { name: 'ChatGPT', pos: 'top-4 left-6', icon: OpenAILogo },
-                { name: 'Midjourney', pos: 'top-4 right-6', icon: MidjourneyLogo },
+                { name: 'ChatGPT', pos: 'top-6 left-8', icon: OpenAILogo },
+                { name: 'Midjourney', pos: 'top-6 right-8', icon: MidjourneyLogo },
                 { name: 'Claude', pos: 'top-1/2 -translate-y-1/2 left-4', icon: ClaudeLogo },
                 { name: 'Gemini', pos: 'top-1/2 -translate-y-1/2 right-4', icon: GeminiLogo },
-                { name: 'DALL-E', pos: 'bottom-4 left-1/2 -translate-x-1/2', icon: DalleLogo },
+                { name: 'DALL-E', pos: 'bottom-6 left-1/2 -translate-x-1/2', icon: DalleLogo },
               ].map((m) => {
                 const isHovered = hoveredModel === m.name;
                 const IconComponent = m.icon;
@@ -306,21 +301,21 @@ export const FeaturesGrid: React.FC = () => {
                   <div
                     key={m.name}
                     className={`absolute ${m.pos} flex flex-col items-center cursor-pointer transition-all duration-300 ${
-                      hoveredModel && !isHovered ? 'opacity-30' : 'opacity-100 scale-105'
+                      hoveredModel && !isHovered ? 'opacity-40 grayscale' : 'opacity-100 scale-105'
                     }`}
                     onMouseEnter={() => setHoveredModel(m.name)}
                     onMouseLeave={() => setHoveredModel(null)}
                   >
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all duration-300 ${
+                      className={`w-12 h-12 rounded-2xl flex items-center justify-center border-[3px] border-black transition-all duration-300 ${
                         isHovered
-                          ? 'bg-[var(--color-primary)]/20 border-[var(--color-primary)] shadow-[0_0_15px_var(--color-primary-glow)]'
-                          : 'bg-[var(--color-background-card)] border-white/5 hover:border-white/20'
+                          ? 'bg-[#06D6A0] shadow-[4px_4px_0_#000] -translate-y-1'
+                          : 'bg-gray-100 shadow-[2px_2px_0_#000]'
                       }`}
                     >
-                      <IconComponent className={`w-4 h-4 ${isHovered ? 'text-white' : 'text-white/40'}`} />
+                      <IconComponent className={`w-6 h-6 text-black`} />
                     </div>
-                    <span className="text-[9px] font-mono text-white/40 mt-1">{m.name}</span>
+                    <span className="text-[10px] font-black text-black mt-2 uppercase bg-white px-2 py-0.5 border-2 border-black rounded shadow-[2px_2px_0_#000]">{m.name}</span>
                   </div>
                 );
               })}
@@ -329,11 +324,11 @@ export const FeaturesGrid: React.FC = () => {
               {hoveredModel && (() => {
                 let x2 = '50%';
                 let y2 = '50%';
-                if (hoveredModel === 'ChatGPT') { x2 = '25%'; y2 = '20%'; }
-                else if (hoveredModel === 'Midjourney') { x2 = '75%'; y2 = '20%'; }
-                else if (hoveredModel === 'Claude') { x2 = '20%'; y2 = '50%'; }
-                else if (hoveredModel === 'Gemini') { x2 = '80%'; y2 = '50%'; }
-                else if (hoveredModel === 'DALL-E') { x2 = '50%'; y2 = '80%'; }
+                if (hoveredModel === 'ChatGPT') { x2 = '20%'; y2 = '25%'; }
+                else if (hoveredModel === 'Midjourney') { x2 = '80%'; y2 = '25%'; }
+                else if (hoveredModel === 'Claude') { x2 = '15%'; y2 = '50%'; }
+                else if (hoveredModel === 'Gemini') { x2 = '85%'; y2 = '50%'; }
+                else if (hoveredModel === 'DALL-E') { x2 = '50%'; y2 = '85%'; }
                 return (
                   <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
                     <line
@@ -341,9 +336,9 @@ export const FeaturesGrid: React.FC = () => {
                       y1="50%"
                       x2={x2}
                       y2={y2}
-                      stroke="var(--color-primary)"
-                      strokeWidth="1.5"
-                      strokeDasharray="4 4"
+                      stroke="black"
+                      strokeWidth="3"
+                      strokeDasharray="6 6"
                       className="animate-[dash_10s_linear_infinite]"
                     />
                   </svg>

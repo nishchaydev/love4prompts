@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import { getBadgeColors } from '../../lib/ui-helpers';
 import { 
-  ThumbsUp, MessageSquare, Repeat2, Send, Loader2, Copy, Check, RotateCcw 
+  ThumbsUp, MessageSquare, Repeat2, Send, Loader2, Copy, Check, RotateCcw, Sparkles 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { springs } from '../../lib/motion';
 
 export const LinkedInPostGenerator: React.FC = () => {
   const [topic, setTopic] = useState('');
+  const [niche, setNiche] = useState('');
+  const [goal, setGoal] = useState('Educate');
   const [tone, setTone] = useState('Storytelling');
-  const [hookStyle, setHookStyle] = useState('Personal Story');
-  const [includeCTA, setIncludeCTA] = useState(true);
+  const [keyPoints, setKeyPoints] = useState('');
   
   const [output, setOutput] = useState('');
+  const [scoreData, setScoreData] = useState<{ score: number, topFix: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
@@ -19,8 +22,8 @@ export const LinkedInPostGenerator: React.FC = () => {
   // Generate post handler
   const handleGenerate = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (topic.trim().length < 10) {
-      setError('Please describe your topic in a bit more detail (minimum 10 characters).');
+    if (topic.trim().length < 5) {
+      setError('Please describe your topic in a bit more detail (minimum 5 characters).');
       return;
     }
     if (loading) return;
@@ -28,12 +31,13 @@ export const LinkedInPostGenerator: React.FC = () => {
     setLoading(true);
     setError('');
     setOutput('');
+    setScoreData(null);
 
     try {
       const res = await fetch('/api/tools/linkedin-post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, tone, hookStyle, includeCTA }),
+        body: JSON.stringify({ topic, tone, niche, goal, keyPoints }),
       });
 
       const data = await res.json();
@@ -42,6 +46,9 @@ export const LinkedInPostGenerator: React.FC = () => {
       }
 
       setOutput(data.post || '');
+      if (data.score !== undefined && data.score >= 0) {
+        setScoreData({ score: data.score, topFix: data.topFix });
+      }
       
       // Clarity Event Tracking
       if (typeof window !== 'undefined' && (window as any).clarity) {
@@ -90,14 +97,15 @@ export const LinkedInPostGenerator: React.FC = () => {
 
   // Character count color coding
   const getCharCountColor = (count: number) => {
-    if (count < 2500) return 'text-[var(--color-success-green)]';
-    if (count <= 2900) return 'text-[var(--color-warning-amber)]';
+    if (count < 2500) return 'text-[#06D6A0]';
+    if (count <= 2900) return 'text-[#FFD166]';
     return 'text-red-500';
   };
 
+
+
   return (
-    <div className="w-full max-w-6xl mx-auto px-6 relative z-10">
-      {/* Skeleton Shimmer CSS Keyframe Injection */}
+    <div className="relative w-full min-h-screen overflow-hidden font-['Inter'] pt-20">
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }
@@ -110,264 +118,305 @@ export const LinkedInPostGenerator: React.FC = () => {
         }
       `}} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        
-        {/* LEFT COLUMN: INPUTS */}
-        <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-3xl p-6 flex flex-col gap-6">
-          <form onSubmit={handleGenerate} className="flex flex-col gap-6">
-            
-            {/* Topic text area */}
-            <div className="flex flex-col gap-2.5">
-              <label htmlFor="topic-input" className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
-                What do you want to post about?
-              </label>
-              <textarea
-                id="topic-input"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value.slice(0, 500))}
-                rows={4}
-                maxLength={500}
-                placeholder="/// TYPE YOUR TOPIC OR IDEA HERE..."
-                disabled={loading}
-                className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#FF6D87] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[180px]"
-              />
-              <span className="text-[10px] text-black/30 font-mono self-end">
-                {topic.length} / 500
-              </span>
-            </div>
+      <div className="relative z-10 container mx-auto max-w-[1200px] grid grid-cols-1 md:grid-cols-12 border-l border-[#cfc4c5] min-h-[calc(100vh-80px)]">
 
-            {/* Tone selector */}
-            <div className="flex flex-col gap-2.5">
-              <span className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
-                Tone
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {['Professional', 'Storytelling', 'Thought Leadership', 'Casual'].map((t) => {
-                  const isActive = tone === t;
-                  return (
-                    <motion.button
-                      key={t}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={springs.bouncy}
-                      type="button"
-                      onClick={() => setTone(t)}
-                      disabled={loading}
-                      className={`py-2.5 px-3 rounded-xl text-xs font-semibold tracking-tight cursor-pointer ${
-                        isActive
-                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)]'
-                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
-                      }`}
-                    >
-                      {t}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Hook Style selector */}
-            <div className="flex flex-col gap-2.5">
-              <span className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
-                Hook Style
-              </span>
-              <div className="grid grid-cols-3 gap-2">
-                {['Question', 'Bold Statement', 'Personal Story'].map((h) => {
-                  const isActive = hookStyle === h;
-                  return (
-                    <motion.button
-                      key={h}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={springs.bouncy}
-                      type="button"
-                      onClick={() => setHookStyle(h)}
-                      disabled={loading}
-                      className={`py-2.5 px-1 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
-                        isActive
-                          ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)]'
-                          : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
-                      }`}
-                    >
-                      {h}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* CTA Toggle switch */}
-            <div className="flex items-center justify-between bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] border-[3px] border-black p-4 rounded-2xl">
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[13px] font-semibold text-black">End with a call to action?</span>
-                <span className="text-[10px] text-black/30">Append a call to action at the bottom of the post</span>
-              </div>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                transition={springs.bouncy}
-                type="button"
-                onClick={() => setIncludeCTA(!includeCTA)}
-                disabled={loading}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  includeCTA ? 'bg-[var(--color-primary)]' : 'bg-white/15'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    includeCTA ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-              </motion.button>
-            </div>
-
-            {/* Generate button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={springs.bouncy}
-              type="submit"
-              disabled={loading || !topic.trim()}
-              className="w-full h-12 rounded-2xl bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] disabled:bg-white/5 disabled:text-black/20 text-black font-bold text-sm tracking-wide shadow-[0_4px_25px_var(--color-primary-glow)] flex items-center justify-center gap-2 cursor-pointer"
+        <div className="hidden md:block md:col-span-3 lg:col-span-2 border-r border-[#cfc4c5] relative overflow-visible bg-transparent">
+          <div className="p-8 sticky top-24 h-full flex flex-col justify-between">
+            <h1
+              className="absolute top-[200px] left-[20px] xl:left-[50px] text-[180px] lg:text-[240px] leading-[0.75] font-black tracking-tighter text-black uppercase opacity-[0.07] hover:opacity-[0.15] transition-opacity m-0 pointer-events-none z-0"
+              style={{ transformOrigin: 'top left', transform: 'rotate(-90deg) translate(-100%, 0)' }}
             >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4.5 h-4.5 animate-spin" />
-                  Generating LinkedIn Post...
-                </>
-              ) : (
-                'Generate LinkedIn Post'
-              )}
-            </motion.button>
-
-          </form>
+              POST
+            </h1>
+          </div>
         </div>
 
-        {/* RIGHT COLUMN: OUTPUT PREVIEW */}
-        <div className="flex flex-col gap-5">
-          
-          {/* LinkedIn Mockup Card */}
-          <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden">
-            
-            {/* Header row */}
-            <div className="flex items-center gap-3 border-b border-white/[0.04] pb-3.5">
-              <div className="w-10 h-10 rounded-full bg-[var(--color-primary-surface)] border border-[var(--color-border-warm)] text-[var(--color-primary)] flex items-center justify-center font-bold font-display text-sm tracking-tight">
-                LP
-              </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-bold text-black leading-tight">Your Name</span>
-                <span className="text-[11px] text-black/40 leading-tight">Your Headline &bull; Just now</span>
-              </div>
+        <div className="md:col-span-9 lg:col-span-10 flex flex-col gap-10 p-6 lg:p-16 pb-32">
+
+          <div className="flex flex-col items-start gap-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#118AB2] text-white rounded-full font-bold tracking-widest text-[12px] uppercase shadow-[4px_4px_0_#000] border-[2px] border-black">
+              LINKEDIN GENERATOR
             </div>
-
-            {/* Post body */}
-            <div className="min-h-[200px] text-sm text-black font-bold leading-relaxed whitespace-pre-wrap select-text py-1">
-              {loading ? (
-                // Shimmer state
-                <div className="flex flex-col gap-3.5 py-2">
-                  <div className="h-4 w-11/12 bg-white/[0.03] rounded skeleton-shimmer-line" />
-                  <div className="h-4 w-full bg-white/[0.03] rounded skeleton-shimmer-line" />
-                  <div className="h-4 w-5/6 bg-white/[0.03] rounded skeleton-shimmer-line" />
-                  <div className="h-4 w-2/3 bg-white/[0.03] rounded skeleton-shimmer-line" />
-                </div>
-              ) : output ? (
-                // Output content
-                output
-              ) : error ? (
-                // Error state inline
-                <div className="text-red-400 font-semibold bg-red-950/20 border border-red-900/30 p-4 rounded-xl text-xs leading-relaxed">
-                  {error}
-                </div>
-              ) : (
-                // Empty state placeholders
-                <div className="flex flex-col gap-5 py-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="h-3 w-5/6 bg-white/[0.015] rounded skeleton-shimmer-line" />
-                    <div className="h-3 w-11/12 bg-white/[0.015] rounded skeleton-shimmer-line" />
-                    <div className="h-3 w-3/4 bg-white/[0.015] rounded skeleton-shimmer-line" />
-                    <div className="h-3 w-1/2 bg-white/[0.015] rounded skeleton-shimmer-line" />
-                  </div>
-                  <p className="text-xs text-[var(--color-text-muted)] italic text-center mt-3">
-                    Your post will appear here
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Divider line */}
-            <div className="h-px bg-gray-100 border-[2px] border-black" />
-
-            {/* Fake actions row */}
-            <div className="flex items-center justify-between px-1 text-black/30 text-xs font-semibold">
-              <div className="flex items-center gap-1.5 transition-colors cursor-default">
-                <ThumbsUp className="w-4 h-4" />
-                <span>Like</span>
-              </div>
-              <div className="flex items-center gap-1.5 transition-colors cursor-default">
-                <MessageSquare className="w-4 h-4" />
-                <span>Comment</span>
-              </div>
-              <div className="flex items-center gap-1.5 transition-colors cursor-default">
-                <Repeat2 className="w-4 h-4" />
-                <span>Repost</span>
-              </div>
-              <div className="flex items-center gap-1.5 transition-colors cursor-default">
-                <Send className="w-4 h-4" />
-                <span>Send</span>
-              </div>
-            </div>
-
+            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-black uppercase" style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1 }}>
+              Write Viral LinkedIn Posts
+            </h1>
+            <p className="text-base font-bold text-gray-700 max-w-2xl">
+              Write professional, engaging posts optimized for Dwell Time and Comments to beat the LinkedIn algorithm.
+            </p>
           </div>
 
-          {/* Under preview controls */}
-          {output && !loading && (
-            <div className="flex flex-col gap-3.5">
-              <div className="flex items-center justify-between">
-                <span className={`text-xs font-mono font-semibold ${getCharCountColor(output.length)}`}>
-                  {output.length} / 3000 characters
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                {/* Copy Button */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            
+            {/* LEFT COLUMN: INPUTS */}
+            <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-3xl p-6 flex flex-col gap-6">
+              <form onSubmit={handleGenerate} className="flex flex-col gap-6">
+                
+                <div className="flex flex-col gap-2.5">
+                  <label htmlFor="topic-input" className="text-xs font-mono font-bold text-[#118AB2] uppercase tracking-wider">
+                    What is the post about?
+                  </label>
+                  <textarea
+                    id="topic-input"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value.slice(0, 500))}
+                    rows={3}
+                    maxLength={500}
+                    placeholder="/// TYPE YOUR TOPIC OR IDEA HERE..."
+                    disabled={loading}
+                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#118AB2] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[100px]"
+                  />
+                  <div className="flex justify-between items-center mt-1">
+                    {error ? (
+                      <span className="text-red-500 font-bold text-[10px] uppercase tracking-widest">{error}</span>
+                    ) : (
+                      <span />
+                    )}
+                    <span className="text-[10px] text-black/30 font-mono">
+                      {topic.length} / 500
+                    </span>
+                  </div>
+                </div>
+
+                {/* Key Points */}
+                <div className="flex flex-col gap-2.5">
+                  <label htmlFor="points-input" className="text-xs font-mono font-bold text-[#118AB2] uppercase tracking-wider">
+                    Key Points (Optional)
+                  </label>
+                  <input
+                    id="points-input"
+                    type="text"
+                    value={keyPoints}
+                    onChange={(e) => setKeyPoints(e.target.value)}
+                    placeholder="Any specific facts or insights to include?"
+                    disabled={loading}
+                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-3 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#118AB2] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 font-medium"
+                  />
+                </div>
+
+                {/* NEW: Niche / Audience */}
+                <div className="flex flex-col gap-2.5">
+                  <label htmlFor="niche-input" className="text-xs font-mono font-bold text-[#118AB2] uppercase tracking-wider">
+                    Your Niche / Audience
+                  </label>
+                  <input
+                    id="niche-input"
+                    type="text"
+                    value={niche}
+                    onChange={(e) => setNiche(e.target.value)}
+                    placeholder="e.g. startup founders, job seekers, VCs"
+                    disabled={loading}
+                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-3 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#118AB2] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 font-medium"
+                  />
+                </div>
+
+                {/* NEW: Goal Dropdown */}
+                <div className="flex flex-col gap-2.5">
+                  <span className="text-xs font-mono font-bold text-[#118AB2] uppercase tracking-wider">
+                    Goal of this post
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Educate', 'Entertain', 'Sell', 'Build Community'].map((g) => {
+                      const isActive = goal === g;
+                      return (
+                        <motion.button
+                          key={g}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          transition={springs.bouncy}
+                          type="button"
+                          onClick={() => setGoal(g)}
+                          disabled={loading}
+                          className={`py-2 px-2 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
+                            isActive
+                              ? 'bg-[#118AB2] text-white shadow-[0_0_15px_rgba(17,138,178,0.5)] border-[2px] border-black'
+                              : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
+                          }`}
+                        >
+                          {g}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2.5">
+                  <span className="text-xs font-mono font-bold text-[#118AB2] uppercase tracking-wider">
+                    Tone of voice
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Professional', 'Storytelling', 'Thought Leadership', 'Casual'].map((t) => {
+                      const isActive = tone === t;
+                      return (
+                        <motion.button
+                          key={t}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          transition={springs.bouncy}
+                          type="button"
+                          onClick={() => setTone(t)}
+                          disabled={loading}
+                          className={`py-2 px-2 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
+                            isActive
+                              ? 'bg-[#FFD166] text-black shadow-[0_0_15px_rgba(255,209,102,0.5)] border-[2px] border-black'
+                              : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
+                          }`}
+                        >
+                          {t}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <motion.button
-                  whileHover={{ scale: 1.05, y: -4 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   transition={springs.bouncy}
-                  type="button"
-                  onClick={handleCopy}
-                  className="h-11 rounded-xl border border-black/20 border-[2px] hover:border-black/30 bg-white/5 hover:bg-[#FF6D87]/20 hover:shadow-[4px_4px_0_#FF6D87] text-black font-bold text-xs tracking-wide flex items-center justify-center gap-2 cursor-pointer"
+                  type="submit"
+                  disabled={loading || !topic.trim()}
+                  className="w-full h-12 rounded-2xl bg-[#118AB2] hover:bg-[#0f7a9e] disabled:bg-black/5 disabled:text-black/20 text-white font-bold text-sm tracking-wide shadow-[4px_4px_0_#000] border-[2px] border-black flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
-                  {copied ? (
+                  {loading ? (
                     <>
-                      <Check className="w-4 h-4 text-[var(--color-success-green)] animate-bounce" />
-                      Copied ✓
+                      <Loader2 className="w-4.5 h-4.5 animate-spin text-white" />
+                      <span className="text-white">Generating & Scoring...</span>
                     </>
                   ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      Copy Post
-                    </>
+                    <span className="text-white">Generate Post</span>
                   )}
                 </motion.button>
 
-                {/* Regenerate Button */}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={springs.bouncy}
-                  type="button"
-                  onClick={() => handleGenerate()}
-                  className="h-11 rounded-xl border border-[var(--color-border-warm)] border-[2px] bg-[var(--color-primary-surface)] text-[var(--color-primary)] font-bold text-xs tracking-wide flex items-center justify-center gap-2 hover:bg-[var(--color-primary)]/15 cursor-pointer"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  Regenerate
-                </motion.button>
-              </div>
+              </form>
             </div>
-          )}
 
+            {/* RIGHT COLUMN: OUTPUT PREVIEW */}
+            <div className="flex flex-col gap-5">
+              
+              {/* LinkedIn Mockup Card */}
+              <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden">
+                
+                <div className="flex items-center gap-3 border-b border-black/5 pb-3.5">
+                  <div className="w-10 h-10 rounded-full bg-[#118AB2] border border-black text-white flex items-center justify-center font-bold text-sm">
+                    in
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-bold text-black leading-tight">Your Name</span>
+                    <span className="text-[11px] text-black/40 leading-tight">Your Headline • Just now</span>
+                  </div>
+                </div>
+
+                <div className="min-h-[200px] text-sm text-black font-medium leading-relaxed whitespace-pre-wrap select-text py-1">
+                  {loading ? (
+                    <div className="flex flex-col gap-3.5 py-2">
+                      <div className="h-4 w-11/12 bg-black/5 rounded skeleton-shimmer-line" />
+                      <div className="h-4 w-full bg-black/5 rounded skeleton-shimmer-line" />
+                      <div className="h-4 w-5/6 bg-black/5 rounded skeleton-shimmer-line" />
+                      <div className="h-4 w-2/3 bg-black/5 rounded skeleton-shimmer-line" />
+                    </div>
+                  ) : output ? (
+                    output
+                  ) : (
+                    <div className="flex flex-col gap-5 py-4">
+                      <div className="flex flex-col gap-3">
+                        <div className="h-3 w-5/6 bg-black/5 rounded skeleton-shimmer-line" />
+                        <div className="h-3 w-11/12 bg-black/5 rounded skeleton-shimmer-line" />
+                        <div className="h-3 w-3/4 bg-black/5 rounded skeleton-shimmer-line" />
+                        <div className="h-3 w-1/2 bg-black/5 rounded skeleton-shimmer-line" />
+                      </div>
+                      <p className="text-xs text-black/30 italic text-center mt-3">
+                        Your post will appear here
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="h-px bg-black/10 border-0" />
+
+                <div className="flex items-center justify-between px-1 text-black/40 text-xs font-semibold">
+                  <div className="flex items-center gap-1.5 transition-colors cursor-default hover:text-black">
+                    <ThumbsUp className="w-4 h-4" />
+                    <span>Like</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 transition-colors cursor-default hover:text-black">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Comment</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 transition-colors cursor-default hover:text-black">
+                    <Repeat2 className="w-4 h-4" />
+                    <span>Repost</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 transition-colors cursor-default hover:text-black">
+                    <Send className="w-4 h-4" />
+                    <span>Send</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Share Score Badge */}
+              {scoreData && !loading && (
+                <div className={`p-4 border-[3px] rounded-xl flex items-start gap-4 ${getBadgeColors(scoreData.score)}`}>
+                  <div className="flex flex-col items-center justify-center bg-white border-[2px] border-black shadow-[2px_2px_0_#000] rounded-lg p-2 min-w-[70px]">
+                    <span className="text-[10px] uppercase font-black tracking-wider text-black">Score</span>
+                    <span className="text-2xl font-black text-black leading-none mt-1">{scoreData.score}</span>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <h4 className="font-black text-sm uppercase tracking-wider mb-1 flex items-center gap-1">
+                      <Sparkles className="w-4 h-4" /> Share Score Feedback
+                    </h4>
+                    <p className="text-xs font-bold font-mono opacity-90">{scoreData.topFix}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Under preview controls */}
+              {output && !loading && (
+                <div className="flex flex-col gap-3.5">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs font-mono font-semibold ${getCharCountColor(output.length)}`}>
+                      {output.length} / 3000 characters
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <motion.button
+                      whileHover={{ scale: 1.05, y: -4 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={springs.bouncy}
+                      type="button"
+                      onClick={handleCopy}
+                      className="h-11 rounded-xl border-[2px] border-black bg-white shadow-[4px_4px_0_rgba(0,0,0,1)] hover:shadow-[6px_6px_0_rgba(0,0,0,1)] text-black font-bold text-xs tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-shadow"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="w-4 h-4 text-green-600 animate-bounce" />
+                          Copied ✓
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          Copy Post
+                        </>
+                      )}
+                    </motion.button>
+
+                    <motion.button
+                      whileHover={{ scale: 1.05, y: -4 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={springs.bouncy}
+                      type="button"
+                      onClick={() => handleGenerate()}
+                      className="h-11 rounded-xl border-[2px] border-black bg-gray-100 shadow-[4px_4px_0_rgba(0,0,0,1)] hover:shadow-[6px_6px_0_rgba(0,0,0,1)] text-black font-bold text-xs tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-shadow"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Regenerate
+                    </motion.button>
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
         </div>
-
       </div>
     </div>
   );

@@ -1,13 +1,51 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
 
-export const POST: APIRoute = async ({ request }) => {
-  try {
-    const body = await request.json();
-    const { topic, tone, hookStyle, includeCTA } = body;
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const MAX_REQUESTS_PER_WINDOW = 5;
 
-    if (!topic || typeof topic !== 'string' || topic.trim().length < 10) {
-      return new Response(JSON.stringify({ error: 'Please describe your topic in a bit more detail.' }), {
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip);
+  if (!record || now > record.resetTime) {
+    rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+  record.count += 1;
+  return true;
+}
+
+export const POST: APIRoute = async ({ request, clientAddress }) => {
+  try {
+    const authHeader = request.headers.get('Authorization');
+    const expectedToken = import.meta.env.API_SECRET_TOKEN; 
+    
+    if (expectedToken) {
+      if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    const ip = clientAddress || request.headers.get('x-forwarded-for') || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', 'Retry-After': '60' },
+      });
+    }
+
+    const body = await request.json();
+    const { topic, keyPoints, tone, niche, goal } = body;
+
+    if (!topic || typeof topic !== 'string' || topic.trim().length < 5) {
+      return new Response(JSON.stringify({ error: 'Please describe the topic in a bit more detail.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -21,27 +59,34 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const systemPrompt = `You are an expert LinkedIn content writer who has helped thousands of professionals build their personal brand. You write posts that feel authentic, get high engagement, and don't sound like AI wrote them.
+    const sanitize = (str: string) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const safeTopic = sanitize(topic);
+    const safePoints = keyPoints ? sanitize(keyPoints) : '';
+    const safeTone = tone ? sanitize(tone) : 'Professional';
+    const safeNiche = niche ? sanitize(niche) : 'Professionals';
+    const safeGoal = goal ? sanitize(goal) : 'Educate';
 
-Write a LinkedIn post with these requirements:
-- Topic: ${topic}
-- Tone: ${tone}
-- Hook style: ${hookStyle}
-- Include CTA: ${includeCTA}
+    const systemPrompt = `You are a top-tier LinkedIn ghostwriter optimizing for Dwell Time and Comments.
+LinkedIn weights: Comments > Shares > Likes.
 
-Rules:
-- Start with a strong hook (first line must stop the scroll)
-- Use short paragraphs (1-3 lines max)
-- Add line breaks between paragraphs
-- Sound like a real human wrote this
-- If includeCTA is true, end with one clear call to action
-- No hashtags unless they're genuinely relevant (max 3)
-- Max 1500 characters for best engagement
-- Never start with 'I am excited to' or 'Thrilled to share'
+POST DETAILS:
+- Topic: ${safeTopic}
+- Key Points: ${safePoints}
+- Tone: ${safeTone}
+- Niche/Audience: ${safeNiche}
+- Goal: ${safeGoal}
 
-Return ONLY the post text, nothing else.`;
+RULES:
+1. HOOK (Lines 1-3): Line 1 must be a contrarian take, a personal vulnerability, or a massive insight. Line 2 and 3 must build tension so they click "See more...".
+2. STRUCTURE: 150-300 words. Short sentences. Lots of white space (1-2 line paragraphs max).
+3. NO EXTERNAL LINKS: Do not include "link in comments" or any URLs in the body text. The algo penalizes it.
+4. HASHTAGS: Max 3 at the very bottom.
+5. CTA: The final line MUST ask a question that invites disagreement or shared experience to drive comments.
+
+Return ONLY the post text. No preamble. No meta-text.`;
 
     const result = await callGroq({
+      model: 'openai/gpt-oss-120b',
       systemPrompt,
       userMessage: `Write the LinkedIn post based on topic: ${topic.trim()}`,
     });
@@ -53,7 +98,53 @@ Return ONLY the post text, nothing else.`;
       });
     }
 
-    return new Response(JSON.stringify({ post: result.content.trim() }), {
+    const post = result.content.trim();
+
+    // ─── Share Score Pass ──────────────────────────────────────────────
+    const scoringPrompt = `You are a social media algorithm expert. Score this caption strictly and honestly.
+
+Platform: LinkedIn
+Goal: ${safeGoal}
+Post:
+---
+${post}
+---
+
+Score on exactly 4 dimensions (0–25 each):
+1. Hook Strength: Do the first 3 lines build enough tension to make someone click "See more..."?
+2. Shareability/Comments: Does it invite meaningful discussion or disagreement?
+3. CTA Quality: Is the call to action specific and comment-focused?
+4. Algo Alignment: Are there zero external links? Is the formatting readable (lots of whitespace)?
+
+Return ONLY this JSON, nothing else:
+{
+  "score": <total 0-100>,
+  "hook": <0-25>,
+  "shareability": <0-25>,
+  "cta": <0-25>,
+  "algo": <0-25>,
+  "topFix": "<one sentence: the single most important improvement>"
+}`;
+
+    let scoreData = { score: 0, topFix: "" };
+    try {
+      const scoreResult = await callGroq({
+        model: 'llama-3.1-8b-instant',
+        systemPrompt: scoringPrompt,
+        userMessage: 'Score the post.',
+        responseFormat: { type: 'json_object' }
+      });
+      scoreData = JSON.parse(scoreResult.content);
+    } catch (e) {
+      console.error('Error getting Share Score:', e);
+      scoreData = { score: -1, topFix: "Failed to generate score." };
+    }
+
+    return new Response(JSON.stringify({ 
+      post, 
+      score: scoreData.score, 
+      topFix: scoreData.topFix 
+    }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });

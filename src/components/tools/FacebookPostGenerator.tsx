@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { getBadgeColors } from '../../lib/ui-helpers';
 import { 
-  Heart, MessageCircle, Send, Bookmark, Loader2, Copy, Check, RotateCcw, Sparkles
+  ThumbsUp, MessageSquare, Share2, Loader2, Copy, Check, RotateCcw, Sparkles 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { springs } from '../../lib/motion';
 
-export const CaptionMaker: React.FC = () => {
-  const [description, setDescription] = useState('');
+export const FacebookPostGenerator: React.FC = () => {
+  const [topic, setTopic] = useState('');
   const [niche, setNiche] = useState('');
-  const [goal, setGoal] = useState('Get Saves');
-  const [postType, setPostType] = useState('Static');
-  const [tone, setTone] = useState('Storytelling');
-  const [includeHashtags, setIncludeHashtags] = useState(true);
-  const [includeEmojis, setIncludeEmojis] = useState(true);
+  const [goal, setGoal] = useState('Entertain');
+  const [tone, setTone] = useState('Casual');
   
   const [output, setOutput] = useState('');
   const [scoreData, setScoreData] = useState<{ score: number, topFix: string } | null>(null);
@@ -24,8 +21,8 @@ export const CaptionMaker: React.FC = () => {
   // Generate post handler
   const handleGenerate = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (description.trim().length < 5) {
-      setError('Please describe your post in a bit more detail (minimum 5 characters).');
+    if (topic.trim().length < 5) {
+      setError('Please describe your topic in a bit more detail (minimum 5 characters).');
       return;
     }
     if (loading) return;
@@ -35,36 +32,29 @@ export const CaptionMaker: React.FC = () => {
     setOutput('');
     setScoreData(null);
 
-    const styles = [];
-    if (includeHashtags) styles.push('Include Hashtags');
-    else styles.push('No Hashtags');
-    
-    if (includeEmojis) styles.push('Lots of Emojis');
-    else styles.push('No Emojis');
-
     try {
-      const res = await fetch('/api/tools/instagram-caption', {
+      const res = await fetch('/api/tools/facebook-post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description, niche, goal, postType, tone, styles }),
+        body: JSON.stringify({ topic, tone, niche, goal }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to generate Instagram caption.');
+        throw new Error(data.error || 'Failed to generate Facebook post.');
       }
 
-      setOutput(data.caption || '');
+      setOutput(data.post || '');
       if (data.score !== undefined && data.score >= 0) {
         setScoreData({ score: data.score, topFix: data.topFix });
       }
       
       // Clarity Event Tracking
       if (typeof window !== 'undefined' && (window as any).clarity) {
-        (window as any).clarity('event', 'instagram_caption_generated');
+        (window as any).clarity('event', 'facebook_post_generated');
       }
     } catch (err: any) {
-      console.error('Caption generator error:', err);
+      console.error('Facebook generator error:', err);
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -79,13 +69,11 @@ export const CaptionMaker: React.FC = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
 
-      // Clarity Event Tracking
       if (typeof window !== 'undefined' && (window as any).clarity) {
-        (window as any).clarity('event', 'instagram_caption_copied');
+        (window as any).clarity('event', 'facebook_post_copied');
       }
     }).catch((err) => {
       console.warn('Copy failed, using fallback:', err);
-      // Fallback
       const textArea = document.createElement('textarea');
       textArea.value = output;
       textArea.style.position = 'fixed';
@@ -104,7 +92,12 @@ export const CaptionMaker: React.FC = () => {
     });
   };
 
-  // Determine badge color for Neo-Brutalism theme
+  const getCharCountColor = (count: number) => {
+    if (count < 1000) return 'text-[#06D6A0]';
+    if (count <= 1500) return 'text-[#FFD166]';
+    return 'text-red-500';
+  };
+
 
 
   return (
@@ -121,34 +114,30 @@ export const CaptionMaker: React.FC = () => {
         }
       `}} />
 
-      {/* Main Grid Layout */}
       <div className="relative z-10 container mx-auto max-w-[1200px] grid grid-cols-1 md:grid-cols-12 border-l border-[#cfc4c5] min-h-[calc(100vh-80px)]">
 
-        {/* Row 1: Left Spacer | Header */}
         <div className="hidden md:block md:col-span-3 lg:col-span-2 border-r border-[#cfc4c5] relative overflow-visible bg-transparent">
           <div className="p-8 sticky top-24 h-full flex flex-col justify-between">
             <h1
               className="absolute top-[200px] left-[20px] xl:left-[50px] text-[180px] lg:text-[240px] leading-[0.75] font-black tracking-tighter text-black uppercase opacity-[0.07] hover:opacity-[0.15] transition-opacity m-0 pointer-events-none z-0"
               style={{ transformOrigin: 'top left', transform: 'rotate(-90deg) translate(-100%, 0)' }}
             >
-              CAPTION
+              POST
             </h1>
           </div>
         </div>
 
-        {/* Right Content Area */}
         <div className="md:col-span-9 lg:col-span-10 flex flex-col gap-10 p-6 lg:p-16 pb-32">
 
-          {/* Header Title */}
           <div className="flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6D87] text-white rounded-full font-bold tracking-widest text-[12px] uppercase shadow-[4px_4px_0_#000] border-[2px] border-black">
-              INSTA CAPTION GENERATOR
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1877F2] text-white rounded-full font-bold tracking-widest text-[12px] uppercase shadow-[4px_4px_0_#000] border-[2px] border-black">
+              FACEBOOK GENERATOR
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-black uppercase" style={{ fontFamily: "'Inter', sans-serif", lineHeight: 1 }}>
-              Write Viral Insta Captions
+              Write Shareable FB Posts
             </h1>
             <p className="text-base font-bold text-gray-700 max-w-2xl">
-              Describe your photo, define your audience, and let AI craft the perfect caption tailored to the Instagram algorithm.
+              Create conversational, relatable posts optimized for Facebook's Meaningful Social Interactions algorithm.
             </p>
           </div>
 
@@ -158,20 +147,19 @@ export const CaptionMaker: React.FC = () => {
             <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-3xl p-6 flex flex-col gap-6">
               <form onSubmit={handleGenerate} className="flex flex-col gap-6">
                 
-                {/* Topic text area */}
                 <div className="flex flex-col gap-2.5">
-                  <label htmlFor="topic-input" className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
+                  <label htmlFor="topic-input" className="text-xs font-mono font-bold text-[#1877F2] uppercase tracking-wider">
                     What is the post about?
                   </label>
                   <textarea
                     id="topic-input"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value.slice(0, 500))}
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value.slice(0, 500))}
                     rows={3}
                     maxLength={500}
-                    placeholder="/// ENTER ANY ADDITIONAL CONTEXT..."
+                    placeholder="/// TYPE YOUR TOPIC OR IDEA HERE..."
                     disabled={loading}
-                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#FF6D87] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[100px]"
+                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-4 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#1877F2] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 resize-none font-medium leading-relaxed min-h-[100px]"
                   />
                   <div className="flex justify-between items-center mt-1">
                     {error ? (
@@ -180,14 +168,14 @@ export const CaptionMaker: React.FC = () => {
                       <span />
                     )}
                     <span className="text-[10px] text-black/30 font-mono">
-                      {description.length} / 500
+                      {topic.length} / 500
                     </span>
                   </div>
                 </div>
 
                 {/* NEW: Niche / Audience */}
                 <div className="flex flex-col gap-2.5">
-                  <label htmlFor="niche-input" className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
+                  <label htmlFor="niche-input" className="text-xs font-mono font-bold text-[#1877F2] uppercase tracking-wider">
                     Your Niche / Audience
                   </label>
                   <input
@@ -195,19 +183,19 @@ export const CaptionMaker: React.FC = () => {
                     type="text"
                     value={niche}
                     onChange={(e) => setNiche(e.target.value)}
-                    placeholder="e.g. fitness coaches, startup founders, new moms"
+                    placeholder="e.g. local parents, small business owners"
                     disabled={loading}
-                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-3 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#06D6A0] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 font-medium"
+                    className="w-full bg-gray-50 border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] rounded-xl p-3 text-[13.5px] text-black focus:outline-none focus:shadow-[6px_6px_0_#1877F2] focus:-translate-y-1 transition-all duration-300 placeholder:font-mono placeholder-black/30 font-medium"
                   />
                 </div>
 
                 {/* NEW: Goal Dropdown */}
                 <div className="flex flex-col gap-2.5">
-                  <span className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
+                  <span className="text-xs font-mono font-bold text-[#1877F2] uppercase tracking-wider">
                     Goal of this post
                   </span>
                   <div className="grid grid-cols-2 gap-2">
-                    {['Educate', 'Entertain', 'Sell', 'Get Saves', 'Build Community'].map((g) => {
+                    {['Entertain', 'Educate', 'Sell', 'Build Community'].map((g) => {
                       const isActive = goal === g;
                       return (
                         <motion.button
@@ -220,7 +208,7 @@ export const CaptionMaker: React.FC = () => {
                           disabled={loading}
                           className={`py-2 px-2 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
                             isActive
-                              ? 'bg-[#1482A3] text-white shadow-[0_0_15px_rgba(20,130,163,0.5)] border-[2px] border-black'
+                              ? 'bg-[#1877F2] text-white shadow-[0_0_15px_rgba(24,119,242,0.5)] border-[2px] border-black'
                               : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
                           }`}
                         >
@@ -231,43 +219,12 @@ export const CaptionMaker: React.FC = () => {
                   </div>
                 </div>
 
-                {/* NEW: Post Type Dropdown */}
                 <div className="flex flex-col gap-2.5">
-                  <span className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
-                    Post Type
-                  </span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['Reel', 'Static', 'Carousel'].map((pt) => {
-                      const isActive = postType === pt;
-                      return (
-                        <motion.button
-                          key={pt}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          transition={springs.bouncy}
-                          type="button"
-                          onClick={() => setPostType(pt)}
-                          disabled={loading}
-                          className={`py-2 px-1 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
-                            isActive
-                              ? 'bg-[#FFD166] text-black shadow-[0_0_15px_rgba(255,209,102,0.5)] border-[2px] border-black'
-                              : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
-                          }`}
-                        >
-                          {pt}
-                        </motion.button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Tone selector */}
-                <div className="flex flex-col gap-2.5">
-                  <span className="text-xs font-mono font-bold text-[var(--color-primary)] uppercase tracking-wider">
+                  <span className="text-xs font-mono font-bold text-[#1877F2] uppercase tracking-wider">
                     Tone of voice
                   </span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['Funny', 'Professional', 'Inspirational', 'Edgy', 'Storytelling', 'Short'].map((t) => {
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Casual', 'Storytelling', 'Humorous', 'Controversial'].map((t) => {
                       const isActive = tone === t;
                       return (
                         <motion.button
@@ -280,7 +237,7 @@ export const CaptionMaker: React.FC = () => {
                           disabled={loading}
                           className={`py-2 px-2 text-center rounded-xl text-[11px] font-semibold tracking-tight cursor-pointer ${
                             isActive
-                              ? 'bg-[var(--color-primary)] text-black shadow-[0_0_15px_var(--color-primary-glow)] border-[2px] border-black'
+                              ? 'bg-[#FFD166] text-black shadow-[0_0_15px_rgba(255,209,102,0.5)] border-[2px] border-black'
                               : 'bg-gray-50 border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-black/60 hover:text-black hover:border-black/20'
                           }`}
                         >
@@ -291,22 +248,21 @@ export const CaptionMaker: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Generate button */}
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={springs.bouncy}
                   type="submit"
-                  disabled={loading || !description.trim()}
-                  className="w-full h-12 rounded-2xl bg-[var(--color-primary)] hover:bg-[#ff5270] disabled:bg-black/5 disabled:text-black/20 text-white font-bold text-sm tracking-wide shadow-[4px_4px_0_#000] border-[2px] border-black flex items-center justify-center gap-2 cursor-pointer mt-2"
+                  disabled={loading || !topic.trim()}
+                  className="w-full h-12 rounded-2xl bg-[#1877F2] hover:bg-[#166fe5] disabled:bg-black/5 disabled:text-black/20 text-white font-bold text-sm tracking-wide shadow-[4px_4px_0_#000] border-[2px] border-black flex items-center justify-center gap-2 cursor-pointer mt-2"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4.5 h-4.5 animate-spin text-black" />
-                      <span className="text-black">Generating & Scoring...</span>
+                      <Loader2 className="w-4.5 h-4.5 animate-spin text-white" />
+                      <span className="text-white">Generating & Scoring...</span>
                     </>
                   ) : (
-                    <span className="text-black">Generate Caption</span>
+                    <span className="text-white">Generate Post</span>
                   )}
                 </motion.button>
 
@@ -316,26 +272,23 @@ export const CaptionMaker: React.FC = () => {
             {/* RIGHT COLUMN: OUTPUT PREVIEW */}
             <div className="flex flex-col gap-5">
               
-              {/* Instagram Mockup Card */}
+              {/* Facebook Mockup Card */}
               <div className="bg-white shadow-[8px_8px_0_rgba(0,0,0,1)] border-[3px] border-black rounded-2xl p-5 flex flex-col gap-4 relative overflow-hidden">
                 
-                {/* Header row */}
                 <div className="flex items-center gap-3 border-b border-black/5 pb-3.5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[2px]">
-                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-[10px] font-bold text-black border border-white">
-                      IG
-                    </div>
+                  <div className="w-10 h-10 rounded-full bg-gray-200 border border-black text-black flex items-center justify-center font-bold text-sm">
+                    👤
                   </div>
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-bold text-black leading-tight">your_handle</span>
-                    <span className="text-[11px] text-black/40 leading-tight">Original Audio</span>
+                    <span className="text-sm font-bold text-black leading-tight">Your Name</span>
+                    <span className="text-[11px] text-black/40 leading-tight flex items-center gap-1">
+                      Just now • 🌎
+                    </span>
                   </div>
                 </div>
 
-                {/* Post body */}
                 <div className="min-h-[200px] text-sm text-black font-medium leading-relaxed whitespace-pre-wrap select-text py-1">
                   {loading ? (
-                    // Shimmer state
                     <div className="flex flex-col gap-3.5 py-2">
                       <div className="h-4 w-11/12 bg-black/5 rounded skeleton-shimmer-line" />
                       <div className="h-4 w-full bg-black/5 rounded skeleton-shimmer-line" />
@@ -343,10 +296,8 @@ export const CaptionMaker: React.FC = () => {
                       <div className="h-4 w-2/3 bg-black/5 rounded skeleton-shimmer-line" />
                     </div>
                   ) : output ? (
-                    // Output content
                     output
                   ) : (
-                    // Empty state placeholders
                     <div className="flex flex-col gap-5 py-4">
                       <div className="flex flex-col gap-3">
                         <div className="h-3 w-5/6 bg-black/5 rounded skeleton-shimmer-line" />
@@ -355,23 +306,27 @@ export const CaptionMaker: React.FC = () => {
                         <div className="h-3 w-1/2 bg-black/5 rounded skeleton-shimmer-line" />
                       </div>
                       <p className="text-xs text-black/30 italic text-center mt-3">
-                        Your caption will appear here
+                        Your post will appear here
                       </p>
                     </div>
                   )}
                 </div>
 
-                {/* Divider line */}
-                <div className="h-px bg-black border border-black/10" />
+                <div className="h-px bg-black/10 border-0" />
 
-                {/* Fake actions row */}
-                <div className="flex items-center justify-between px-1 text-black/80">
-                  <div className="flex gap-4">
-                    <Heart className="w-5 h-5 cursor-pointer hover:text-red-500 transition-colors" />
-                    <MessageCircle className="w-5 h-5 cursor-pointer hover:text-gray-500 transition-colors" />
-                    <Send className="w-5 h-5 cursor-pointer hover:text-gray-500 transition-colors" />
+                <div className="flex items-center justify-between px-4 text-black/60 text-[13px] font-semibold">
+                  <div className="flex items-center gap-2 transition-colors cursor-default hover:bg-gray-100 py-1.5 px-3 rounded-md">
+                    <ThumbsUp className="w-4 h-4" />
+                    <span>Like</span>
                   </div>
-                  <Bookmark className="w-5 h-5 cursor-pointer hover:text-gray-500 transition-colors" />
+                  <div className="flex items-center gap-2 transition-colors cursor-default hover:bg-gray-100 py-1.5 px-3 rounded-md">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Comment</span>
+                  </div>
+                  <div className="flex items-center gap-2 transition-colors cursor-default hover:bg-gray-100 py-1.5 px-3 rounded-md">
+                    <Share2 className="w-4 h-4" />
+                    <span>Share</span>
+                  </div>
                 </div>
               </div>
 
@@ -395,13 +350,12 @@ export const CaptionMaker: React.FC = () => {
               {output && !loading && (
                 <div className="flex flex-col gap-3.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-semibold text-black/60">
+                    <span className={`text-xs font-mono font-semibold ${getCharCountColor(output.length)}`}>
                       {output.length} characters
                     </span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-3">
-                    {/* Copy Button */}
                     <motion.button
                       whileHover={{ scale: 1.05, y: -4 }}
                       whileTap={{ scale: 0.95 }}
@@ -412,18 +366,17 @@ export const CaptionMaker: React.FC = () => {
                     >
                       {copied ? (
                         <>
-                          <Check className="w-4 h-4 text-green-600" />
+                          <Check className="w-4 h-4 text-green-600 animate-bounce" />
                           Copied ✓
                         </>
                       ) : (
                         <>
                           <Copy className="w-4 h-4" />
-                          Copy Caption
+                          Copy Post
                         </>
                       )}
                     </motion.button>
 
-                    {/* Regenerate Button */}
                     <motion.button
                       whileHover={{ scale: 1.05, y: -4 }}
                       whileTap={{ scale: 0.95 }}
@@ -438,6 +391,7 @@ export const CaptionMaker: React.FC = () => {
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </div>

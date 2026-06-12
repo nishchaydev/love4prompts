@@ -1,37 +1,31 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
 
-// Simple in-memory rate limit store (Use Redis for production/serverless environments)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 5;
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const record = rateLimitStore.get(ip);
-  
   if (!record || now > record.resetTime) {
     rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
     return true;
   }
-  
   if (record.count >= MAX_REQUESTS_PER_WINDOW) {
     return false;
   }
-  
   record.count += 1;
   return true;
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
-    // 1. Optional Authentication Check
     const authHeader = request.headers.get('Authorization');
     const expectedToken = import.meta.env.API_SECRET_TOKEN; 
     
     if (expectedToken) {
       if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-        console.warn('Unauthorized API access attempt rejected.');
         return new Response(JSON.stringify({ error: 'Unauthorized' }), {
           status: 401,
           headers: { 'Content-Type': 'application/json' },
@@ -39,10 +33,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       }
     }
 
-    // 2. Rate Limiting Check
     const ip = clientAddress || request.headers.get('x-forwarded-for') || 'unknown';
     if (!checkRateLimit(ip)) {
-      console.warn(`Rate limit exceeded for IP: ${ip}`);
       return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }), {
         status: 429,
         headers: { 'Content-Type': 'application/json', 'Retry-After': '60' },
@@ -50,63 +42,51 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     }
 
     const body = await request.json();
-    const { description, tone, styles, extraContext, niche, goal, postType } = body;
+    const { topic, tone, niche, goal } = body;
 
-    if (!description || typeof description !== 'string' || description.trim().length < 5) {
-      return new Response(JSON.stringify({ error: 'Please describe your post in a bit more detail.' }), {
+    if (!topic || typeof topic !== 'string' || topic.trim().length < 5) {
+      return new Response(JSON.stringify({ error: 'Please describe the topic in a bit more detail.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const MAX_DESC_LENGTH = 1000;
-    if (description.length > MAX_DESC_LENGTH) {
-      return new Response(JSON.stringify({ error: 'Description exceeds limit.' }), {
+    const MAX_TOPIC_LENGTH = 1000;
+    if (topic.length > MAX_TOPIC_LENGTH) {
+      return new Response(JSON.stringify({ error: 'Topic exceeds limit.' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
     const sanitize = (str: string) => str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    const safeDesc = sanitize(description);
+    const safeTopic = sanitize(topic);
     const safeTone = tone ? sanitize(tone) : 'Casual';
-    const safeNiche = niche ? sanitize(niche) : 'General Audience';
-    const safeGoal = goal ? sanitize(goal) : 'Get Engagement';
-    const safePostType = postType ? sanitize(postType) : 'Static';
-    
-    const includesEmojis = styles && styles.includes('Lots of Emojis');
-    const emojiRule = includesEmojis ? 'Use them strategically to draw the eye' : 'NO emojis at all';
-    const includesHashtags = styles && styles.includes('Include Hashtags');
-    const hashtagRule = includesHashtags ? 'Include 3-5 niche-specific tags' : 'NO hashtags';
+    const safeNiche = niche ? sanitize(niche) : 'General';
+    const safeGoal = goal ? sanitize(goal) : 'Entertain';
 
-    const systemPrompt = `You are an elite Instagram growth strategist who understands the 2026 algorithm deeply.
-Instagram weights: Saves > Shares > Comments > Likes.
+    const systemPrompt = `You are a Facebook engagement expert optimizing for "Meaningful Social Interactions" (MSI).
+Facebook weights: Shares > Long Comments > Reactions > Likes.
 
 POST DETAILS:
-- Content: ${safeDesc}
-- Post Type: ${safePostType}
+- Topic: ${safeTopic}
 - Tone: ${safeTone}
 - Niche/Audience: ${safeNiche}
 - Goal: ${safeGoal}
 
 RULES:
-1. LINE 1 (Hook, MUST be ≤125 chars): Curiosity gap, bold claim, number hook, or identity trigger.
-   Examples: "Nobody talks about this but..." / "3 things killing your reach" / "POV: you finally figured it out"
-2. BODY: One idea per line. Hard line breaks. No paragraph walls.
-3. CTA (last line): 
-   - For saves: "Save this before you forget."
-   - For shares: "Send this to someone who needs it."
-   - For comments: Ask ONE specific question. Not "thoughts?" — something people can actually answer.
-4. EMOJIS: ${emojiRule}. Max 4. Only at line breaks. Never mid-sentence.
-5. HASHTAGS: ${hashtagRule}. 3–5 niche-specific only. No mega-tags (#love, #instagood).
-6. LENGTH: Reel = 50–150 chars. Static/Carousel = 150–300 chars. Hard limits.
+1. HOOK: Line 1 must hit an emotional trigger (nostalgia, strong agreement, or outrage/debate). Make them nod their head immediately.
+2. FORMAT: 100-250 words. Conversational. Feels like a text to a friend, not a marketing broadcast.
+3. ALGORITHM PENALTIES: Do NOT use engagement bait ("Tag a friend who", "Like if you agree"). The algorithm will suppress the post.
+4. CTA: End with an open-ended question that requires a real answer, not a yes/no.
+5. HASHTAGS: Zero or max 1. Facebook suppresses heavy hashtag use.
 
-Return ONLY the caption. No preamble. No meta-text.`;
+Return ONLY the post text. No preamble. No meta-text.`;
 
     const result = await callGroq({
       model: 'openai/gpt-oss-120b',
       systemPrompt,
-      userMessage: `Write the caption based on description: ${description.trim()}`,
+      userMessage: `Write the Facebook post based on topic: ${topic.trim()}`,
     });
 
     if (!result.content || typeof result.content !== 'string' || result.content.trim().length === 0) {
@@ -116,23 +96,23 @@ Return ONLY the caption. No preamble. No meta-text.`;
       });
     }
 
-    const caption = result.content.trim();
+    const post = result.content.trim();
 
     // ─── Share Score Pass ──────────────────────────────────────────────
     const scoringPrompt = `You are a social media algorithm expert. Score this caption strictly and honestly.
 
-Platform: Instagram
+Platform: Facebook
 Goal: ${safeGoal}
-Caption:
+Post:
 ---
-${caption}
+${post}
 ---
 
 Score on exactly 4 dimensions (0–25 each):
-1. Hook Strength: Does line 1 stop the scroll? Does it fit within 125 chars?
-2. Shareability: Does it make someone think "I need to send this to someone specific"?
-3. CTA Quality: Is the call to action specific and platform-appropriate?
-4. Algo Alignment: Correct length, format, hashtag count for this platform?
+1. Hook Strength: Does line 1 hit an emotional trigger (nostalgia/agreement)?
+2. Shareability: Does it feel like a text to a friend rather than a broadcast? Is it highly relatable?
+3. CTA Quality: Is the call to action a real, open-ended question (not engagement bait)?
+4. Algo Alignment: Are there zero/minimal hashtags and zero engagement bait words?
 
 Return ONLY this JSON, nothing else:
 {
@@ -149,18 +129,17 @@ Return ONLY this JSON, nothing else:
       const scoreResult = await callGroq({
         model: 'llama-3.1-8b-instant',
         systemPrompt: scoringPrompt,
-        userMessage: 'Score the caption.',
+        userMessage: 'Score the post.',
         responseFormat: { type: 'json_object' }
       });
       scoreData = JSON.parse(scoreResult.content);
     } catch (e) {
       console.error('Error getting Share Score:', e);
-      // Fallback if scoring fails
       scoreData = { score: -1, topFix: "Failed to generate score." };
     }
 
     return new Response(JSON.stringify({ 
-      caption, 
+      post, 
       score: scoreData.score, 
       topFix: scoreData.topFix 
     }), {
@@ -168,7 +147,7 @@ Return ONLY this JSON, nothing else:
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err: unknown) {
-    console.error('Instagram Caption API error:', err);
+    console.error('Facebook Post API error:', err);
     return new Response(JSON.stringify({ error: 'Something went wrong. Please try again.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

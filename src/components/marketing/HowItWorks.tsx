@@ -2,9 +2,9 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const STEPS = [
-  { num: '01 / INPUT', title: 'Write Intent', desc: 'Describe your idea in simple keywords or draft instructions.' },
-  { num: '02 / ANALYZE', title: 'Smart Detection', desc: 'The system instantly parses intent and detects the optimal action.' },
-  { num: '03 / OUTPUT', title: 'Production Ready', desc: 'Get structured, high-fidelity prompt parameters formatted for your model.' },
+  { num: '01 / DISCOVER', title: 'Find Your Tool', desc: 'Browse our curated Image Library of prompts or select a specialized AI generator for your social media needs.', color: 'bg-[#FFD166]' },
+  { num: '02 / CUSTOMIZE', title: 'Set Your Intent', desc: 'Describe your idea, define your target audience, or tweak the parameters to fit your specific goal.', color: 'bg-[#1482A3]', textClass: 'text-white' },
+  { num: '03 / GENERATE', title: 'Production Ready', desc: 'Get instantly optimized results—whether it’s a perfect Midjourney prompt or a viral, algorithm-scored social post.', color: 'bg-[#FF6D87]' },
 ];
 
 export const HowItWorks: React.FC = () => {
@@ -12,38 +12,36 @@ export const HowItWorks: React.FC = () => {
   const isInView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section className="py-24 border-t border-white/[0.03] relative bg-[var(--color-background-primary)]/40" ref={ref}>
-      <div className="container mx-auto px-4 max-w-[960px]">
+    <section className="py-16 md:py-24 border-t-[4px] border-black relative bg-white" ref={ref}>
+      <div className="container mx-auto px-4 max-w-[1000px]">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4 }}
         >
-          <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-[0.2em] mb-3 font-mono">
+          <div className="inline-block bg-[#06D6A0] text-black text-[12px] font-black px-4 py-1.5 border-[3px] border-black shadow-[4px_4px_0_#000] rounded-full mb-6 uppercase tracking-widest">
             Process Channel
-          </p>
-          <h2 className="text-2xl md:text-[36px] font-bold text-white tracking-[-0.04em]">
+          </div>
+          <h2 className="text-[32px] md:text-[48px] font-black text-black tracking-[-0.04em] uppercase leading-none">
             Optimized in three phases.
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[var(--color-border)] bg-[var(--color-background-card)]/40 backdrop-blur-xl rounded-3xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {STEPS.map((step, i) => (
             <motion.div
               key={step.num}
-              className={`flex-1 flex flex-col p-8 md:p-10 relative ${
-                i > 0 ? 'border-t md:border-t-0 md:border-l border-white/[0.04]' : ''
-              }`}
+              className={`flex-1 flex flex-col p-8 md:p-10 border-[3px] border-black rounded-[24px] shadow-[6px_6px_0_#000] hover:-translate-y-2 hover:shadow-[10px_10px_0_#000] transition-all duration-300 ${step.color}`}
               initial={{ opacity: 0, y: 12 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: i * 0.12 }}
             >
-              <span className="text-[10px] font-mono font-bold text-[var(--color-primary)] tracking-widest mb-4">
+              <span className={`text-[12px] font-black ${step.textClass || 'text-black'} bg-black/10 inline-block px-3 py-1 rounded-full w-fit tracking-widest mb-6 uppercase`}>
                 {step.num}
               </span>
-              <h3 className="text-[16px] font-bold text-white tracking-tight mb-2">{step.title}</h3>
-              <p className="text-[13px] text-white/40 leading-relaxed font-medium">{step.desc}</p>
+              <h3 className={`text-[24px] font-black ${step.textClass || 'text-black'} tracking-tight mb-3 uppercase leading-tight`}>{step.title}</h3>
+              <p className={`text-[15px] ${step.textClass === 'text-white' ? 'text-white/90' : 'text-black/80'} leading-relaxed font-bold`}>{step.desc}</p>
             </motion.div>
           ))}
         </div>
