@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
+import { checkServerRateLimit, recordServerUsage } from '../../../lib/server-rate-limit';
 
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -21,6 +22,14 @@ function checkRateLimit(ip: string): boolean {
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    const rateLimitResult = await checkServerRateLimit(request, 'linkedin-post');
+    if (!rateLimitResult.allowed) {
+      return new Response(JSON.stringify({ error: rateLimitResult.error }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    await recordServerUsage(rateLimitResult.userId, 'linkedin-post', rateLimitResult.clientIp);
     const authHeader = request.headers.get('Authorization');
     const expectedToken = import.meta.env.API_SECRET_TOKEN; 
     
@@ -86,7 +95,6 @@ RULES:
 Return ONLY the post text. No preamble. No meta-text.`;
 
     const result = await callGroq({
-      model: 'openai/gpt-oss-120b',
       systemPrompt,
       userMessage: `Write the LinkedIn post based on topic: ${topic.trim()}`,
     });

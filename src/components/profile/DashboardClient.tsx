@@ -16,6 +16,7 @@ export const DashboardClient: React.FC = () => {
   const [styleSearch, setStyleSearch] = useState('');
   const [placeholderText, setPlaceholderText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const typingTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   const protocolLines = [
@@ -37,6 +38,46 @@ export const DashboardClient: React.FC = () => {
     setActiveTags(prev =>
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
     );
+  };
+
+  const handleCompile = async () => {
+    if (!session) {
+      localStorage.setItem('draft_prompt', promptText);
+      window.location.href = '/login?redirect=/submit';
+      return;
+    }
+    
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
+    // Save prompt to database
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+      
+      const response = await fetch('/api/save-prompt', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          prompt: promptText,
+          model: engine,
+          intent: 'User Submission - ' + engine
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save prompt');
+      }
+
+      setScreenState('compile');
+    } catch (err) {
+      console.error('Error saving prompt:', err);
+      alert('Failed to submit prompt. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   React.useEffect(() => {
@@ -325,20 +366,16 @@ export const DashboardClient: React.FC = () => {
           {/* Compile Button */}
           <div className="mt-8 pt-8 border-t-4 border-black">
             <button
-              onClick={() => {
-                if (!session) {
-                  localStorage.setItem('draft_prompt', promptText);
-                  window.location.href = '/login?redirect=/submit';
-                  return;
-                }
-                setScreenState('compile');
-              }}
-              className="w-full flex items-center justify-between group cursor-pointer outline-none bg-black text-white p-8 hover:bg-[#FF6D87] transition-colors shadow-[8px_8px_0_#cfc4c5]"
+              onClick={handleCompile}
+              disabled={isSubmitting}
+              className={`w-full flex items-center justify-between group cursor-pointer outline-none p-8 transition-colors shadow-[8px_8px_0_#cfc4c5] ${
+                isSubmitting ? 'bg-[#7e7576] text-white cursor-not-allowed' : 'bg-black text-white hover:bg-[#FF6D87]'
+              }`}
             >
               <span className="text-4xl lg:text-6xl font-black tracking-tighter uppercase">
-                COMPILE
+                {isSubmitting ? 'COMPILING...' : 'COMPILE'}
               </span>
-              <ArrowRight className="w-10 h-10 lg:w-16 lg:h-16 group-hover:translate-x-4 transition-transform" />
+              {!isSubmitting && <ArrowRight className="w-10 h-10 lg:w-16 lg:h-16 group-hover:translate-x-4 transition-transform" />}
             </button>
           </div>
 

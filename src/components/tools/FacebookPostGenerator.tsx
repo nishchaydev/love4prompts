@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { getBadgeColors } from '../../lib/ui-helpers';
 import { 
-  ThumbsUp, MessageSquare, Share2, Loader2, Copy, Check, RotateCcw, Sparkles 
+  ThumbsUp, MessageSquare, Share2, Loader2, Copy, Check, RotateCcw, Sparkles, Lock 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { springs } from '../../lib/motion';
+import { supabase } from '../../lib/supabase';
+import { AuthModal } from '../auth/AuthModal';
 
 export const FacebookPostGenerator: React.FC = () => {
   const [topic, setTopic] = useState('');
@@ -17,6 +19,23 @@ export const FacebookPostGenerator: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const [session, setSession] = useState<any>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Generate post handler
   const handleGenerate = async (e?: React.FormEvent) => {
@@ -33,9 +52,15 @@ export const FacebookPostGenerator: React.FC = () => {
     setScoreData(null);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const res = await fetch('/api/tools/facebook-post', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ topic, tone, niche, goal }),
       });
 
@@ -332,17 +357,32 @@ export const FacebookPostGenerator: React.FC = () => {
 
               {/* Share Score Badge */}
               {scoreData && !loading && (
-                <div className={`p-4 border-[3px] rounded-xl flex items-start gap-4 ${getBadgeColors(scoreData.score)}`}>
-                  <div className="flex flex-col items-center justify-center bg-white border-[2px] border-black shadow-[2px_2px_0_#000] rounded-lg p-2 min-w-[70px]">
-                    <span className="text-[10px] uppercase font-black tracking-wider text-black">Score</span>
-                    <span className="text-2xl font-black text-black leading-none mt-1">{scoreData.score}</span>
+                <div className="relative group mt-4">
+                  <div className={`p-4 border-[3px] rounded-xl flex items-start gap-4 ${getBadgeColors(scoreData.score)} ${!session ? 'blur-[4px] select-none opacity-60' : ''} transition-all duration-300`}>
+                    <div className="flex flex-col items-center justify-center bg-white border-[2px] border-black shadow-[2px_2px_0_#000] rounded-lg p-2 min-w-[70px]">
+                      <span className="text-[10px] uppercase font-black tracking-wider text-black">Score</span>
+                      <span className="text-2xl font-black text-black leading-none mt-1">{scoreData.score}</span>
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <h4 className="font-black text-sm uppercase tracking-wider mb-1 flex items-center gap-1">
+                        <Sparkles className="w-4 h-4" /> Share Score Feedback
+                      </h4>
+                      <p className="text-xs font-bold font-mono opacity-90">{scoreData.topFix}</p>
+                    </div>
                   </div>
-                  <div className="flex flex-col justify-center">
-                    <h4 className="font-black text-sm uppercase tracking-wider mb-1 flex items-center gap-1">
-                      <Sparkles className="w-4 h-4" /> Share Score Feedback
-                    </h4>
-                    <p className="text-xs font-bold font-mono opacity-90">{scoreData.topFix}</p>
-                  </div>
+                  
+                  {!session && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-white/10 rounded-xl border-[3px] border-transparent">
+                      <button 
+                        type="button"
+                        onClick={() => setIsAuthModalOpen(true)}
+                        className="bg-[var(--color-primary)] text-black px-5 py-2.5 rounded-xl font-bold text-sm border-[2px] border-black shadow-[4px_4px_0_rgba(0,0,0,1)] hover:translate-y-[2px] hover:shadow-[2px_2px_0_rgba(0,0,0,1)] transition-all flex items-center gap-2 cursor-pointer"
+                      >
+                        <Lock className="w-4 h-4" />
+                        Sign in to view Score
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -396,6 +436,7 @@ export const FacebookPostGenerator: React.FC = () => {
           </div>
         </div>
       </div>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 };

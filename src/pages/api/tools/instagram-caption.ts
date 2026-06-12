@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
+import { checkServerRateLimit, recordServerUsage } from '../../../lib/server-rate-limit';
 
 // Simple in-memory rate limit store (Use Redis for production/serverless environments)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -25,6 +26,14 @@ function checkRateLimit(ip: string): boolean {
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
+    const rateLimitResult = await checkServerRateLimit(request, 'instagram-caption');
+    if (!rateLimitResult.allowed) {
+      return new Response(JSON.stringify({ error: rateLimitResult.error }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    await recordServerUsage(rateLimitResult.userId, 'instagram-caption', rateLimitResult.clientIp);
     // 1. Optional Authentication Check
     const authHeader = request.headers.get('Authorization');
     const expectedToken = import.meta.env.API_SECRET_TOKEN; 
@@ -104,7 +113,6 @@ RULES:
 Return ONLY the caption. No preamble. No meta-text.`;
 
     const result = await callGroq({
-      model: 'openai/gpt-oss-120b',
       systemPrompt,
       userMessage: `Write the caption based on description: ${description.trim()}`,
     });

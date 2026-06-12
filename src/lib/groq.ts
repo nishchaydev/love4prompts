@@ -1,5 +1,10 @@
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL = 'llama-3.3-70b-versatile';
+// Primary (caption generation, all heavy tools)
+export const MODEL = 'llama-3.3-70b-versatile';
+
+// Fast/cheap (Share Score second pass only)
+export const SCORE_MODEL = 'llama-3.1-8b-instant';
+
 const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
 
 interface GroqTextRequest {

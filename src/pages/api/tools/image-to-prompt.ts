@@ -1,11 +1,19 @@
 import type { APIRoute } from 'astro';
 import { callGroqVision } from '../../../lib/groq';
+import { checkServerRateLimit, recordServerUsage } from '../../../lib/server-rate-limit';
 
 const VALID_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 const MAX_BASE64_SIZE = 5 * 1024 * 1024 * (4 / 3); // ~5MB file → ~6.67MB base64
 
 export const POST: APIRoute = async ({ request }) => {
   try {
+    const rateLimitResult = await checkServerRateLimit(request, 'image-to-prompt');
+    if (!rateLimitResult.allowed) {
+      return new Response(JSON.stringify({ error: rateLimitResult.error }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     const body = await request.json();
     const { imageBase64, mimeType } = body;
 
@@ -39,6 +47,7 @@ export const POST: APIRoute = async ({ request }) => {
       userMessage: 'Analyze this image and write a detailed AI image generation prompt that could recreate it.',
     });
 
+    await recordServerUsage(rateLimitResult.userId, 'image-to-prompt', rateLimitResult.clientIp);
     return new Response(JSON.stringify({ prompt: result.content }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

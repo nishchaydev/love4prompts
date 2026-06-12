@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { callGroq } from '../../../lib/groq';
+import { checkServerRateLimit, recordServerUsage } from '../../../lib/server-rate-limit';
 
 function getCorsHeaders(request: Request) {
   const origin = request.headers.get('origin');
@@ -27,6 +28,15 @@ export const OPTIONS: APIRoute = ({ request }) => {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
+    const rateLimitResult = await checkServerRateLimit(request, 'prompt-enhancer');
+    if (!rateLimitResult.allowed) {
+      return new Response(JSON.stringify({ error: rateLimitResult.error }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(request) },
+      });
+    }
+    
+    await recordServerUsage(rateLimitResult.userId, 'prompt-enhancer', rateLimitResult.clientIp);
     const body = await request.json();
     const { prompt, targetTool, modes, url, chatContext, pageContext, tone, length, memory, deepThink } = body;
 

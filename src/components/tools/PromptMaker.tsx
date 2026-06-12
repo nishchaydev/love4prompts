@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Loader2, Copy, Check, Sparkles, MessageSquare, Code2, Image as ImageIcon, ArrowLeft, ArrowRight, RotateCcw, ExternalLink, Lightbulb } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 import { getRemainingUses, recordUse, hasReachedLimit } from '../../lib/rate-limit';
 import { AI_MODELS_EXTENDED } from '../hero/logos';
 import { useModKey } from '../../lib/useOS';
@@ -52,7 +53,7 @@ export const PromptMaker: React.FC = () => {
     const params = new URLSearchParams(window.location.search);
     const q = params.get('q');
     if (q) setDescription(q);
-    setRemainingUses(getRemainingUses(TOOL_SLUG));
+    getRemainingUses(TOOL_SLUG).then(setRemainingUses);
   }, []);
 
   const toggleStyle = (style: string) => {
@@ -65,7 +66,8 @@ export const PromptMaker: React.FC = () => {
 
   const handleGenerate = async () => {
     if (!description.trim() || !useCase) return;
-    if (hasReachedLimit(TOOL_SLUG)) {
+    const limitReached = await hasReachedLimit(TOOL_SLUG);
+    if (limitReached) {
       setError("You've reached your daily limit of 5 free generations.");
       return;
     }
@@ -76,9 +78,15 @@ export const PromptMaker: React.FC = () => {
     setLoading(true);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const response = await fetch('/api/tools/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           description: description.trim(),
           targetTool: targetModel,
@@ -98,8 +106,9 @@ export const PromptMaker: React.FC = () => {
         tool: TOOL_SLUG,
         model: targetModel,
       });
-      recordUse(TOOL_SLUG);
-      setRemainingUses(getRemainingUses(TOOL_SLUG));
+      await recordUse(TOOL_SLUG);
+      const remaining = await getRemainingUses(TOOL_SLUG);
+      setRemainingUses(remaining);
       setStep('result');
 
       if (typeof window !== 'undefined' && (window as any).clarity) {

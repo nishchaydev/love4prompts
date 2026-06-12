@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import { supabase } from '../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
@@ -21,48 +23,39 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const sanitizedBody = {
-      prompt: rawBody.prompt,
-      model: rawBody.model,
-      intent: rawBody.intent,
-    };
+    const authHeader = request.headers.get('Authorization');
+    let userId: string | undefined = undefined;
 
-    const webhookUrl = import.meta.env.GOOGLE_SHEET_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.warn('Google Sheet Webhook URL is missing');
-      return new Response(JSON.stringify({ success: false, message: 'Webhook URL not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-
-    let response;
-    try {
-      response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sanitizedBody),
-        signal: controller.signal,
-      });
-    } catch (err: unknown) {
-      if (err instanceof Error && err.name === 'AbortError') {
-         return new Response(JSON.stringify({ success: false, error: 'Request to webhook timed out' }), {
-           status: 504,
-           headers: { 'Content-Type': 'application/json' },
-         });
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const { data: { user } } = await supabase.auth.getUser(token);
+      if (user) {
+        userId = user.id;
       }
-      throw err;
-    } finally {
-      clearTimeout(timeout);
     }
 
-    if (!response.ok) {
-      throw new Error(`Google Sheet Webhook returned status ${response.status}`);
+    const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase credentials for service role');
+      throw new Error('Server configuration error');
+    }
+
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+
+    const { error } = await supabaseAdmin
+      .from('saved_prompts')
+      .insert({
+        user_id: userId ?? null,
+        title: rawBody.intent,
+        prompt: rawBody.prompt,
+        target_tool: rawBody.model
+      });
+
+    if (error) {
+      console.error('Supabase insert error:', error);
+      throw new Error(`Failed to save to Supabase: ${error.message}`);
     }
 
     return new Response(JSON.stringify({ success: true }), {
@@ -70,7 +63,7 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Error saving prompt to Google Sheet:', error);
+    console.error('Error saving prompt to Supabase:', error);
     return new Response(JSON.stringify({ success: false, error: 'Failed to save prompt' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

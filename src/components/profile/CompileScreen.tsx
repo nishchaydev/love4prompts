@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-export const CompileScreen: React.FC = () => {
+interface CompileScreenProps {
+  onComplete: () => void;
+}
+
+export const CompileScreen: React.FC<CompileScreenProps> = ({ onComplete }) => {
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const allLines = [
     "> injecting stylistic parameters... OK",
@@ -21,6 +25,7 @@ export const CompileScreen: React.FC = () => {
         lineIndex++;
       } else {
         clearInterval(interval);
+        setTimeout(() => onComplete(), 500);
       }
     }, 1200);
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Loader2, Copy, Check, ExternalLink, ImagePlus } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 import { getRemainingUses, recordUse, hasReachedLimit } from '../../lib/rate-limit';
 import { AI_MODELS } from '../hero/logos';
 import { springs } from '../../lib/motion';
@@ -51,7 +52,11 @@ export const ImageToPrompt: React.FC = () => {
   const [error, setError] = useState('');
   const [dragOver, setDragOver] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [remainingUses, setRemainingUses] = useState(() => getRemainingUses(TOOL_SLUG));
+  const [remainingUses, setRemainingUses] = useState(5);
+  
+  useEffect(() => {
+    getRemainingUses(TOOL_SLUG).then(setRemainingUses);
+  }, []);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const processFile = useCallback(async (file: File) => {
@@ -103,7 +108,8 @@ export const ImageToPrompt: React.FC = () => {
       setError('Upload an image first.');
       return;
     }
-    if (hasReachedLimit(TOOL_SLUG)) {
+    const limitReached = await hasReachedLimit(TOOL_SLUG);
+    if (limitReached) {
       setError("You've reached your daily limit of 5 free analyses.");
       return;
     }
@@ -112,9 +118,15 @@ export const ImageToPrompt: React.FC = () => {
     setLoading(true);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const response = await fetch('/api/tools/image-to-prompt', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           imageBase64: imageData.base64,
           mimeType: imageData.mimeType,
@@ -124,8 +136,9 @@ export const ImageToPrompt: React.FC = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Analysis failed.');
       setResult(data.prompt || '');
-      recordUse(TOOL_SLUG);
-      setRemainingUses(getRemainingUses(TOOL_SLUG));
+      await recordUse(TOOL_SLUG);
+      const remaining = await getRemainingUses(TOOL_SLUG);
+      setRemainingUses(remaining);
 
       if (typeof window !== 'undefined' && (window as any).clarity) {
         (window as any).clarity('event', 'image_analyzed');
