@@ -1018,7 +1018,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image1.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1034,7 +1034,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image2.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1050,7 +1050,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image3.png",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1066,7 +1066,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image4.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1082,7 +1082,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image5.png",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1098,7 +1098,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image6.png",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1114,7 +1114,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image7.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1130,7 +1130,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image8.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1146,7 +1146,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image9.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
@@ -1162,7 +1162,7 @@ export const mockPrompts: Prompt[] = [
   ],
   "style": "Various",
   "model": "ChatGPT",
-  "image_url": "/images/cards/library.png",
+  "image_url": "/images/prompts57/image10.jpeg",
   "view_count": 0,
   "save_count": 0,
   "creator": null
