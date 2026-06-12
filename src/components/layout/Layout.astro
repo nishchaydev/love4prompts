@@ -108,6 +108,7 @@ const isEditorial = theme === 'editorial';
     </script>
 
     <!-- Google AdSense -->
+    <meta name="google-adsense-account" content={import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-2577531019319172'} />
     <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${import.meta.env.PUBLIC_ADSENSE_ID || 'ca-pub-2577531019319172'}`} crossorigin="anonymous"></script>
   </head>
   <body 
