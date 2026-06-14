@@ -31,6 +31,42 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
   const [isSaving, setIsSaving] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [isPromptVisible, setIsPromptVisible] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+
+  const handleCreateClick = async () => {
+    setIsRedirecting(true);
+    setCountdown(3);
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(prompt.prompt_text);
+      }
+    } catch (err) {
+      console.warn('Auto-copy on redirect failed: ', err);
+    }
+  };
+
+  const handleSkipCountdown = () => {
+    setIsRedirecting(false);
+    const promptPrefix = "Generate an image using this prompt: ";
+    const redirectUrl = `https://chatgpt.com/?q=${encodeURIComponent(promptPrefix + prompt.prompt_text)}`;
+    window.open(redirectUrl, '_blank');
+  };
+
+  React.useEffect(() => {
+    if (!isRedirecting) return;
+    if (countdown === 0) {
+      setIsRedirecting(false);
+      const promptPrefix = "Generate an image using this prompt: ";
+      const redirectUrl = `https://chatgpt.com/?q=${encodeURIComponent(promptPrefix + prompt.prompt_text)}`;
+      window.open(redirectUrl, '_blank');
+      return;
+    }
+    const timer = setTimeout(() => {
+      setCountdown(prev => prev - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [isRedirecting, countdown, prompt.prompt_text]);
 
   React.useEffect(() => {
     import('../../lib/supabase').then(({ supabase }) => {
@@ -117,28 +153,6 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
     } catch {}
   };
 
-  /* Extract model parameters from prompt text */
-  const extractParams = (text: string) => {
-    const params: Record<string, string> = {};
-    const arMatch = text.match(/--ar\s+(\S+)/i);
-    if (arMatch) params['ASPECT RATIO'] = arMatch[1];
-    const vMatch = text.match(/--v\s+(\S+)/i);
-    if (vMatch) params['ENGINE'] = `V ${vMatch[1]}`;
-    const styleMatch = text.match(/--style\s+(\S+)/i);
-    if (styleMatch) params['STYLE'] = styleMatch[1].toUpperCase();
-    const cMatch = text.match(/--c\s+(\S+)/i);
-    if (cMatch) params['CHAOS'] = cMatch[1];
-    /* Fallback defaults */
-    if (Object.keys(params).length === 0) {
-      params['MODEL'] = prompt.model || 'AI';
-      params['STYLE'] = prompt.style || 'General';
-      params['VIEWS'] = prompt.view_count?.toLocaleString() || '—';
-      params['SAVES'] = prompt.save_count?.toLocaleString() || '—';
-    }
-    return params;
-  };
-
-  const params = extractParams(prompt.prompt_text);
   const titleWords = prompt.title.toUpperCase().split(' ');
   const titleLine1 = titleWords.slice(0, Math.ceil(titleWords.length / 2)).join(' ');
   const titleLine2 = titleWords.slice(Math.ceil(titleWords.length / 2)).join(' ');
@@ -152,15 +166,20 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
     relatedImages.push(prompt.image_url);
   }
 
+  /* Launch URLs */
+  const promptPrefix = "Generate an image using this prompt: ";
+  const chatGptUrl = `https://chatgpt.com/?q=${encodeURIComponent(promptPrefix + prompt.prompt_text)}`;
+
   return (
-    <main className="flex-grow flex flex-col md:flex-row relative overflow-hidden max-w-7xl mx-auto w-full border-x border-black">
+    <>
+      <main className="flex-grow flex flex-col md:flex-row relative overflow-hidden max-w-7xl mx-auto w-full border-x border-black">
       {/* Massive Background Wordmark */}
       <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center opacity-[0.05] overflow-hidden">
         <h1
           className="text-black whitespace-nowrap select-none"
           style={{ fontFamily: 'Inter, sans-serif', fontSize: '320px', lineHeight: '280px', letterSpacing: '-0.05em', fontWeight: 700 }}
         >
-          DETAIL
+          TREND
         </h1>
       </div>
 
@@ -173,12 +192,12 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
           {titleLine1}<br />{titleLine2}
         </h2>
         <div className="flex flex-wrap gap-2">
-          {prompt.style && (
-            <span className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{prompt.style.toUpperCase()}</span>
+          {prompt.category && (
+            <span className="px-3 py-1 border-2 border-[#FF6D87] text-[#FF6D87] ed-label-caps bg-[#f9f9f9] rounded-full font-bold">{prompt.category.toUpperCase()}</span>
           )}
-          {prompt.tags.slice(0, 2).map((tag) => (
-            <span key={tag} className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{tag.toUpperCase()}</span>
-          ))}
+          {prompt.subcategory && (
+            <span className="px-3 py-1 border border-black ed-label-caps bg-[#f9f9f9] rounded-full">{prompt.subcategory.toUpperCase()}</span>
+          )}
           {prompt.model && (
             <span className="px-2 py-1 border border-[#0047BB] text-[#0047BB] ed-label-caps bg-[#f9f9f9]">{prompt.model.toUpperCase()}</span>
           )}
@@ -215,21 +234,19 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
           )}
         </div>
 
-        {/* Mobile-only CTA */}
+        {/* Mobile-only Launch Buttons */}
         <div className="block md:hidden w-full mt-6">
-          <a 
-            href={`https://chatgpt.com/?q=${encodeURIComponent("Generate an image using this prompt: " + prompt.prompt_text)}`}
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="w-full justify-center px-6 py-4 bg-[#FF6D87] border-4 border-black rounded-full font-black uppercase tracking-widest text-white text-[16px] active:bg-black transition-all shadow-[6px_6px_0_#000] active:shadow-[2px_2px_0_#000] active:translate-y-1 flex items-center gap-3"
+          <button 
+            onClick={handleCreateClick}
+            className="w-full justify-center px-6 py-4 bg-[#FF6D87] border-4 border-black rounded-full font-black uppercase tracking-widest text-white text-[14px] active:bg-black transition-all shadow-[6px_6px_0_#000] active:shadow-[2px_2px_0_#000] active:translate-y-1 flex items-center gap-3 cursor-pointer"
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-            Create Image!
-          </a>
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>image</span>
+            Create Image
+          </button>
         </div>
       </div>
 
-      {/* Right: Structural Prompt Data */}
+      {/* Right: Trend Data + Launch */}
       <div className="w-full md:w-1/2 flex flex-col relative z-10">
         {/* Desktop-only Header Section */}
         <div className="hidden md:block p-[40px] border-b border-black">
@@ -240,22 +257,34 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
             {titleLine1}<br />{titleLine2}
           </h2>
           <div className="flex flex-wrap gap-2 mb-[24px]">
-            {prompt.style && (
-              <span className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{prompt.style.toUpperCase()}</span>
+            {prompt.category && (
+              <span className="px-3 py-1 border-2 border-[#FF6D87] text-[#FF6D87] ed-label-caps bg-[#f9f9f9] rounded-full font-bold">{prompt.category.toUpperCase()}</span>
             )}
-            {prompt.tags.slice(0, 2).map((tag) => (
-               <span key={tag} className="px-2 py-1 border border-black ed-label-caps bg-[#f9f9f9]">{tag.toUpperCase()}</span>
-            ))}
+            {prompt.subcategory && (
+              <span className="px-3 py-1 border border-black ed-label-caps bg-[#f9f9f9] rounded-full">{prompt.subcategory.toUpperCase()}</span>
+            )}
             {prompt.model && (
               <span className="px-2 py-1 border border-[#0047BB] text-[#0047BB] ed-label-caps bg-[#f9f9f9]">{prompt.model.toUpperCase()}</span>
             )}
           </div>
         </div>
 
-        {/* Prompt Formula Section */}
+        {/* ═══ LAUNCH BUTTONS (Desktop) — ABOVE prompt ═══ */}
+        <div className="hidden md:flex p-[40px] border-b border-black flex-col gap-3">
+          <h3 className="ed-label-caps text-[#4c4546] mb-2">RECREATE THIS TREND</h3>
+          <button 
+            onClick={handleCreateClick}
+            className="w-full justify-center px-6 py-4 bg-[#FF6D87] border-4 border-black rounded-full font-black uppercase tracking-widest text-white text-[16px] hover:bg-black transition-all hover:-translate-y-1 shadow-[6px_6px_0_#000] hover:shadow-[8px_8px_0_#000] flex items-center gap-3 cursor-pointer"
+          >
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>image</span>
+            Create Image
+          </button>
+        </div>
+
+        {/* Prompt Section — Below launch buttons */}
         <div className="p-6 md:p-[40px] border-b border-black flex-grow">
           <div className="flex justify-between items-center mb-[24px] border-b border-[#7e7576] pb-2">
-            <h3 className="ed-label-caps text-[#4c4546]">BASE FORMULA</h3>
+            <h3 className="ed-label-caps text-[#4c4546]">PROMPT</h3>
             <button
               onClick={handleCopy}
               className="ed-label-ui uppercase chromatic-underline inline-flex items-center gap-1 cursor-pointer bg-transparent border-0 px-0"
@@ -285,19 +314,6 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
                 {prompt.prompt_text}
               </p>
             </div>
-          </div>
-          
-          {/* Desktop-only CTA */}
-          <div className="mt-8 hidden md:flex justify-start">
-            <a 
-              href={`https://chatgpt.com/?q=${encodeURIComponent("Generate an image using this prompt: " + prompt.prompt_text)}`}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="px-6 py-4 bg-[#FF6D87] border-4 border-black rounded-full font-black uppercase tracking-widest text-white text-[16px] hover:bg-black transition-all hover:-translate-y-1 shadow-[6px_6px_0_#000] hover:shadow-[8px_8px_0_#000] inline-flex items-center gap-3"
-            >
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-              Create Image!
-            </a>
           </div>
         </div>
 
@@ -334,5 +350,49 @@ export const PromptDetailView: React.FC<PromptDetailViewProps> = ({ prompt, init
         </div>
       </div>
     </main>
+
+    {/* Redirection Countdown Overlay */}
+    {isRedirecting && (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+        <div className="bg-white border-4 border-black p-8 rounded-[24px] max-w-md w-full shadow-[8px_8px_0_#000] text-center">
+          <div className="w-16 h-16 bg-[#FFD166] border-4 border-black rounded-full flex items-center justify-center mx-auto mb-6 shadow-[3px_3px_0_#000]">
+            <span className="material-symbols-outlined text-2xl font-black text-black">photo_camera</span>
+          </div>
+          <h3 className="font-black text-2xl uppercase tracking-tight text-black mb-3">
+            Prepare Your Photo
+          </h3>
+          <p className="text-black font-black uppercase text-sm tracking-wide bg-[#FF6D87]/20 border-2 border-[#FF6D87] py-3 px-4 rounded-xl mb-6">
+            ⚠️ You will have to add a photo of yours!
+          </p>
+          <p className="text-gray-600 text-sm font-bold uppercase tracking-wider">
+            Redirecting to ChatGPT in <span className="text-black font-black text-lg">{countdown}</span> seconds...
+          </p>
+          <div className="w-full bg-gray-200 h-3 border-2 border-black rounded-full mt-4 overflow-hidden">
+            <div 
+              className="bg-[#1482A3] h-full transition-all duration-1000 ease-linear"
+              style={{ width: `${(3 - countdown) * 33.3}%` }}
+            />
+          </div>
+          <p className="text-[#1482A3] text-[10px] font-black uppercase tracking-wider mt-4">
+            📋 Prompt auto-copied to clipboard! Just paste (Ctrl+V) in ChatGPT.
+          </p>
+          <div className="flex justify-between items-center mt-6">
+            <button 
+              onClick={() => setIsRedirecting(false)}
+              className="text-xs text-red-500 hover:text-red-700 font-black uppercase tracking-widest underline bg-transparent border-0 cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={handleSkipCountdown}
+              className="text-xs text-[#1482A3] hover:text-black font-black uppercase tracking-widest underline bg-transparent border-0 cursor-pointer"
+            >
+              Launch Immediately
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronLeft, Loader2, Copy, Check, Sparkles, MessageSquare, Code2, Image as ImageIcon, ArrowLeft, ArrowRight, RotateCcw, ExternalLink, Lightbulb } from 'lucide-react';
+import { Loader2, Copy, Check, Sparkles, MessageSquare, Image as ImageIcon, ArrowLeft, ArrowRight, RotateCcw, ExternalLink, Lightbulb } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { getRemainingUses, recordUse, hasReachedLimit } from '../../lib/rate-limit';
 import { AI_MODELS_EXTENDED } from '../hero/logos';

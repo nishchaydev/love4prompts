@@ -143,12 +143,13 @@ export const FacebookPostGenerator: React.FC = () => {
 
         <div className="hidden md:block md:col-span-3 lg:col-span-2 border-r border-[#cfc4c5] relative overflow-visible bg-transparent">
           <div className="p-8 sticky top-24 h-full flex flex-col justify-between">
-            <h1
+            <div
+              aria-hidden="true"
               className="absolute top-[200px] left-[20px] xl:left-[50px] text-[180px] lg:text-[240px] leading-[0.75] font-black tracking-tighter text-black uppercase opacity-[0.07] hover:opacity-[0.15] transition-opacity m-0 pointer-events-none z-0"
               style={{ transformOrigin: 'top left', transform: 'rotate(-90deg) translate(-100%, 0)' }}
             >
               POST
-            </h1>
+            </div>
           </div>
         </div>
 

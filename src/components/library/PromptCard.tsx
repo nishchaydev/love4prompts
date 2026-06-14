@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bookmark, BookmarkCheck, Copy, Check, Share2 } from 'lucide-react';
+import { Bookmark, Copy, Check, Share2, Wand2 } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { motion } from 'framer-motion';
 import { springs } from '../../lib/motion';
@@ -19,6 +19,10 @@ export interface Prompt {
   save_count: number;
   copy_count?: number;
   created_at?: string;
+  /** Trend category — Girls, Boys, Couples, Creators */
+  category?: string;
+  /** Trend subcategory — e.g. Soft Girl, CEO, Anime */
+  subcategory?: string;
   creator?: {
     name: string;
     avatar: string;
@@ -124,19 +128,30 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
           <button
             onClick={handleCopy}
             aria-label="Copy Prompt"
-            className="flex items-center gap-2 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white rounded-full text-sm font-bold hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
+            className="flex items-center gap-2 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white rounded-full text-sm font-bold hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-[2px_2px_0_#000] hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
           >
             {copied ? <Check className="w-4 h-4 text-[var(--color-success-green)]" aria-hidden="true" /> : <Copy className="w-4 h-4" aria-hidden="true" />}
             {copied ? 'Copied!' : 'Copy Prompt'}
           </button>
           
-          <button 
-            onClick={(e) => { e.preventDefault(); }}
-            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white flex items-center justify-center hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-lg hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
-            aria-label="Share prompt"
-          >
-             <Share2 className="w-4 h-4" aria-hidden="true" />
-          </button>
+          <div className="flex gap-2">
+            <a 
+              href={`/tools/prompt-enhancer?q=${encodeURIComponent(prompt.prompt_text)}`}
+              onClick={(e) => e.stopPropagation()}
+              className="w-10 h-10 rounded-full bg-[#1482A3]/90 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#1482A3] hover:border-white/40 transition-all duration-300 shadow-[2px_2px_0_#000] hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
+              aria-label="Enhance prompt"
+              title="1-Click Enhance"
+            >
+               <Wand2 className="w-4 h-4" aria-hidden="true" />
+            </a>
+            <button 
+              onClick={(e) => { e.preventDefault(); }}
+              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white flex items-center justify-center hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-[2px_2px_0_#000] hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
+              aria-label="Share prompt"
+            >
+               <Share2 className="w-4 h-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
       </motion.a>
 

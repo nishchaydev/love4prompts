@@ -67,7 +67,7 @@ const isEditorial = theme === 'editorial';
           "@id": "https://love4prompts.com/#website",
           "url": "https://love4prompts.com/",
           "name": "Love4Prompts",
-          "description": "The ultimate prompt toolkit for every AI. Generate, enhance, and translate AI prompts instantly.",
+          "description": "Recreate viral AI image trends in seconds. Discover trending AI image styles from across the internet, copy the prompt or launch directly into ChatGPT, Gemini or Claude.",
           "publisher": {
             "@type": "Organization",
             "name": "Love4Prompts",
@@ -78,12 +78,13 @@ const isEditorial = theme === 'editorial';
           }
         },
         {
-          "@type": "SoftwareApplication",
-          "@id": "https://love4prompts.com/#software",
-          "name": title,
-          "description": description,
-          "applicationCategory": "UtilitiesApplication",
+          "@type": "WebApplication",
+          "@id": "https://love4prompts.com/#webapp",
+          "name": "Love4Prompts",
+          "description": "The fastest platform to discover, recreate and use viral AI image trends in seconds.",
+          "applicationCategory": "DesignApplication",
           "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript. Requires HTML5.",
           "offers": {
             "@type": "Offer",
             "price": "0",
@@ -122,6 +123,8 @@ const isEditorial = theme === 'editorial';
       ? 'editorial-page bg-[#FAEFED] text-[#1a1a1a] selection:bg-[#FF6D87] selection:text-white'
       : 'bg-[var(--color-background-primary)] text-[var(--color-text-primary)] selection:bg-[var(--color-primary)] selection:text-white'
   ]}>
+    <!-- Top Progress Bar for ViewTransitions -->
+    <div id="nav-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="fixed top-0 left-0 h-[5px] z-[999999] w-0 transition-all duration-300 ease-out opacity-0 pointer-events-none border-b-2" style="background-color: var(--progress-color, #FF6D87); border-color: var(--progress-border-color, #000);"></div>
 
     <!-- Global Splash Loader -->
     <div id="global-splash-loader" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FAEFED] transition-opacity duration-500 ease-out pointer-events-none opacity-0">
@@ -195,7 +198,7 @@ const isEditorial = theme === 'editorial';
     
     {!isEditorial && (
       <div class="absolute top-0 inset-x-0 h-[700px] overflow-hidden pointer-events-none z-0 opacity-[0.35]" aria-hidden="true">
-        <div class="absolute top-[-15%] left-[10%] w-[80vw] max-w-[700px] h-[500px] rounded-full bg-[var(--color-accent-violet)] opacity-[0.35] blur-[130px]"></div>
+        <div class="absolute top-[-15%] left-[10%] w-[80vw] max-w-[700px] h-[500px] rounded-full bg-[var(--color-primary)] opacity-[0.35] blur-[130px]"></div>
         <div class="absolute top-[5%] left-[55%] w-[60vw] max-w-[500px] h-[400px] rounded-full bg-[#ea2261] opacity-[0.22] blur-[110px]"></div>
         <div class="absolute top-[-20%] left-[40%] w-[55vw] max-w-[450px] h-[350px] rounded-full bg-[#ff9f43] opacity-[0.18] blur-[100px]"></div>
         <div class="absolute top-[8%] left-[25%] w-[65vw] max-w-[550px] h-[400px] rounded-full bg-[#b9b9f9] opacity-[0.15] blur-[120px]"></div>
@@ -242,8 +245,44 @@ const isEditorial = theme === 'editorial';
         
         if (typeof window !== 'undefined' && !window._physicsAttached) {
           window._physicsAttached = true;
-          
-          document.addEventListener('click', (e) => {
+         // --- Global Sparkle Effect & Top Progress Bar ---
+      
+      document.addEventListener('astro:before-preparation', () => {
+        const bar = document.getElementById('nav-progress');
+        if (bar) {
+          bar.style.transition = 'width 0.3s ease-out, opacity 0.1s';
+          bar.style.opacity = '1';
+          bar.style.width = '30%';
+          bar.setAttribute('aria-valuenow', '30');
+          window._navInterval = setInterval(() => {
+            const current = parseInt(bar.style.width || '30');
+            if (current < 85) {
+              const next = current + 5;
+              bar.style.width = next + '%';
+              bar.setAttribute('aria-valuenow', next.toString());
+            }
+          }, 200);
+        }
+      });
+
+      document.addEventListener('astro:page-load', () => {
+        const bar = document.getElementById('nav-progress');
+        if (bar) {
+          clearInterval(window._navInterval);
+          bar.style.width = '100%';
+          bar.setAttribute('aria-valuenow', '100');
+          setTimeout(() => {
+            bar.style.opacity = '0';
+            setTimeout(() => {
+              bar.style.transition = 'none';
+              bar.style.width = '0';
+              bar.setAttribute('aria-valuenow', '0');
+            }, 300);
+          }, 300);
+        }
+      });
+
+      document.addEventListener('click', (e) => {
             // Ignore clicks on links/buttons to prevent blocking them, but still spawn particles
             const colors = ['#000000', '#000000', '#000000', '#FF6D87', '#1482A3'];
 

@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  /* ─── PALETTE: Solid Minimalist — Charcoal × Purple ───── */
+  /* ─── PALETTE: Solid Minimalist — Charcoal × Teal ───── */
 
-  /* Backgrounds — clean Wope dark purple-black */
+  /* Backgrounds — clean Wope dark teal-black */
   --color-background-primary: #0A0118;
   --color-background-card: #120A24;
   --color-background-elevated: #170E30;
@@ -24,9 +24,9 @@
   --color-primary-rgb: 216, 63, 135;
   --color-primary-glow: rgba(216, 63, 135, 0.3);
   --color-primary-surface: rgba(216, 63, 135, 0.08);
-  --color-accent-violet: #8B5CF6;
-  --color-accent-purple: var(--color-accent-violet);
-  --color-accent-purple-hover: #7c4bf5;
+  --color-accent-cyan: #06B6D4;
+  --color-accent-teal: var(--color-accent-cyan);
+  --color-accent-teal-hover: #0891B2;
   --color-border-warm: rgba(216, 63, 135, 0.12);
 
   /* Layout */

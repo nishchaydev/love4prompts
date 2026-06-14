@@ -51,7 +51,7 @@ export const ReelSubmitForm: React.FC = () => {
             if (status === 'error') setStatus('idle');
           }}
           placeholder="https://www.instagram.com/reel/..."
-          className={`w-full bg-[var(--color-background-elevated)] border ${status === 'error' ? 'border-[var(--color-accent-coral)]' : 'border-[var(--color-border)]'} rounded-xl pl-4 pr-32 py-4 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-purple)] transition-colors`}
+          className={`w-full bg-[var(--color-background-elevated)] border ${status === 'error' ? 'border-[var(--color-accent-coral)]' : 'border-[var(--color-border)]'} rounded-xl pl-4 pr-32 py-4 text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent-teal)] transition-colors`}
         />
         <div className="absolute right-2 top-2 bottom-2">
           <Button 
@@ -82,8 +82,8 @@ export const ReelSubmitForm: React.FC = () => {
         </p>
       )}
       
-      <div className="mt-6 p-4 bg-[var(--color-accent-purple)]/5 border border-[var(--color-accent-purple)]/20 rounded-xl">
-        <h4 className="text-sm font-medium text-[var(--color-accent-purple)] mb-1">How it works (Coming soon in Phase 2)</h4>
+      <div className="mt-6 p-4 bg-[var(--color-accent-teal)]/5 border border-[var(--color-accent-teal)]/20 rounded-xl">
+        <h4 className="text-sm font-medium text-[var(--color-accent-teal)] mb-1">How it works (Coming soon in Phase 2)</h4>
         <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
           Our bot will automatically comment on the creator's reel using your connected account, wait for the DM response, extract the prompt text, and save it directly to your library.
         </p>

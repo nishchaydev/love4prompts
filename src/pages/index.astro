@@ -1,10 +1,9 @@
 ---
 import Layout from "../components/layout/Layout.astro";
 import { supabase } from "../lib/supabase";
-import { PinterestGallery } from "../components/library/PinterestGallery";
 import { AdSlot } from "../components/ads/AdSlot";
-import type { Prompt } from "../components/library/PromptCard";
 import { mockPrompts } from "../lib/mock-data";
+import { PinterestGallery } from "../components/library/PinterestGallery";
 
 const { data: dbPrompts, error } = await supabase
   .from("prompts")
@@ -16,24 +15,34 @@ if (error) console.error("Error fetching prompts:", error);
 
 const prompts = dbPrompts && dbPrompts.length > 0 ? dbPrompts : mockPrompts;
 
-const title = "Love4Prompts — Making your everyday simple!";
+const title = "Love4Prompts — Recreate Viral AI Image Trends in Seconds";
 const description =
-  "Discover ready-to-use tools and prompts that save you time. No complex tech stuff. Just click, type, and get amazing results instantly.";
+  "Discover trending AI image styles from across the internet. Copy the prompt or launch directly into ChatGPT, Gemini or Claude and recreate the trend with your own face.";
 
-/* Tile accent colors cycle */
-const accentColors = ["vermillion", "cobalt", "primary", "secondary"] as const;
-const accentHex: Record<string, string> = {
-  vermillion: "#FF3B30",
-  cobalt: "#0047BB",
-  primary: "#000000",
-  secondary: "#FF6D87",
-};
-/* Aspect ratios to match reference variety */
-const aspects = [
-  "aspect-[3/4]",
-  "aspect-square",
-  "aspect-video",
-  "aspect-[4/5]",
+/* Category definitions for the grid (Exactly 10 categories) */
+const categories = [
+  { name: "Boys", color: "#1482A3", count: prompts.filter((p: any) => p.category === "Boys").length },
+  { name: "Girls", color: "#FF6D87", count: prompts.filter((p: any) => p.category === "Girls").length },
+  { name: "Professional", color: "#06D6A0", count: prompts.filter((p: any) => p.category === "Professional").length },
+  { name: "AI art", color: "#9b59b6", count: prompts.filter((p: any) => p.category === "AI art").length },
+  { name: "Birthday", color: "#FFD166", count: prompts.filter((p: any) => p.category === "Birthday").length },
+  { name: "Festivals", color: "#e67e22", count: prompts.filter((p: any) => p.category === "Festivals").length },
+  { name: "Posters", color: "#1abc9c", count: prompts.filter((p: any) => p.category === "Posters").length },
+  { name: "Netflix typo", color: "#e74c3c", count: prompts.filter((p: any) => p.category === "Netflix typo").length },
+  { name: "Memories", color: "#34495e", count: prompts.filter((p: any) => p.category === "Memories").length },
+  { name: "Anniversary", color: "#FF3B30", count: prompts.filter((p: any) => p.category === "Anniversary").length },
+];
+
+/* Get trending prompts (sorted by views) for the floating hero cards */
+const trendingPrompts = [...prompts].sort((a: any, b: any) => (b.view_count || 0) - (a.view_count || 0)).slice(0, 4);
+
+/* How it works steps - EMOJIS REMOVED */
+const steps = [
+  { num: "01", title: "Discover", desc: "Browse viral AI image trends from TikTok, Instagram & Pinterest" },
+  { num: "02", title: "Open", desc: "Tap any trend to see the AI prompt behind the viral image" },
+  { num: "03", title: "Copy or Launch", desc: "Copy the prompt or launch directly into ChatGPT, Gemini or Claude" },
+  { num: "04", title: "Add Your Photo", desc: "Upload your own photo as the reference image" },
+  { num: "05", title: "Become the Trend", desc: "Get your personalized version of the viral AI image" },
 ];
 ---
 
@@ -43,7 +52,7 @@ const aspects = [
     <main
       class="relative z-10 flex-1 pt-[40px] lg:pt-[60px] xl:pt-[80px] px-[20px] sm:px-[40px] max-w-7xl mx-auto pb-[60px] w-full"
     >
-      {/* Neo-Brutalist SaaS Hero Section */}
+      {/* ═══ HERO: Trend Discovery ═══ */}
       <section
         class="relative w-full pb-[60px] lg:pb-[80px] flex flex-col items-center text-center"
       >
@@ -54,51 +63,54 @@ const aspects = [
         >
         </div>
 
-        {/* Floating Side Visuals (Hidden on small screens) */}
-        {/* Left Side */}
+        {/* Floating Trend Cards — Left */}
         <div
-          class="hidden md:block absolute -left-8 lg:-left-4 xl:left-4 top-[10%] w-[120px] lg:w-[160px] xl:w-[200px] -rotate-6 z-0 hover:rotate-0 transition-transform duration-300"
+          class="hidden lg:block absolute lg:left-0 xl:left-4 top-[10%] lg:w-[140px] xl:w-[200px] -rotate-6 z-0 md:hover:rotate-0 transition-transform duration-300"
         >
           <div
             class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] lg:shadow-[6px_6px_0_#000] rounded-[12px]"
           >
-            <img
-              src="/images/cards/caption_maker.png"
-              fetchpriority="high"
-              loading="eager"
-              width="400"
-              height="300"
-              class="w-full h-[100px] lg:h-[120px] xl:h-[150px] object-cover rounded-[6px] border-[2px] border-black"
-              alt="Viral Photos"
-            />
+            {trendingPrompts[0]?.image_url && (
+              <img
+                src={trendingPrompts[0].image_url}
+                fetchpriority="high"
+                loading="eager"
+                width="400"
+                height="300"
+                class="w-full h-[100px] lg:h-[120px] xl:h-[150px] object-cover rounded-[6px] border-[2px] border-black"
+                alt={trendingPrompts[0].title}
+              />
+            )}
             <p
-              class="font-black text-[8px] lg:text-[10px] uppercase mt-2 text-center tracking-widest"
+              class="font-black text-[8px] lg:text-[10px] uppercase mt-2 text-center tracking-widest text-black"
             >
-              Viral Photos
+              {trendingPrompts[0]?.title || "Trending"}
             </p>
           </div>
         </div>
 
-        {/* Right Side */}
+        {/* Floating Trend Cards — Right */}
         <div
-          class="hidden md:block absolute -right-8 lg:-right-4 xl:right-4 top-[5%] w-[110px] lg:w-[140px] xl:w-[180px] rotate-3 z-0 hover:rotate-0 transition-transform duration-300"
+          class="hidden lg:block absolute lg:right-0 xl:right-4 top-[5%] lg:w-[130px] xl:w-[180px] rotate-3 z-0 md:hover:rotate-0 transition-transform duration-300"
         >
           <div
             class="bg-[#FFD166] border-[3px] border-black p-2 shadow-[4px_4px_0_#000] lg:shadow-[6px_6px_0_#000] rounded-[12px]"
           >
-            <img
-              src="/images/cards/library.png"
-              fetchpriority="high"
-              loading="eager"
-              width="400"
-              height="300"
-              class="w-full h-[80px] lg:h-[100px] xl:h-[120px] object-cover rounded-[6px] border-[2px] border-black"
-              alt="Image Library"
-            />
+            {trendingPrompts[1]?.image_url && (
+              <img
+                src={trendingPrompts[1].image_url}
+                fetchpriority="high"
+                loading="eager"
+                width="400"
+                height="300"
+                class="w-full h-[80px] lg:h-[100px] xl:h-[120px] object-cover rounded-[6px] border-[2px] border-black"
+                alt={trendingPrompts[1].title}
+              />
+            )}
             <p
-              class="font-black text-[8px] lg:text-[10px] uppercase mt-2 text-center tracking-widest"
+              class="font-black text-[8px] lg:text-[10px] uppercase mt-2 text-center tracking-widest text-black"
             >
-              Image Library
+              {trendingPrompts[1]?.title || "Trending"}
             </p>
           </div>
         </div>
@@ -108,435 +120,213 @@ const aspects = [
         >
           {/* Pill Badge */}
           <div
-            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-[2px] border-black shadow-[4px_4px_0_#000] mb-4 transition-transform hover:-translate-y-1 hover:shadow-[6px_6px_0_#000]"
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-[2px] border-black shadow-[4px_4px_0_#000] mb-6 transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#000] active:scale-95 duration-200"
           >
             <span
               class="w-3 h-3 rounded-full bg-[#FF6D87] border-[2px] border-black animate-pulse"
             ></span>
             <span
               class="text-[12px] font-black tracking-widest text-black uppercase"
-              >The Ultimate Prompt Toolkit</span
+              >SEE THE TREND. BE THE TREND.</span
             >
           </div>
 
           <h1
-            class="text-black uppercase font-black text-[32px] sm:text-[40px] md:text-[56px] lg:text-[64px] xl:text-[72px] leading-[0.95] mb-4 max-w-[850px] relative z-10"
+            class="text-black uppercase font-black text-[32px] sm:text-[40px] md:text-[56px] lg:text-[56px] xl:text-[72px] leading-[0.95] mb-6 max-w-[850px] lg:max-w-[700px] xl:max-w-[850px] relative z-10"
           >
-            MAKE AI YOUR ULTIMATE <br class="hidden sm:block" />
+            RECREATE VIRAL AI IMAGE <br class="hidden sm:block" />
             <span
               class="text-[#1482A3] drop-shadow-[2px_2px_0_#000] md:drop-shadow-[4px_4px_0_#000] tracking-tighter"
-              >GROWTH ENGINE.</span
+              >TRENDS IN SECONDS.</span
             >
           </h1>
 
           <p
-            class="text-black font-medium text-[16px] sm:text-[20px] leading-relaxed max-w-2xl mx-auto mb-6"
+            class="text-black font-semibold text-[18px] sm:text-[22px] leading-relaxed max-w-2xl mx-auto mb-8 whitespace-pre-line"
           >
-            {
-              "Build better prompts, generate perfect images, and automate your workflow with the industry's most powerful collection of ready-to-use AI tools."
-                .split("")
-                .map((char, index) =>
-                  char === " " ? (
-                    " "
-                  ) : (
-                    <span class="inline-block transition-all duration-300 ease-out hover:-translate-y-1 hover:text-[#FF6D87] cursor-default">
-                      {char}
-                    </span>
-                  ),
-                )
-            }
+            Browse trending image styles.
+            Click on Create Me
+            Put yourself into the trend.
           </p>
 
           <div
             class="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto relative z-20"
           >
             <a
-              href="/tools"
-              class="magnetic-btn bg-[#FF6D87] text-white px-6 py-3 rounded-full font-black text-[16px] uppercase tracking-wide border-[3px] border-black shadow-[4px_4px_0_#000] hover:bg-[#FFD166] hover:text-black hover:shadow-[4px_4px_0_#1482A3] transition-all duration-300"
+              href="#trends-feed"
+              class="magnetic-btn bg-[#FF6D87] text-white px-8 py-4 rounded-full font-black text-[16px] uppercase tracking-wide border-[3px] border-black shadow-[4px_4px_0_#000] hover:-translate-y-1 hover:scale-105 active:scale-95 hover:shadow-[6px_6px_0_#000] transition-all duration-200"
             >
-              Start for free
+              Explore Trends
             </a>
             <a
-              href="/library"
-              class="magnetic-btn bg-white text-black px-6 py-3 rounded-full font-black text-[16px] uppercase tracking-wide border-[3px] border-black shadow-[4px_4px_0_#000] hover:bg-[#06D6A0] hover:shadow-[4px_4px_0_#FF6D87] transition-all duration-300"
+              href="#how-it-works"
+              class="magnetic-btn bg-white text-black px-8 py-4 rounded-full font-black text-[16px] uppercase tracking-wide border-[3px] border-black shadow-[4px_4px_0_#000] hover:-translate-y-1 hover:scale-105 active:scale-95 hover:shadow-[6px_6px_0_#FF6D87] transition-all duration-200"
             >
-              Browse Library
+              How It Works
             </a>
-          </div>
-        </div>
-
-        {/* Feature Cards (Brutalist Bento Box) */}
-        <div
-          class="relative z-10 w-full max-w-6xl mx-auto mt-20 md:mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 text-left px-4"
-        >
-          {/* Card 1 */}
-          <a
-            href="/tools/prompt-maker"
-            class="relative group block cursor-pointer"
-          >
-            {/* Top Pop Card */}
-            <div
-              class="hidden md:block absolute left-1/4 -translate-x-1/2 -top-6 w-[120px] lg:w-[140px] rotate-3 z-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:-translate-y-10 group-hover:-translate-x-4"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/prompt_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Style Engine"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Style Engine
-                </p>
-              </div>
-            </div>
-            {/* Edge Pop Card */}
-            <div
-              class="hidden md:block absolute -left-4 lg:-left-8 top-10 w-[120px] lg:w-[140px] -rotate-6 z-0 transition-transform duration-500 ease-out group-hover:-rotate-12 group-hover:-translate-x-8"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/caption_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Everyday AI"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Everyday AI
-                </p>
-              </div>
-            </div>
-            {/* Center Pop Card */}
-            <div
-              class="hidden md:block absolute top-0 left-8 w-[120px] lg:w-[140px] rotate-2 z-0 transition-transform duration-500 ease-out group-hover:-rotate-2 group-hover:-translate-y-6 group-hover:-translate-x-2"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/library.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Photography"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Photography
-                </p>
-              </div>
-            </div>
-            <div
-              class="relative z-10 bg-white border-[3px] border-black rounded-[20px] p-5 shadow-[6px_6px_0_#000] group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#FF6D87] transition-all duration-300 h-full flex flex-col"
-            >
-              <h3
-                class="text-[20px] font-black text-black mb-1 uppercase tracking-tight"
-              >
-                Prompt Maker
-              </h3>
-              <p
-                class="text-gray-700 font-medium mb-4 text-[14px] leading-snug flex-1"
-              >
-                Generate perfect Midjourney prompts with our visual builder and
-                styling engine.
-              </p>
-              <div
-                class="w-full h-32 bg-[#FAEFED] rounded-[12px] border-[2px] border-black overflow-hidden relative shadow-[3px_3px_0_#000]"
-              >
-                <img
-                  src="/images/cards/prompt_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="800"
-                  height="600"
-                  class="w-full h-full object-cover"
-                  alt="Prompt Maker Illustration"
-                />
-              </div>
-            </div>
-          </a>
-
-          {/* Card 2 */}
-          <a
-            href="/instagram-caption-generator"
-            class="relative group md:-translate-y-4 block cursor-pointer"
-          >
-            {/* Top Left Pop Card */}
-            <div
-              class="hidden md:block absolute left-1/4 -translate-x-1/2 -top-4 w-[120px] lg:w-[140px] -rotate-3 z-0 transition-transform duration-500 ease-out group-hover:-translate-y-10 group-hover:-rotate-6 group-hover:-translate-x-4"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/caption_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Social"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Social
-                </p>
-              </div>
-            </div>
-            {/* Top Right Pop Card */}
-            <div
-              class="hidden md:block absolute right-1/4 translate-x-1/2 -top-2 w-[120px] lg:w-[140px] rotate-3 z-0 transition-transform duration-500 ease-out group-hover:-translate-y-10 group-hover:rotate-6 group-hover:translate-x-4"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/prompt_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Magic Output"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Magic Output
-                </p>
-              </div>
-            </div>
-            {/* Center Pop Card */}
-            <div
-              class="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 w-[120px] lg:w-[140px] rotate-0 z-0 transition-transform duration-500 ease-out group-hover:-translate-y-12"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/library.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Trending"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Trending
-                </p>
-              </div>
-            </div>
-            <div
-              class="relative z-10 bg-[#FAEFED] border-[3px] border-black rounded-[20px] p-5 shadow-[6px_6px_0_#000] group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#06D6A0] transition-all duration-300 h-full flex flex-col"
-            >
-              <div>
-                <div
-                  class="inline-block bg-[#06D6A0] text-black text-[10px] font-black px-2 py-0.5 border-[2px] border-black shadow-[2px_2px_0_#000] rounded-full mb-2 uppercase tracking-widest"
-                >
-                  New Feature
-                </div>
-                <h3
-                  class="text-[20px] font-black text-black mb-1 uppercase tracking-tight"
-                >
-                  Caption Maker
-                </h3>
-              </div>
-              <p
-                class="text-gray-700 font-medium mb-4 text-[14px] leading-snug flex-1"
-              >
-                Generate viral, highly-engaging captions perfectly tailored for
-                any social platform.
-              </p>
-              <div
-                class="w-full h-24 bg-white rounded-[12px] border-[2px] border-black overflow-hidden relative shadow-[3px_3px_0_#000]"
-              >
-                <img
-                  src="/images/cards/caption_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="800"
-                  height="600"
-                  class="w-full h-full object-cover"
-                  alt="Caption Maker Illustration"
-                />
-              </div>
-            </div>
-          </a>
-
-          {/* Card 3 */}
-          <div class="relative group cursor-pointer block">
-            {/* Top Pop Card */}
-            <div
-              class="hidden md:block absolute right-1/4 translate-x-1/2 -top-6 w-[120px] lg:w-[140px] rotate-6 z-0 transition-transform duration-500 ease-out group-hover:rotate-2 group-hover:-translate-y-10 group-hover:translate-x-4"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/prompt_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Prompt Tools"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Prompt Tools
-                </p>
-              </div>
-            </div>
-            {/* Edge Pop Card */}
-            <div
-              class="hidden md:block absolute -right-2 lg:-right-6 top-16 w-[120px] lg:w-[140px] rotate-3 z-0 transition-transform duration-500 ease-out group-hover:rotate-12 group-hover:translate-x-8"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/caption_maker.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Love4prompts !"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Love4prompts !
-                </p>
-              </div>
-            </div>
-            {/* Center Pop Card */}
-            <div
-              class="hidden md:block absolute top-0 right-8 w-[120px] lg:w-[140px] -rotate-2 z-0 transition-transform duration-500 ease-out group-hover:rotate-2 group-hover:-translate-y-6 group-hover:translate-x-2"
-            >
-              <div
-                class="bg-white border-[3px] border-black p-2 shadow-[4px_4px_0_#000] rounded-[12px]"
-              >
-                <img
-                  src="/images/cards/library.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="400"
-                  height="300"
-                  class="w-full h-[80px] object-cover rounded-[6px] border-[2px] border-black"
-                  alt="Team"
-                />
-                <p
-                  class="font-black text-[8px] uppercase mt-2 text-center tracking-widest text-black"
-                >
-                  Team
-                </p>
-              </div>
-            </div>
-            <div
-              class="relative z-10 bg-[#1482A3] border-[3px] border-black rounded-[20px] p-5 shadow-[6px_6px_0_#000] group-hover:-translate-y-1 group-hover:shadow-[8px_8px_0_#FFD166] transition-all duration-300 h-full flex flex-col"
-            >
-              <h3
-                class="text-[20px] font-black text-white mb-1 uppercase tracking-tight"
-              >
-                The Library
-              </h3>
-              <p
-                class="text-white font-medium mb-4 text-[14px] leading-snug flex-1"
-              >
-                Access thousands of curated, battle-tested AI prompts shared by
-                top creators.
-              </p>
-              <div
-                class="w-full h-32 bg-white rounded-[12px] border-[2px] border-black overflow-hidden relative shadow-[3px_3px_0_#000]"
-              >
-                <img
-                  src="/images/cards/library.png"
-                  fetchpriority="high"
-                  loading="eager"
-                  width="800"
-                  height="600"
-                  class="w-full h-full object-cover"
-                  alt="Library Illustration"
-                />
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
       {/* Hero Leaderboard Ad */}
-      <div class="mx-auto mt-8 mb-16 hidden md:flex justify-center w-full">
+      <div class="mx-auto mt-4 mb-12 hidden md:flex justify-center w-full">
         <AdSlot type="leaderboard" />
       </div>
-      <div class="mx-auto mt-8 mb-16 flex md:hidden justify-center w-full">
+      <div class="mx-auto mt-4 mb-12 flex md:hidden justify-center w-full">
         <AdSlot type="banner" />
       </div>
 
-      {/* Pinterest-Style Love4prompts ! */}
-      <div id="library" class="pt-[80px] pb-[40px] px-4 md:px-[40px]">
+      {/* ═══ LIVE TRENDS FEED ═══ */}
+      <section id="trends-feed" class="py-[60px] px-4 md:px-[40px] border-t-4 border-black">
+        <div class="flex justify-between items-end mb-[32px] border-b-[4px] border-black pb-[16px]">
+          <h2
+            class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] leading-none"
+          >
+            Live Trends Feed
+          </h2>
+          <span class="text-[12px] font-black uppercase text-gray-500 flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span> Live Updates
+          </span>
+        </div>
+        <PinterestGallery client:visible initialPrompts={prompts} />
+      </section>
+
+      {/* ═══ HOW IT WORKS ═══ */}
+      <section id="how-it-works" class="py-[60px] px-4 md:px-[40px] border-t-4 border-black">
+        <h2
+          class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] mb-[16px] text-center"
+        >
+          How It Works
+        </h2>
+        <p class="text-center text-gray-600 font-bold tracking-widest text-[14px] uppercase mb-[48px]">
+          From scroll to stunning in 5 steps
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {steps.map((step) => (
+            <div class="relative bg-white border-[3px] border-black rounded-[20px] p-6 shadow-[4px_4px_0_#000] hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-[6px_6px_0_#FF6D87] active:scale-[0.99] transition-all duration-300 text-center">
+              <div class="inline-block bg-black text-white text-[10px] font-black px-3 py-1 rounded-full mb-3 uppercase tracking-widest">
+                Step {step.num}
+              </div>
+              <h3 class="font-black text-[18px] text-black uppercase tracking-tight mb-2">{step.title}</h3>
+              <p class="text-gray-600 text-[13px] leading-snug">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ CATEGORIES ═══ */}
+      <section class="py-[60px] px-4 md:px-[40px] border-t-4 border-black">
         <h2
           class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] mb-[40px] border-b-[4px] border-black pb-[16px]"
         >
-          {
-            "Love4prompts !"
-              .split("")
-              .map((char, index) =>
-                char === " " ? (
-                  " "
-                ) : (
-                  <span
-                    class={`inline-block transition-all duration-300 ease-out cursor-default ${char === "!" ? "hover:animate-bounce hover:text-[#FF6D87]" : `hover:-translate-y-2 ${char === "4" ? "text-[#FF6D87] hover:text-black" : "hover:text-[#FF6D87]"}`}`}
-                  >
-                    {char}
-                  </span>
-                ),
-              )
-          }
+          Browse by Category
         </h2>
-        <p
-          class="text-gray-600 font-bold tracking-widest text-[14px] uppercase mb-8"
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+          {categories.map((cat) => (
+            <a href={`/library?category=${cat.name}`} class="group block">
+              <div
+                class="relative border-[3px] border-black rounded-[16px] p-6 shadow-[4px_4px_0_#000] hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-[6px_6px_0_#FF6D87] active:scale-[0.98] transition-all duration-200 text-center overflow-hidden bg-white"
+              >
+                <div class="text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Topic</div>
+                <h3 class="font-black text-[15px] sm:text-[18px] text-black uppercase tracking-tight mb-2 group-hover:text-[#FF6D87] transition-colors">{cat.name}</h3>
+                <p class="text-gray-500 text-[11px] font-bold uppercase tracking-widest">
+                  {cat.count} {cat.count === 1 ? "trend" : "trends"}
+                </p>
+                <div
+                  class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={`background: linear-gradient(135deg, ${cat.color}20, transparent);`}
+                ></div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ TOOLS & EXTENSION ECOSYSTEM (At the very bottom!) ═══ */}
+      <section class="py-[60px] px-4 md:px-[40px] border-t-4 border-black">
+        <h2
+          class="text-black tracking-tighter uppercase font-black text-[32px] sm:text-[48px] mb-[16px] text-center"
         >
-          {
-            "by the prompter to the prompter !"
-              .split("")
-              .map((char, index) =>
-                char === " " ? (
-                  " "
-                ) : (
-                  <span
-                    class={`inline-block transition-all duration-300 ease-out cursor-default ${char === "!" ? "hover:animate-bounce hover:text-[#FF6D87]" : "hover:-translate-y-1 hover:text-[#FF6D87]"}`}
-                  >
-                    {char}
-                  </span>
-                ),
-              )
-          }
+          Tools & Plug & Play Extension
+        </h2>
+        <p class="text-center text-gray-600 font-bold tracking-widest text-[14px] uppercase mb-[48px]">
+          Power up your creation flow inside any model or site
         </p>
-        <PinterestGallery client:load initialPrompts={prompts} />
-      </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Left Card: AI Prompt Tools */}
+          <div class="bg-white border-[4px] border-black rounded-[24px] p-6 sm:p-8 shadow-[8px_8px_0_#1482A3] hover:-translate-y-1 hover:scale-[1.005] hover:shadow-[12px_12px_0_#1482A3] active:scale-[0.995] transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="inline-block bg-[#1482A3] text-white text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest border-[2px] border-black shadow-[2px_2px_0_#000]">
+                Creator Tools
+              </div>
+              <h3 class="font-black text-2xl uppercase tracking-tight text-black mb-3">Interactive AI Tools</h3>
+              <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                Optimize, generate, and extract prompts with ease. Our dedicated tools take care of the technical complexity behind the scenes.
+              </p>
+              <div class="space-y-4">
+                <a href="/tools/prompt-maker" class="flex items-center justify-between p-3 border-2 border-black rounded-xl hover:bg-[#1482A3]/10 hover:scale-[1.01] active:scale-[0.99] transition-all group">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">✨</span>
+                    <div>
+                      <h4 class="font-black text-xs uppercase tracking-tight text-black">Prompt Maker</h4>
+                      <p class="text-[11px] text-gray-500">Visual style builder & model targeter</p>
+                    </div>
+                  </div>
+                  <span class="text-black font-black group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+                <a href="/tools/prompt-enhancer" class="flex items-center justify-between p-3 border-2 border-black rounded-xl hover:bg-[#1482A3]/10 hover:scale-[1.01] active:scale-[0.99] transition-all group">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">🪄</span>
+                    <div>
+                      <h4 class="font-black text-xs uppercase tracking-tight text-black">Prompt Enhancer</h4>
+                      <p class="text-[11px] text-gray-500">Auto-polish prompts for all models</p>
+                    </div>
+                  </div>
+                  <span class="text-black font-black group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+                <a href="/tools/image-to-prompt" class="flex items-center justify-between p-3 border-2 border-black rounded-xl hover:bg-[#1482A3]/10 hover:scale-[1.01] active:scale-[0.99] transition-all group">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">📸</span>
+                    <div>
+                      <h4 class="font-black text-xs uppercase tracking-tight text-black">Image to Prompt</h4>
+                      <p class="text-[11px] text-gray-500">Extract text prompts from any reference image</p>
+                    </div>
+                  </div>
+                  <span class="text-black font-black group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+              </div>
+            </div>
+            <a href="/tools" class="mt-8 inline-block text-center bg-black text-white hover:bg-[#1482A3] border-[3px] border-black py-3 rounded-full font-black uppercase text-sm tracking-wide shadow-[4px_4px_0_#000] hover:shadow-none hover:-translate-y-0.5 active:scale-95 transition-all">
+              Launch Toolkit →
+            </a>
+          </div>
+
+          {/* Right Card: Chrome Extension */}
+          <div class="bg-[#FAEFED] border-[4px] border-black rounded-[24px] p-6 sm:p-8 shadow-[8px_8px_0_#FF6D87] hover:-translate-y-1 hover:scale-[1.005] hover:shadow-[12px_12px_0_#FF6D87] active:scale-[0.995] transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <div class="inline-block bg-[#FF6D87] text-white text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest border-[2px] border-black shadow-[2px_2px_0_#000]">
+                Chrome Extension
+              </div>
+              <h3 class="font-black text-2xl uppercase tracking-tight text-black mb-3">Plug & Play Overlay</h3>
+              <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                Take Love4Prompts with you. Open our overlay extension inside ChatGPT, Gemini, Claude, or Midjourney and inject trending styles directly into your chats with one click.
+              </p>
+              <div class="border-2 border-black bg-white rounded-xl p-4 shadow-[4px_4px_0_#000] relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="w-3 h-3 bg-[#06D6A0] rounded-full border border-black shadow-[1px_1px_0_#000]"></span>
+                  <span class="font-black text-xs uppercase tracking-wider text-black">Active in browser</span>
+                </div>
+                <p class="text-xs text-gray-700 leading-snug">
+                  "No more tab-switching or manual copy-pasting. Seamlessly launch prompts and overlay trends directly inside the model's native UI."
+                </p>
+              </div>
+            </div>
+            <a href="/extension" class="mt-8 inline-block text-center bg-[#FF6D87] text-white hover:bg-black border-[3px] border-black py-3 rounded-full font-black uppercase text-sm tracking-wide shadow-[4px_4px_0_#000] hover:shadow-none hover:-translate-y-0.5 active:scale-95 transition-all">
+              Install Extension →
+            </a>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 </Layout>

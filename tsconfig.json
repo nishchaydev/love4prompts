@@ -7,7 +7,13 @@
   ],
   "exclude": [
     "dist",
-    "extension"
+    "extension",
+    "temp-mock-data.js",
+    "replace_colors.cjs",
+    "update_layouts.cjs",
+    "update_tools_theme.cjs",
+    "scripts",
+    ".agents"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

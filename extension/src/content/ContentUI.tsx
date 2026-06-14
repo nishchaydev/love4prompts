@@ -335,7 +335,7 @@ export default function ContentUI() {
           display: 'flex',
           alignItems: 'center',
           gap: '6px',
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+          background: 'linear-gradient(135deg, #6366f1, #06B6D4)',
           color: 'white',
           border: 'none',
           padding: '6px 12px',

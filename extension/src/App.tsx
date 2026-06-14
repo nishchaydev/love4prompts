@@ -67,7 +67,7 @@ function App() {
     <div className="w-80 bg-slate-900 text-slate-100 p-4 font-sans border border-slate-800 rounded-lg shadow-2xl">
       <div className="flex items-center gap-2 mb-4 border-b border-slate-800 pb-3">
         <Sparkles className="w-5 h-5 text-indigo-400" />
-        <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+        <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-teal-400">
           Love4Prompts
         </h1>
       </div>
@@ -108,14 +108,14 @@ function App() {
         <div>
           <div className="flex justify-between text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wider">
             <span>Length</span>
-            <span className="text-purple-300">{length < 30 ? 'Concise' : length > 70 ? 'Detailed' : 'Balanced'}</span>
+            <span className="text-teal-300">{length < 30 ? 'Concise' : length > 70 ? 'Detailed' : 'Balanced'}</span>
           </div>
           <input 
             type="range" 
             min="0" max="100" 
             value={length}
             onChange={saveLength}
-            className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+            className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-teal-500"
           />
         </div>
 

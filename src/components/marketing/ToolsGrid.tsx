@@ -94,7 +94,7 @@ export const ToolsGrid: React.FC = () => {
     <section ref={ref} className="container mx-auto px-4 py-16 sm:py-24 relative z-10 border-t border-white/[0.03]">
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] h-[350px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] pointer-events-none z-0" />
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[350px] h-[350px] bg-[var(--color-accent-purple)]/5 rounded-full blur-[100px] pointer-events-none z-0" />
+      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[350px] h-[350px] bg-[var(--color-accent-teal)]/5 rounded-full blur-[100px] pointer-events-none z-0" />
 
       {/* Header */}
       <motion.div 

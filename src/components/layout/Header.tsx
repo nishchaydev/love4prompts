@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, LayoutGroup } from 'framer-motion';
 import type { Session } from '@supabase/supabase-js';
 import {
-  User, LogOut, LayoutDashboard, Menu, X,
-  Wand2, Sparkles, ArrowRightLeft, Image, Palette,
+  User, LogOut, LayoutDashboard, Menu, X, ArrowLeft,
+  Wand2, Sparkles, Image, Palette,
   ChevronDown, Puzzle
 } from 'lucide-react';
 import { AuthModal } from '../auth/AuthModal';
@@ -102,7 +102,7 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
       <LayoutGroup>
         <nav 
           onMouseLeave={() => setHoveredPath(null)}
-          className="bg-transparent text-black flex justify-between items-center px-[40px] w-full h-20 absolute top-0 z-50"
+          className="bg-transparent text-black flex justify-between items-center px-4 md:px-[40px] w-full h-20 absolute top-0 z-50"
         >
           {/* Logo */}
           <a 
@@ -133,12 +133,14 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
           {/* Right Side - Nav Links + User Actions */}
           <div className="flex items-center gap-12">
             {/* Desktop Nav Links */}
-            <div className="hidden md:flex space-x-10 relative">
+            <div className="hidden md:flex space-x-6 lg:space-x-10 relative">
               {[
-                { name: 'Library', path: '/library', match: (p: string) => p.startsWith('/library') },
+                { name: 'Trends', path: '/library', match: (p: string) => p.startsWith('/library') },
+                { name: 'Categories', path: '/categories', match: (p: string) => p.startsWith('/categories') },
                 { name: 'Tools', path: '/tools', match: (p: string) => p.startsWith('/tools') || p.endsWith('-generator') || p === '/image-to-prompt' || p === '/prompt-to-image' },
                 { name: 'Plug & Play', path: '/extension', match: (p: string) => p.startsWith('/extension') },
-                { name: 'Submit', path: '/submit', match: (p: string) => p.startsWith('/submit') }
+                { name: 'Submit Trend', path: '/submit', match: (p: string) => p.startsWith('/submit') },
+                { name: 'About', path: '/about', match: (p: string) => p.startsWith('/about') }
               ].map((item) => {
                 const isActive = item.match(activePath);
                 const isHovered = hoveredPath === item.path;
@@ -218,11 +220,13 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
 
         {/* Mobile Nav for Editorial */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#f9f9f9] border-b border-[#7e7576] absolute top-20 left-0 w-full z-40 px-[40px] py-[20px] flex flex-col space-y-4">
-            <a href="/library" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/library') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Library</a>
-            <a href="/tools" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/tools') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Tools</a>
-            <a href="/extension" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/extension') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Plug & Play</a>
-            <a href="/submit" className={`ed-label-caps no-underline uppercase transition-colors ${currentPath.startsWith('/submit') ? 'text-black' : 'text-[#4c4546] hover:text-black'}`}>Submit</a>
+          <div className="md:hidden bg-white border-b-[4px] border-black absolute top-20 left-0 w-full z-40 px-6 py-6 flex flex-col gap-5 shadow-[0_8px_0_#000]">
+            <a href="/library" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/library') ? 'text-[#FF6D87]' : 'text-black'}`}>Trends</a>
+            <a href="/categories" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/categories') ? 'text-[#FF6D87]' : 'text-black'}`}>Categories</a>
+            <a href="/tools" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/tools') ? 'text-[#FF6D87]' : 'text-black'}`}>Tools</a>
+            <a href="/extension" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/extension') ? 'text-[#FF6D87]' : 'text-black'}`}>Plug & Play</a>
+            <a href="/submit" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/submit') ? 'text-[#FF6D87]' : 'text-black'}`}>Submit Trend</a>
+            <a href="/about" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/about') ? 'text-[#FF6D87]' : 'text-black'}`}>About</a>
           </div>
         )}
         
@@ -251,8 +255,25 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
               : 'bg-transparent border border-transparent px-2 h-16'
           }`}
         >
+          {/* Mobile Back Button */}
+          {currentPath !== '/' && (
+            <button 
+              onClick={() => {
+                if (window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  window.location.href = '/';
+                }
+              }} 
+              className="md:hidden flex items-center justify-center p-1.5 mr-1 rounded-lg text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5 no-underline group select-none">
+          <a href="/" className="flex items-center gap-2.5 no-underline group select-none flex-1">
             <img 
               src="/logo-icon.png" 
               alt="Love4Prompts Logo" 
@@ -338,19 +359,19 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
                 const Icon = tool.icon;
                 return (
                   <a key={tool.href} href={tool.href} onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline"
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[15px] font-medium text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline"
                   >
-                    <Icon className="w-4 h-4 text-white/30" />
+                    <Icon className="w-5 h-5 text-white/30" />
                     <div className="flex flex-col">
                       <span className="font-semibold text-white/80">{tool.label}</span>
-                      <span className="text-[10px] text-white/30 mt-0.5">{tool.desc}</span>
+                      <span className="text-[11px] text-white/30 mt-0.5">{tool.desc}</span>
                     </div>
                   </a>
                 );
               })}
               <div className="h-px bg-white/[0.04] my-2" />
-              <a href="/library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
-              <a href="/pricing" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[13px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Pro</a>
+              <a href="/library" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[15px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Library</a>
+              <a href="/pricing" onClick={() => setMobileMenuOpen(false)} className="px-3 py-2.5 rounded-xl text-[15px] font-semibold text-white/60 hover:text-white hover:bg-white/[0.03] transition-colors no-underline">Pro</a>
               
               {session ? (
                 <>

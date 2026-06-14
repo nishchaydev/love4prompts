@@ -346,7 +346,7 @@ export const CaptionMaker: React.FC = () => {
                 
                 {/* Header row */}
                 <div className="flex items-center gap-3 border-b border-black/5 pb-3.5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 p-[2px]">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-pink-500 p-[2px]">
                     <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-[10px] font-bold text-black border border-white">
                       IG
                     </div>

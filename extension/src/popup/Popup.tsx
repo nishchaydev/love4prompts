@@ -33,10 +33,10 @@ export default function Popup() {
   return (
     <div className="flex flex-col h-full bg-slate-950 text-slate-200 font-sans p-4">
       <div className="flex items-center gap-2 mb-6 border-b border-slate-800 pb-3">
-        <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+        <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-teal-600 rounded-lg">
           <Sparkles className="text-white" size={18} />
         </div>
-        <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+        <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-teal-400">
           Love4Prompts
         </h1>
       </div>
