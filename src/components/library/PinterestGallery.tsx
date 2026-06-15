@@ -187,7 +187,7 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
         {/* Main Gallery Area */}
         <div className="flex-1 flex flex-col w-full min-w-0">
           {filteredPrompts.length > 0 ? (
-            <div className="w-full columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-8">
+            <div className="w-full columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-8">
               {/* Sponsor Box as first item */}
               {!hideFilters && (
                 <div className="w-full break-inside-avoid mb-8 bg-[#FAEFED] border-4 border-black h-[220px] rounded-[24px] flex flex-col items-center justify-center text-center p-6 relative overflow-hidden group shadow-[6px_6px_0_#000]">
