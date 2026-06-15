@@ -135,7 +135,7 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
             {/* Desktop Nav Links */}
             <div className="hidden md:flex space-x-6 lg:space-x-10 relative">
               {[
-                { name: 'Trends', path: '/library', match: (p: string) => p.startsWith('/library') },
+                { name: 'Library', path: '/library', match: (p: string) => p.startsWith('/library') },
                 { name: 'Categories', path: '/categories', match: (p: string) => p.startsWith('/categories') },
                 { name: 'Tools', path: '/tools', match: (p: string) => p.startsWith('/tools') || p.endsWith('-generator') || p === '/image-to-prompt' || p === '/prompt-to-image' },
                 { name: 'Plug & Play', path: '/extension', match: (p: string) => p.startsWith('/extension') },
@@ -221,7 +221,7 @@ export const Header: React.FC<{ isEditorial?: boolean, currentPath?: string }> =
         {/* Mobile Nav for Editorial */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-b-[4px] border-black absolute top-20 left-0 w-full z-40 px-6 py-6 flex flex-col gap-5 shadow-[0_8px_0_#000]">
-            <a href="/library" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/library') ? 'text-[#FF6D87]' : 'text-black'}`}>Trends</a>
+            <a href="/library" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/library') ? 'text-[#FF6D87]' : 'text-black'}`}>Library</a>
             <a href="/categories" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/categories') ? 'text-[#FF6D87]' : 'text-black'}`}>Categories</a>
             <a href="/tools" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/tools') ? 'text-[#FF6D87]' : 'text-black'}`}>Tools</a>
             <a href="/extension" onClick={() => setMobileMenuOpen(false)} className={`font-black text-[18px] tracking-tight no-underline uppercase transition-all active:scale-95 ${currentPath.startsWith('/extension') ? 'text-[#FF6D87]' : 'text-black'}`}>Plug & Play</a>

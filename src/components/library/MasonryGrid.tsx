@@ -133,7 +133,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
   return (
     <>
       {/* Masonry grid */}
-      <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-2">
+      <div className="columns-2 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-2">
         {displayedPrompts.map((prompt, idx) => (
           <div key={prompt.id} className="break-inside-avoid">
             <PromptCard
@@ -148,7 +148,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({ prompts, savedPromptId
 
       {/* Skeleton loading cards */}
       {hasMore && (
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-2 mt-2">
+        <div className="columns-2 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-2 mt-2">
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={`skeleton-${i}`}

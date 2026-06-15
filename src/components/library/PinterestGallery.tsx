@@ -15,6 +15,10 @@ const SORTS = ['Newest', 'Popular', 'A-Z'];
 // Helper to parse IDs so newest/highest IDs are sorted correctly
 const getIdValue = (id: string | number): number => {
   const str = String(id);
+  if (str.startsWith('community-new-')) {
+    const num = parseInt(str.replace('community-new-', ''), 10);
+    return 20000 + (isNaN(num) ? 0 : num);
+  }
   if (str.startsWith('new-')) {
     const num = parseInt(str.replace('new-', ''), 10);
     return 10000 + (isNaN(num) ? 0 : num);
@@ -80,30 +84,7 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
     return result;
   }, [initialPrompts, activeCategory, activeSort, searchQuery]);
 
-  const [columnsCount, setColumnsCount] = useState(5);
 
-  useEffect(() => {
-    const updateColumns = () => {
-      if (window.innerWidth >= 1280) setColumnsCount(5);
-      else if (window.innerWidth >= 1024) setColumnsCount(4);
-      else if (window.innerWidth >= 768) setColumnsCount(3);
-      else if (window.innerWidth >= 640) setColumnsCount(2);
-      else setColumnsCount(1);
-    };
-    if (typeof window !== 'undefined') {
-      updateColumns();
-      window.addEventListener('resize', updateColumns);
-      return () => window.removeEventListener('resize', updateColumns);
-    }
-  }, []);
-
-  const masonryColumns = useMemo(() => {
-    const cols: Prompt[][] = Array.from({ length: columnsCount }, () => []);
-    filteredPrompts.forEach((prompt, index) => {
-      cols[index % columnsCount].push(prompt);
-    });
-    return cols;
-  }, [filteredPrompts, columnsCount]);
 
   return (
     <div className="flex flex-col gap-8 w-full">
@@ -206,91 +187,87 @@ export const PinterestGallery: React.FC<PinterestGalleryProps> = ({ initialPromp
         {/* Main Gallery Area */}
         <div className="flex-1 flex flex-col w-full min-w-0">
           {filteredPrompts.length > 0 ? (
-            <div className="flex gap-8 w-full">
-              {masonryColumns.map((col, colIndex) => (
-                <div key={colIndex} className="flex-1 flex flex-col gap-8 min-w-0">
-                  {/* Sponsor Box as first item in the first column */}
-                  {colIndex === 0 && !hideFilters && (
-                    <div className="w-full bg-[#FAEFED] border-4 border-black h-[220px] rounded-[24px] flex flex-col items-center justify-center text-center p-6 relative overflow-hidden group shadow-[6px_6px_0_#000]">
-                      <div className="absolute top-2 right-4 font-black uppercase tracking-widest text-[9px] text-[#FF6D87]">SPONSOR</div>
-                      <Sparkles size={28} className="text-[#FF6D87] mb-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-                      <h4 className="font-black text-sm uppercase tracking-wider text-black mb-1">Overlay Extension</h4>
-                      <p className="text-[11px] text-gray-600 leading-snug">Run Love4Prompts on top of any AI website with our overlay.</p>
-                      <a href="/extension" className="mt-4 px-4 py-1.5 bg-black text-white text-[10px] font-black uppercase tracking-widest border-2 border-black rounded-full shadow-[2px_2px_0_#FF6D87] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
-                        Install overlay
+            <div className="w-full columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-8">
+              {/* Sponsor Box as first item */}
+              {!hideFilters && (
+                <div className="w-full break-inside-avoid mb-8 bg-[#FAEFED] border-4 border-black h-[220px] rounded-[24px] flex flex-col items-center justify-center text-center p-6 relative overflow-hidden group shadow-[6px_6px_0_#000]">
+                  <div className="absolute top-2 right-4 font-black uppercase tracking-widest text-[9px] text-[#FF6D87]">SPONSOR</div>
+                  <Sparkles size={28} className="text-[#FF6D87] mb-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <h4 className="font-black text-sm uppercase tracking-wider text-black mb-1">Overlay Extension</h4>
+                  <p className="text-[11px] text-gray-600 leading-snug">Run Love4Prompts on top of any AI website with our overlay.</p>
+                  <a href="/extension" className="mt-4 px-4 py-1.5 bg-black text-white text-[10px] font-black uppercase tracking-widest border-2 border-black rounded-full shadow-[2px_2px_0_#FF6D87] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+                    Install overlay
+                  </a>
+                </div>
+              )}
+              
+              {filteredPrompts.map((prompt, globalIndex) => {
+                const showAd = !hideFilters && globalIndex > 0 && globalIndex % 8 === 0;
+                
+                const isNew = String(prompt.id).startsWith('new-') || String(prompt.id).startsWith('community-new-');
+                const isVeryPopular = (prompt.view_count || 0) > 1800;
+
+                return (
+                  <React.Fragment key={prompt.id}>
+                    <div className="w-full relative group bg-white border-4 border-black rounded-[24px] overflow-hidden transition-all duration-300 hover:shadow-[10px_10px_0_#FF6D87] hover:-translate-y-1 break-inside-avoid mb-8">
+                      <a href={`/prompt/${prompt.slug}`} className="block w-full h-full flex flex-col relative">
+                        <div className="relative w-full h-auto overflow-hidden">
+                          <img
+                            alt={prompt.title}
+                            className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-[1.03] min-h-[200px]"
+                            src={prompt.image_url || undefined}
+                            loading={globalIndex < 6 ? "eager" : "lazy"}
+                            fetchPriority={globalIndex < 6 ? "high" : "auto"}
+                            decoding="async"
+                          />
+                          
+                          {/* Live Ticker Status Badge */}
+                          {isNew && (
+                            <div className="absolute top-3 left-3 bg-red-500 text-white border-2 border-black px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-[2px_2px_0_#000] z-20">
+                              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                              NEW
+                            </div>
+                          )}
+                          {!isNew && isVeryPopular && (
+                            <div className="absolute top-3 left-3 bg-[#FF6D87] text-white border-2 border-black px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-[2px_2px_0_#000] z-20">
+                              🔥 HOT
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Premium details block */}
+                        <div className="p-4 border-t-2 border-black bg-white flex flex-col gap-2">
+                          <div className="flex justify-between items-start gap-2">
+                            <h4 className="font-black uppercase text-[14px] sm:text-[15px] text-black tracking-tight leading-tight group-hover:text-[#FF6D87] transition-colors line-clamp-1">{prompt.title}</h4>
+                            <span className="shrink-0 bg-[#FF6D87]/15 text-[#FF6D87] px-2 py-0.5 rounded-full text-[9px] font-black border border-[#FF6D87] uppercase tracking-wider">
+                              {prompt.category}
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+                            <div className="flex items-center gap-3 text-gray-500 font-black text-[10px] uppercase tracking-wider">
+                              <span className="flex items-center gap-1">
+                                <Eye size={12} /> {prompt.view_count != null && Number.isFinite(Number(prompt.view_count)) ? Number(prompt.view_count).toLocaleString() : "—"}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Bookmark size={12} /> {prompt.save_count != null && Number.isFinite(Number(prompt.save_count)) ? Number(prompt.save_count).toLocaleString() : "—"}
+                              </span>
+                            </div>
+                            <span className="text-[11px] font-black uppercase text-black group-hover:text-[#1482A3] transition-colors flex items-center gap-1">
+                              Create Me →
+                            </span>
+                          </div>
+                        </div>
                       </a>
                     </div>
-                  )}
-                  
-                  {col.map((prompt) => {
-                    const globalIndex = filteredPrompts.findIndex(p => p.id === prompt.id);
-                    const showAd = !hideFilters && globalIndex > 0 && globalIndex % 8 === 0;
-                    
-                    const isNew = String(prompt.id).startsWith('new-');
-                    const isVeryPopular = (prompt.view_count || 0) > 1800;
-
-                    return (
-                      <React.Fragment key={prompt.id}>
-                        <div className="w-full relative group bg-white border-4 border-black rounded-[24px] overflow-hidden transition-all duration-300 hover:shadow-[10px_10px_0_#FF6D87] hover:-translate-y-1">
-                          <a href={`/prompt/${prompt.slug}`} className="block w-full h-full flex flex-col relative">
-                            <div className="relative w-full h-auto overflow-hidden">
-                              <img
-                                alt={prompt.title}
-                                className="w-full h-auto object-cover block transition-transform duration-500 group-hover:scale-[1.03] min-h-[200px]"
-                                src={prompt.image_url || undefined}
-                                loading={globalIndex < 6 ? "eager" : "lazy"}
-                                fetchPriority={globalIndex < 6 ? "high" : "auto"}
-                              />
-                              
-                              {/* Live Ticker Status Badge */}
-                              {isNew && (
-                                <div className="absolute top-3 left-3 bg-red-500 text-white border-2 border-black px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-[2px_2px_0_#000] z-20">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                                  NEW
-                                </div>
-                              )}
-                              {!isNew && isVeryPopular && (
-                                <div className="absolute top-3 left-3 bg-[#FF6D87] text-white border-2 border-black px-2.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-[2px_2px_0_#000] z-20">
-                                  🔥 HOT
-                                </div>
-                              )}
-                            </div>
-                            
-                            {/* Premium details block */}
-                            <div className="p-4 border-t-2 border-black bg-white flex flex-col gap-2">
-                              <div className="flex justify-between items-start gap-2">
-                                <h4 className="font-black uppercase text-[14px] sm:text-[15px] text-black tracking-tight leading-tight group-hover:text-[#FF6D87] transition-colors line-clamp-1">{prompt.title}</h4>
-                                <span className="shrink-0 bg-[#FF6D87]/15 text-[#FF6D87] px-2 py-0.5 rounded-full text-[9px] font-black border border-[#FF6D87] uppercase tracking-wider">
-                                  {prompt.category}
-                                </span>
-                              </div>
-                              
-                              <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
-                                <div className="flex items-center gap-3 text-gray-500 font-black text-[10px] uppercase tracking-wider">
-                                  <span className="flex items-center gap-1">
-                                    <Eye size={12} /> {prompt.view_count != null && Number.isFinite(Number(prompt.view_count)) ? Number(prompt.view_count).toLocaleString() : "—"}
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <Bookmark size={12} /> {prompt.save_count != null && Number.isFinite(Number(prompt.save_count)) ? Number(prompt.save_count).toLocaleString() : "—"}
-                                  </span>
-                                </div>
-                                <span className="text-[11px] font-black uppercase text-black group-hover:text-[#1482A3] transition-colors flex items-center gap-1">
-                                  Create Me →
-                                </span>
-                              </div>
-                            </div>
-                          </a>
-                        </div>
-                        {showAd && (
-                          <div className="w-full relative group">
-                            <AdSlot type="medium-rectangle" className="w-full aspect-[4/5] h-auto rounded-[24px] overflow-hidden" label="Sponsor" />
-                          </div>
-                        )}
-                      </React.Fragment>
-                    );
-                  })}
-                </div>
-              ))}
+                    {showAd && (
+                      <div className="w-full relative group break-inside-avoid mb-8">
+                        <AdSlot type="medium-rectangle" className="w-full aspect-[4/5] h-auto rounded-[24px] overflow-hidden" label="Sponsor" />
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-[400px] border-4 border-black border-dashed rounded-[32px] bg-white/50 w-full">

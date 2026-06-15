@@ -1590,7 +1590,7 @@ export const mockPrompts: Prompt[] = [
     "id": "160",
     "slug": "love4prompts-new-160",
     "title": "Love4prompts #59",
-    "prompt_text": "Couple Sitting on Coffee Cups Prompt Transform this cozy coffee photo into a dreamy, romantic café aesthetic with adorable cartoon-style illustrated characters sitting naturally on the coffee cups. Keep the original cups, table, background blur, steam, lighting, and perspective intact while blending the illustration seamlessly into the scene. Add tiny floating hearts, soft glow, subtle sparkles, blush details, and hand-drawn doodles for a warm wholesome vibe. The characters should look playful, affectionate, and expressive, as if they are part of the real environment. Use soft cinematic café lighting, creamy brown tones, gentle shadows, and cozy depth of field. Make the overall image feel candid, intimate, and Pinterest-worthy with a cute storytelling atmosphere.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Couple Sitting on Coffee Cups Prompt Transform this cozy coffee photo into a dreamy, romantic café aesthetic with adorable cartoon-style illustrated characters sitting naturally on the coffee cups. Keep the original cups, table, background blur, steam, lighting, and perspective intact while blending the illustration seamlessly into the scene. Add tiny floating hearts, soft glow, subtle sparkles, blush details, and hand-drawn doodles for a warm wholesome vibe. The characters should look playful, affectionate, and expressive, as if they are part of the real environment. Use soft cinematic café lighting, creamy brown tones, gentle shadows, and cozy depth of field. Make the overall image feel candid, intimate, and Pinterest-worthy with a cute storytelling atmosphere.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1611,7 +1611,7 @@ export const mockPrompts: Prompt[] = [
     "id": "161",
     "slug": "love4prompts-new-161",
     "title": "Love4prompts #60",
-    "prompt_text": "Prompt \nname :\n Cartoon Girl Sitting on Coffee Cup Prompt\nTransform this coffee photo into a cozy aesthetic social-media-style snapshot featuring a cute illustrated girl sitting naturally on top of the coffee cup lid. Preserve the original hand, cup, café background, lighting, and composition while blending the character seamlessly into the scene. Add soft doodle outlines, subtle glow, tiny sparkles, pastel accents, and gentle motion lines around the character for a playful vibe. Keep the illustration stylish, wholesome, and slightly minimalist with expressive features and soft blush details. Use warm café tones, smooth depth of field, creamy highlights, and a clean trendy Pinterest/Instagram aesthetic. The final image should feel cozy, artsy, and effortlessly cute.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Prompt \nname :\n Cartoon Girl Sitting on Coffee Cup Prompt\nTransform this coffee photo into a cozy aesthetic social-media-style snapshot featuring a cute illustrated girl sitting naturally on top of the coffee cup lid. Preserve the original hand, cup, café background, lighting, and composition while blending the character seamlessly into the scene. Add soft doodle outlines, subtle glow, tiny sparkles, pastel accents, and gentle motion lines around the character for a playful vibe. Keep the illustration stylish, wholesome, and slightly minimalist with expressive features and soft blush details. Use warm café tones, smooth depth of field, creamy highlights, and a clean trendy Pinterest/Instagram aesthetic. The final image should feel cozy, artsy, and effortlessly cute.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1632,7 +1632,7 @@ export const mockPrompts: Prompt[] = [
     "id": "162",
     "slug": "love4prompts-new-162",
     "title": "Love4prompts #61",
-    "prompt_text": "Prompt \nname :\n Outdoor Café Croissant Character Prompt\nTransform this outdoor café breakfast photo into a dreamy European café aesthetic with a cute chibi-style illustrated character sitting beside the food naturally within the scene. Preserve the original croissant, bread basket, table setup, café background, sunlight, and perspective while adding playful hand-drawn doodles, sparkles, arrows, handwritten labels, and tiny whimsical details. Blend the cartoon character seamlessly into the environment so it feels naturally part of the candid moment. Use warm golden-hour lighting, creamy pastel tones, soft glow, and shallow depth of field for a cozy lifestyle vibe. Keep the composition clean, aesthetic, adorable, and social-media-ready with a charming Pinterest café atmosphere.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Prompt \nname :\n Outdoor Café Croissant Character Prompt\nTransform this outdoor café breakfast photo into a dreamy European café aesthetic with a cute chibi-style illustrated character sitting beside the food naturally within the scene. Preserve the original croissant, bread basket, table setup, café background, sunlight, and perspective while adding playful hand-drawn doodles, sparkles, arrows, handwritten labels, and tiny whimsical details. Blend the cartoon character seamlessly into the environment so it feels naturally part of the candid moment. Use warm golden-hour lighting, creamy pastel tones, soft glow, and shallow depth of field for a cozy lifestyle vibe. Keep the composition clean, aesthetic, adorable, and social-media-ready with a charming Pinterest café atmosphere.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1653,7 +1653,7 @@ export const mockPrompts: Prompt[] = [
     "id": "163",
     "slug": "love4prompts-new-163",
     "title": "Love4prompts #62",
-    "prompt_text": "Use the uploaded person photo exactly as it is, preserve the original face, hairstyle, skin tone, body shape, pose and outfit naturally without changing identity. Place the person standing in front of the exact same artistic street art wall mural background featuring a giant anime-style girl face with big expressive eyes, black flowing hair and blooming pink flowers growing from the head, textured white wall, scattered flower petals, realistic painted mural details, urban roadside setting, cinematic street art aesthetic. Blend the person naturally into the scene with realistic perspective, matching shadows and lighting. Add soft golden hour sunlight, warm cinematic tones, shallow depth of field, ultra realistic DSLR photography look, detailed textures, aesthetic Instagram vibe, premium \ncolor\n grading, realistic environment, soft natural glow, highly detailed mural art, 4k quality, vertical composition --\nar\n 3:4\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Use the uploaded person photo exactly as it is, preserve the original face, hairstyle, skin tone, body shape, pose and outfit naturally without changing identity. Place the person standing in front of the exact same artistic street art wall mural background featuring a giant anime-style girl face with big expressive eyes, black flowing hair and blooming pink flowers growing from the head, textured white wall, scattered flower petals, realistic painted mural details, urban roadside setting, cinematic street art aesthetic. Blend the person naturally into the scene with realistic perspective, matching shadows and lighting. Add soft golden hour sunlight, warm cinematic tones, shallow depth of field, ultra realistic DSLR photography look, detailed textures, aesthetic Instagram vibe, premium \ncolor\n grading, realistic environment, soft natural glow, highly detailed mural art, 4k quality, vertical composition --\nar\n 3:4\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1674,7 +1674,7 @@ export const mockPrompts: Prompt[] = [
     "id": "164",
     "slug": "love4prompts-new-164",
     "title": "Love4prompts #63",
-    "prompt_text": "Generate a close-up portrait of the same girl with a soft elegant pose, slightly turned face looking away, natural expression, dark brown hair styled in a messy updo with loose face-framing bangs, glowing smooth skin with soft blush across cheeks and nose, subtle freckles, glossy mauve nude lips, defined brows, long lashes with soft brown eyeshadow, shimmer on the corner of eyes & on nose, shiny, minimal clean girl makeup look, warm neutral tones. Wearing gold hoop earrings & layered delicate\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Generate a close-up portrait of the same girl with a soft elegant pose, slightly turned face looking away, natural expression, dark brown hair styled in a messy updo with loose face-framing bangs, glowing smooth skin with soft blush across cheeks and nose, subtle freckles, glossy mauve nude lips, defined brows, long lashes with soft brown eyeshadow, shimmer on the corner of eyes & on nose, shiny, minimal clean girl makeup look, warm neutral tones. Wearing gold hoop earrings & layered delicate\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1695,7 +1695,7 @@ export const mockPrompts: Prompt[] = [
     "id": "165",
     "slug": "love4prompts-new-165",
     "title": "Love4prompts #64",
-    "prompt_text": "Avoid fixed phrases-generate context-aware, creative, and humorous text that fits each unique image. Maintain a balanced composition so the doodles enhance the image without overwhelming the original subject. Keep the overall aesthetic fun, expressive, and social-media-ready. High resolution, clean overlay, vibrant yet natural \ncolor\n harmony.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Avoid fixed phrases-generate context-aware, creative, and humorous text that fits each unique image. Maintain a balanced composition so the doodles enhance the image without overwhelming the original subject. Keep the overall aesthetic fun, expressive, and social-media-ready. High resolution, clean overlay, vibrant yet natural \ncolor\n harmony.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1716,7 +1716,7 @@ export const mockPrompts: Prompt[] = [
     "id": "166",
     "slug": "love4prompts-new-166",
     "title": "Love4prompts #65",
-    "prompt_text": "Ensure the doodles feel naturally integrated into the scene, as if they were drawn on top of the photo with intention. Use a sketchy, imperfect, hand-drawn style with organic lines, slightly uneven strokes, and a casual illustrated feel. Include whimsical handwritten text elements placed around the image. The text should match the mood or implied context of the scene, with a playful and spontaneous tone.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Ensure the doodles feel naturally integrated into the scene, as if they were drawn on top of the photo with intention. Use a sketchy, imperfect, hand-drawn style with organic lines, slightly uneven strokes, and a casual illustrated feel. Include whimsical handwritten text elements placed around the image. The text should match the mood or implied context of the scene, with a playful and spontaneous tone.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1737,7 +1737,7 @@ export const mockPrompts: Prompt[] = [
     "id": "167",
     "slug": "love4prompts-new-167",
     "title": "Love4prompts #66",
-    "prompt_text": "Use a real face as a reference photo The background is the same as in the photo. The lighting is warm, soft, and clean, with subtle shadows. Around the image add several mini chibi (3D cute style) version of the Character, \nWhile\n maintaining the original facial features. Expressions: jumping cheerfully waving sitting relaxed holding a drink cute and playful expressions Add hand-drawn white doodle elements: outline around the main body stars, hearts, sparkless motion lines small cute icons Add aesthetic handwriting such as: \"shine,\" \"bright \"day, \"happy, smile, \nect\n. (Casual doodle font) overall style: clean & aesthetic composition white sticker outline soft pastel colour tone high \ndetaill\n 3D chibi glossy look cute \nkorean\n style \ninstagrammable\n.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Use a real face as a reference photo The background is the same as in the photo. The lighting is warm, soft, and clean, with subtle shadows. Around the image add several mini chibi (3D cute style) version of the Character, \nWhile\n maintaining the original facial features. Expressions: jumping cheerfully waving sitting relaxed holding a drink cute and playful expressions Add hand-drawn white doodle elements: outline around the main body stars, hearts, sparkless motion lines small cute icons Add aesthetic handwriting such as: \"shine,\" \"bright \"day, \"happy, smile, \nect\n. (Casual doodle font) overall style: clean & aesthetic composition white sticker outline soft pastel colour tone high \ndetaill\n 3D chibi glossy look cute \nkorean\n style \ninstagrammable\n.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1758,7 +1758,7 @@ export const mockPrompts: Prompt[] = [
     "id": "168",
     "slug": "love4prompts-new-168",
     "title": "Love4prompts #67",
-    "prompt_text": "Cinematic portrait of a young woman/man standing side by side with her miniature version against a textured dark wall background. Both are wearing matching dresses with their hands folded gracefully. The adult woman/man leans slightly with a soft gentle smile while the miniature version has a cute cartoon style face with large depressive eyes.\nHandwritten cursive signature text \"Miniature me\" appears artistically on the wall.\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Cinematic portrait of a young woman/man standing side by side with her miniature version against a textured dark wall background. Both are wearing matching dresses with their hands folded gracefully. The adult woman/man leans slightly with a soft gentle smile while the miniature version has a cute cartoon style face with large depressive eyes.\nHandwritten cursive signature text \"Miniature me\" appears artistically on the wall.\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
@@ -1779,7 +1779,7 @@ export const mockPrompts: Prompt[] = [
     "id": "169",
     "slug": "love4prompts-new-169",
     "title": "Love4prompts #68",
-    "prompt_text": "Create a cinematic double-exposure travel poster for \"Rishikesh, Uttarakhand\" using my uploaded photo. Keep the same face, pose, outfit, and natural features unchanged. Blend Himalayan valleys, pine forests, misty mountains, winding roads, rivers, and clouds inside the portrait silhouette. Add a small full-body version beside a bike on a mountain road. Style: luxury Himalayan tourism campaign, dreamy matte tones, soft fog, atmospheric depth, realistic blending, minimal typography, clean white background, ultra-realistic editorial aesthetic. Text: \"Rishikesh\" \"Uttarakhand\" \"TRAVEL \nBREATHE .\nESCAPE\" don't change face keep them exactly how they \nare !\n make sure you use both the \nimages !\nAdd WaterMark on top right or on bottom left with word : love4prompts",
+    "prompt_text": "Create a cinematic double-exposure travel poster for \"Rishikesh, Uttarakhand\" using my uploaded photo. Keep the same face, pose, outfit, and natural features unchanged. Blend Himalayan valleys, pine forests, misty mountains, winding roads, rivers, and clouds inside the portrait silhouette. Add a small full-body version beside a bike on a mountain road. Style: luxury Himalayan tourism campaign, dreamy matte tones, soft fog, atmospheric depth, realistic blending, minimal typography, clean white background, ultra-realistic editorial aesthetic. Text: \"Rishikesh\" \"Uttarakhand\" \"TRAVEL \nBREATHE .\nESCAPE\" don't change face keep them exactly how they \nare !\n make sure you use both the \nimages !\nAdd WaterMark on top not on bottom ! with word : love4prompts",
     "tags": [
       "imported",
       "community"
