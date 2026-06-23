@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, ChevronDown, Flame, Menu, Sparkles, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Flame, Menu, Share2, Sparkles, X } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   ASTRO_TOOLS_URL,
@@ -10,6 +11,7 @@ import {
   createUrlFor,
   SITE_URL,
   TRENDS,
+  trendUrlFor,
   type Trend,
 } from "@/lib/trends";
 import { signOut, useAuth } from "@/lib/auth";
@@ -990,6 +992,32 @@ function TrendLightbox({ trend, onClose }: { trend: Trend | null; onClose: () =>
                 >
                   Explore more <ArrowUpRight className="size-4" />
                 </Link>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const url = trendUrlFor(trend.slug);
+                    const text = `${trend.title} — viral AI image trend`;
+                    if (typeof navigator !== "undefined" && (navigator as any).share) {
+                      try {
+                        await (navigator as any).share({ title: trend.title, text, url });
+                        toast.success("Shared successfully!");
+                      } catch {
+                        /* user cancelled */
+                      }
+                    } else {
+                      try {
+                        await navigator.clipboard.writeText(url);
+                        toast.success("Link copied to clipboard!");
+                      } catch {
+                        toast.error("Failed to copy link");
+                      }
+                    }
+                  }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-background px-5 py-3 text-sm font-medium hover:bg-muted transition"
+                >
+                  <Share2 className="size-4" /> Share trend
+                </button>
 
                 <button
                   type="button"
