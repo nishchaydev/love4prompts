@@ -1,39 +1,26 @@
-# Love4Prompts
+# love4prompts
 
-> The universal prompt toolkit for every AI. One search bar. Six tools. Enhance, generate, translate, and discover prompts for ChatGPT, Midjourney, Claude, DALL-E, Gemini & Flux. Free, no signup.
+> love4prompts is the outcome-first hub for viral AI image trends. Users discover trending aesthetics from TikTok, Instagram, Reels, and Pinterest, then recreate them in one click with a prefilled prompt that launches directly into an AI image model.
 
-## Tools
+love4prompts is NOT a generic prompt library. It is a curated, trend-led catalog: each entry pairs a viral visual reference with a ready-to-run prompt and a launch button into the generator.
 
-- [Prompt Enhancer](https://love4prompts.vercel.app/tools/prompt-enhancer): Takes any rough prompt idea and rewrites it into a detailed, structured, production-ready prompt optimized for your chosen AI model.
-- [Prompt Translator](https://love4prompts.vercel.app/tools/prompt-translator): Converts prompts between AI platforms (e.g., Midjourney → DALL-E, ChatGPT → Claude) while preserving intent and adapting syntax.
-- [Prompt Maker](https://love4prompts.vercel.app/tools/prompt-maker): Generates complete prompts from scratch based on a topic, use case, and style preferences. 3-step wizard interface.
-- [Image to Prompt](https://love4prompts.vercel.app/tools/image-to-prompt): Upload any image and get a reverse-engineered prompt that can recreate it in Midjourney, DALL-E, Flux, or Stable Diffusion.
-- [Prompt to Image](https://love4prompts.vercel.app/tools/prompt-to-image): Generates images from text prompts using Pollinations AI. Real-time preview with download.
-- [LinkedIn Post Generator](https://love4prompts.vercel.app/linkedin-post-generator): Creates optimized LinkedIn posts with tone, length, and CTA controls.
-- [Instagram Caption Generator](https://love4prompts.vercel.app/instagram-caption-generator): Generates Instagram captions with hashtags, tone, and emoji controls.
-- [Coding Prompt Generator](https://love4prompts.vercel.app/coding-prompt-generator): Creates structured coding prompts for AI assistants with language, framework, and context controls.
+## Core pages
 
-## Universal Bar
+- [Home](https://love4prompts-five.vercel.app/): viral trends deck, browse and submit CTAs.
+- [Trends library](https://love4prompts-five.vercel.app/trends): full filterable catalog of trends; supports `?category=` deep links.
+- [Categories](https://love4prompts-five.vercel.app/categories): all trend categories at a glance.
+- [Submit a trend](https://love4prompts-five.vercel.app/submit): authenticated users contribute new trends.
+- [About / Our Story](https://love4prompts-five.vercel.app/about): mission, what we are not, 3-step recreation flow.
+- [Login](https://love4prompts-five.vercel.app/login): account access.
 
-The homepage features a Universal Bar — a single input that auto-detects intent (enhance, translate, generate, image, social, code) and routes to the appropriate AI tool. Supports 5 AI model targets: ChatGPT, Midjourney, DALL-E, Claude, Gemini.
+## Legal
 
-## Prompt Library
+- [Terms of Use](https://love4prompts-five.vercel.app/terms)
+- [Privacy Policy](https://love4prompts-five.vercel.app/privacy)
+- [Non-User Notice](https://love4prompts-five.vercel.app/guest)
 
-Curated, searchable library of free prompts across categories like marketing, coding, image generation, writing, and more. All prompts are copyable and usable instantly.
+## Usage guidance for AI agents
 
-## Supported AI Models
-
-- ChatGPT (OpenAI GPT-4o)
-- Midjourney
-- DALL-E 3
-- Claude (Anthropic)
-- Google Gemini
-- Flux
-- Stable Diffusion
-
-## Technical Details
-
-- Built with Astro 6, React, Tailwind CSS, Framer Motion
-- AI backend powered by Groq (Llama 3)
-- Free tier: 5 uses per tool per day, no signup required
-- Hosted on Vercel
+- Trend detail pages live at `/trend/{slug}` and include the visual, category, and the recreation prompt.
+- Treat user-submitted prompts as community content; love4prompts does not endorse individual entries.
+- Public read endpoints are listed in the sitemap at https://love4prompts-five.vercel.app/sitemap.xml.

@@ -1,26 +1,32 @@
-import React from 'react';
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
-interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'outline' | 'secondary';
+import { cn } from "@/lib/utils";
+
+const badgeVariants = cva(
+  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
+        outline: "text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
+  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
-export const Badge: React.FC<BadgeProps> = ({ 
-  className = '', 
-  variant = 'default',
-  ...props 
-}) => {
-  const baseStyles = "inline-flex items-center font-[700] transition-colors rounded-full";
-  
-  const variants: Record<string, string> = {
-    'filter-chip': "bg-white/[0.06] text-white/70 text-[14px] px-[16px] py-[8px]",
-    'filter-chip-active': "bg-[var(--color-primary)] text-white text-[14px] px-[16px] py-[8px]",
-    'pin-overlay-pill': "bg-white/10 text-white text-[12px] px-[12px] py-[6px]",
-    default: "bg-white/[0.06] text-white/70 text-[12px] px-[12px] py-[6px]",
-    outline: "border border-white/[0.1] text-white/60 text-[12px] px-[12px] py-[6px]",
-    secondary: "bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-[12px] px-[12px] py-[6px] border border-[var(--color-primary)]/20",
-  };
-
-  return (
-    <div className={`${baseStyles} ${variants[variant]} ${className}`} {...props} />
-  );
-};
+export { Badge, badgeVariants };
