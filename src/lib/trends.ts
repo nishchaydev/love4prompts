@@ -777,11 +777,13 @@ export const CATEGORIES = [
   "Storytelling"
 ];
 
-export const createUrlFor = (slug: string) =>
-  `${CREATE_BASE}?trend=${encodeURIComponent(slug)}`;
+export const createUrlFor = (slug: string) => {
+  const trend = TRENDS.find((t) => t.slug === slug);
+  return trend ? chatGptUrlFor(trend.prompt) : "https://chatgpt.com/";
+};
 
 export const chatGptUrlFor = (prompt: string) =>
-  `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`;
+  `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
 
 export const trendUrlFor = (slug: string) => `${SITE_URL}/trend/${slug}`;
 
