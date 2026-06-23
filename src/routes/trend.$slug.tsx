@@ -156,7 +156,7 @@ function TrendPage() {
           {/* Primary CTA */}
           <div className="mt-8 space-y-3">
             <a
-              href={createUrlFor(trend.slug)}
+              href={chatGptUrlFor(trend.prompt)}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center justify-center gap-2 w-full rounded-full bg-[#FF6B8A] text-white px-6 py-5 text-base font-bold uppercase tracking-wider shadow-[0_8px_0_0_#0a0a0a] hover:shadow-[0_4px_0_0_#0a0a0a] hover:translate-y-1 transition-all"

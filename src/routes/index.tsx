@@ -5,6 +5,7 @@ import { ArrowUpRight, ChevronDown, Flame, Menu, Sparkles, X } from "lucide-reac
 
 import {
   CATEGORIES,
+  chatGptUrlFor,
   createUrlFor,
   SITE_URL,
   TRENDS,
@@ -942,7 +943,7 @@ function TrendLightbox({ trend, onClose }: { trend: Trend | null; onClose: () =>
               </p>
               <div className="mt-auto flex flex-col gap-2">
                 <a
-                  href={createUrlFor(trend.slug)}
+                  href={chatGptUrlFor(trend.prompt)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background px-5 py-3.5 text-sm font-semibold hover:opacity-90 transition"
