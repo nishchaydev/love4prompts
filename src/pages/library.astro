@@ -19,42 +19,30 @@ const isUsingFallback = !!error || !dbPrompts || dbPrompts.length === 0;
 const prompts = isUsingFallback ? mockPrompts : dbPrompts;
 ---
 
-<Layout title="Community Library | love4prompts" 
-  description="Discover, copy, and use battle-tested AI prompts shared by top creators in the love4prompts community." theme="editorial">
+<Layout title="Community Library | Love4Prompts" 
+  description="Discover, copy, and use battle-tested AI prompts shared by top creators in the Love4Prompts community.">
   
   <div class="flex flex-1 relative min-h-screen overflow-x-hidden">
-    {/* Background Massive Text */}
-    <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none overflow-hidden pt-20">
-      <span 
-        class="text-[#e8e8e8] font-bold tracking-tighter whitespace-nowrap" 
-        style="font-size: clamp(100px, 25vw, 400px); line-height: 0.8;"
-      >
-        ARCHIVE
-      </span>
-    </div>
-
-    <!-- Main Content -->
     <main class="w-full relative z-10">
-      <div class="px-6 md:px-12 pt-24 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 relative">
-        <div class="flex flex-col">
-          <div class="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full font-bold tracking-widest text-[12px] uppercase mb-6 shadow-[4px_4px_0_#FF6D87] border-2 border-black self-start">
+      <div class="px-5 sm:px-8 max-w-[1400px] mx-auto pt-12 sm:pt-20 pb-8">
+        <div class="flex flex-col mb-10">
+          <div class="badge-pill badge-pill--active w-fit mb-6">
             Community Archive
           </div>
-          <h1 class="text-black font-black uppercase tracking-tighter text-[48px] md:text-[72px] leading-[0.9] mb-4">
-            The <span class="text-[#FF6D87] drop-shadow-[2px_2px_0_#000]">Library</span>
+          <h1 class="font-[Anton] uppercase text-[var(--color-text)] text-[40px] sm:text-[56px] lg:text-[68px] leading-[0.95] mb-4">
+            The <span class="gradient-text">Library</span>
           </h1>
-          <p class="text-black font-medium text-[16px] sm:text-[20px] leading-relaxed max-w-2xl mb-0">
-            <strong>By the prompter, to the prompter!</strong> Access thousands of curated, battle-tested AI prompts shared by top creators. Copy, modify, and elevate your AI creations.
+          <p class="text-[var(--color-text-secondary)] font-[Epilogue] text-[16px] sm:text-[18px] leading-relaxed max-w-2xl">
+            <strong class="text-[var(--color-text)]">By the creator, for the creator.</strong> Access thousands of curated, battle-tested AI prompts shared by top creators. Copy, modify, and elevate your AI creations.
           </p>
         </div>
       </div>
 
-      <div class="mx-auto mt-8 mb-8 hidden md:flex justify-center w-full">
+      <div class="mx-auto mt-2 mb-8 hidden md:flex justify-center w-full max-w-[1400px] px-5">
         <AdSlot type="leaderboard" />
       </div>
 
-      {/* Pinterest-Style Community Library */}
-      <div class="pb-[40px] px-6 md:px-12">
+      <div class="pb-12 px-5 sm:px-8 max-w-[1400px] mx-auto">
         <PinterestGallery client:visible initialPrompts={prompts} />
       </div>
     </main>

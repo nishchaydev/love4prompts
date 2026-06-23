@@ -13,7 +13,8 @@
     "update_layouts.cjs",
     "update_tools_theme.cjs",
     "scripts",
-    ".agents"
+    ".agents",
+    "ui-ux-pro-max-skill-main"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

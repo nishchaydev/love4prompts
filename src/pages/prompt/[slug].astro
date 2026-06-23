@@ -48,41 +48,34 @@ const relatedPrompts = mockPrompts.filter(p => p.id !== prompt?.id).slice(0, 4);
   title={seoTitle} 
   description={seoDescription}
   ogImage={prompt.image_url}
-  theme="editorial"
 >
   <PromptDetailView 
     client:load 
     prompt={prompt as Prompt} 
   />
 
-  {/* CTA / More Prompts Section */}
-  <section class="bg-[#fafafa] border-t border-black py-16 px-4 md:px-8">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex justify-between items-end mb-8">
+  {/* Related Trends Section */}
+  <section class="border-t border-[var(--color-border)] py-16 px-5 sm:px-8">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="flex justify-between items-end mb-10">
         <div>
-          <h2 class="text-black uppercase font-black text-3xl md:text-5xl leading-none tracking-tighter mb-2">
+          <h2 class="font-[Anton] uppercase text-[var(--color-text)] text-[28px] sm:text-[40px] leading-none mb-2">
             More Trends to Try
           </h2>
-          <p class="text-[#4c4546] uppercase font-bold tracking-widest text-sm">
+          <p class="text-[var(--color-text-muted)] text-[13px] font-[Epilogue]">
             Keep the inspiration flowing
           </p>
         </div>
-        <a href="/library" class="hidden md:inline-block border-2 border-black bg-white text-black font-bold uppercase tracking-widest text-sm px-6 py-3 rounded-full hover:bg-black hover:text-white transition-colors shadow-[4px_4px_0_#000] hover:shadow-none">
-          Explore Trends
+        <a href="/library" class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--color-bg-surface)] border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:border-[var(--color-border-hover)] text-[13px] font-semibold transition-all no-underline cursor-pointer font-[Epilogue]">
+          Explore All →
         </a>
       </div>
       
-      <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {relatedPrompts.map(p => (
-          <PromptCard client:visible prompt={p as Prompt} />
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {relatedPrompts.map((p, i) => (
+          <PromptCard client:visible prompt={p as Prompt} index={i} />
         ))}
       </div>
     </div>
   </section>
 </Layout>
-
-<style>
-  .fill-icon {
-    font-variation-settings: 'FILL' 1;
-  }
-</style>

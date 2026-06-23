@@ -2,18 +2,14 @@
 import '../../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { Header } from './Header';
-import { SeoFooter } from './SeoFooter';
 import { EditorialFooter } from './EditorialFooter';
 import { TrendingBar } from './TrendingBar';
-import { PaperAirplaneAd } from '../ads/PaperAirplaneAd';
-import { AdSlot } from '../ads/AdSlot';
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
   canonicalUrl?: string;
-  theme?: 'default' | 'editorial';
 }
 
 const { 
@@ -21,10 +17,7 @@ const {
   description, 
   ogImage = '/default-og.png',
   canonicalUrl = Astro.url.href,
-  theme = 'editorial'
 } = Astro.props;
-
-const isEditorial = theme === 'editorial';
 ---
 
 <!doctype html>
@@ -55,7 +48,7 @@ const isEditorial = theme === 'editorial';
     <meta name="twitter:image" content={new URL(ogImage, Astro.site || 'https://love4prompts.com').href} />
 
     <!-- Theme Color & PWA -->
-    <meta name="theme-color" content="#120A24" />
+    <meta name="theme-color" content="#0A0A0F" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- JSON-LD Schema -->
@@ -67,7 +60,7 @@ const isEditorial = theme === 'editorial';
           "@id": "https://love4prompts.com/#website",
           "url": "https://love4prompts.com/",
           "name": "Love4Prompts",
-          "description": "Recreate viral AI image trends in seconds. Discover trending AI image styles from across the internet, copy the prompt or launch directly into ChatGPT, Gemini or Claude.",
+          "description": "The fastest way to recreate viral AI image trends. Discover trending AI styles, copy the prompt, and launch directly into ChatGPT, Gemini or Claude.",
           "publisher": {
             "@type": "Organization",
             "name": "Love4Prompts",
@@ -81,7 +74,7 @@ const isEditorial = theme === 'editorial';
           "@type": "WebApplication",
           "@id": "https://love4prompts.com/#webapp",
           "name": "Love4Prompts",
-          "description": "The fastest platform to discover, recreate and use viral AI image trends in seconds.",
+          "description": "See the Trend. Be the Trend. The fastest platform to discover, recreate and use viral AI image trends in seconds.",
           "applicationCategory": "DesignApplication",
           "operatingSystem": "All",
           "browserRequirements": "Requires JavaScript. Requires HTML5.",
@@ -94,10 +87,10 @@ const isEditorial = theme === 'editorial';
       ]
     })} />
 
+    <!-- Fonts: Anton (display) + Epilogue (body) + JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
 
     <!-- Microsoft Clarity - Session Recording & Heatmaps -->
     <script type="text/javascript">
@@ -116,283 +109,156 @@ const isEditorial = theme === 'editorial';
       </>
     )}
   </head>
-  <body 
-    class:list={[
-    'min-h-screen flex flex-col w-full relative',
-    isEditorial
-      ? 'editorial-page bg-[#FAEFED] text-[#1a1a1a] selection:bg-[#FF6D87] selection:text-white'
-      : 'bg-[var(--color-background-primary)] text-[var(--color-text-primary)] selection:bg-[var(--color-primary)] selection:text-white'
-  ]}>
-    <!-- Top Progress Bar for ViewTransitions -->
-    <div id="nav-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="fixed top-0 left-0 h-[5px] z-[999999] w-0 transition-all duration-300 ease-out opacity-0 pointer-events-none border-b-2" style="background-color: var(--progress-color, #FF6D87); border-color: var(--progress-border-color, #000);"></div>
+  <body class="min-h-screen flex flex-col w-full relative bg-[var(--color-bg)] text-[var(--color-text)] selection:bg-[var(--color-primary)] selection:text-white">
 
-    <!-- Global Splash Loader -->
-    <div id="global-splash-loader" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FAEFED] transition-opacity duration-500 ease-out pointer-events-none opacity-0">
-      <div class="flex items-center justify-center animate-pulse">
-        <span class="font-black tracking-tighter uppercase" style="font-family: 'Inter', sans-serif; font-size: clamp(32px, 8vw, 64px); line-height: 1;">
-          <span class="text-black">love4</span><span class="text-[#FF6D87]">prompts</span>
+    <!-- Top Progress Bar for ViewTransitions -->
+    <div id="nav-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" class="fixed top-0 left-0 h-[3px] z-[999999] w-0 transition-all duration-300 ease-out opacity-0 pointer-events-none rounded-r-full" style="background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));"></div>
+
+    <!-- Splash Loader -->
+    <div id="global-splash-loader" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[var(--color-bg)] transition-opacity duration-500 ease-out pointer-events-none opacity-0">
+      <div class="flex flex-col items-center gap-4 animate-pulse">
+        <span class="font-[Anton] uppercase tracking-wide" style="font-size: clamp(32px, 8vw, 56px); line-height: 1;">
+          <span class="text-[var(--color-text)]">love4</span><span class="text-[var(--color-primary)]">prompts</span>
         </span>
+        <div class="w-16 h-[2px] bg-[var(--color-primary)] rounded-full"></div>
       </div>
     </div>
 
-    <!-- Premium Noise/Grain Overlay -->
-    <svg class="pointer-events-none fixed inset-0 z-[9999] h-full w-full opacity-[0.2] mix-blend-overlay" style="isolation: isolate;">
+    <!-- Subtle Noise Texture Overlay -->
+    <svg class="pointer-events-none fixed inset-0 z-[9999] h-full w-full opacity-[0.03] mix-blend-overlay" style="isolation: isolate;" aria-hidden="true">
       <filter id="noiseFilter">
         <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
       </filter>
       <rect width="100%" height="100%" filter="url(#noiseFilter)" />
     </svg>
-    
-    <style is:global>
-      body.loading-locked {
-        overflow: hidden;
-      }
-      
-      @keyframes grid-pan {
-        0% { background-position: 0 0; }
-        100% { background-position: 40px 40px; }
-      }
-      .animate-grid-pan {
-        animation: grid-pan 30s linear infinite;
-      }
-    </style>
 
-    <script>
-      // Make it visible immediately on initial load if we don't have ViewTransitions history
-      // Removed to improve LCP (Largest Contentful Paint)
-
-
-      // Hide loader function
-      let loaderHidden = false;
-      let fallbackTimeout = 0;
-      
-      const hideLoader = () => {
-        if (loaderHidden) return;
-        loaderHidden = true;
-        if (fallbackTimeout) clearTimeout(fallbackTimeout);
-
-        const loader = document.getElementById('global-splash-loader');
-        if (loader) {
-          // Add a short delay so the user sees the loader, then fade out
-          setTimeout(() => {
-            loader.style.opacity = '0';
-            loader.style.pointerEvents = 'none';
-            setTimeout(() => {
-              document.body.classList.remove('loading-locked');
-              window.removeEventListener('load', hideLoader);
-              document.removeEventListener('astro:page-load', hideLoader);
-            }, 500); // match transition duration
-          }, 800);
-        }
-      };
-
-      // Initial page load
-      window.addEventListener('load', hideLoader);
-      
-      // Astro ViewTransitions: Hide loader after new page swaps in
-      document.addEventListener('astro:page-load', hideLoader);
-
-      // Safety fallback
-      fallbackTimeout = window.setTimeout(hideLoader, 4000);
-    </script>
-    
-    {!isEditorial && (
-      <div class="absolute top-0 inset-x-0 h-[700px] overflow-hidden pointer-events-none z-0 opacity-[0.35]" aria-hidden="true">
-        <div class="absolute top-[-15%] left-[10%] w-[80vw] max-w-[700px] h-[500px] rounded-full bg-[var(--color-primary)] opacity-[0.35] blur-[130px]"></div>
-        <div class="absolute top-[5%] left-[55%] w-[60vw] max-w-[500px] h-[400px] rounded-full bg-[#ea2261] opacity-[0.22] blur-[110px]"></div>
-        <div class="absolute top-[-20%] left-[40%] w-[55vw] max-w-[450px] h-[350px] rounded-full bg-[#ff9f43] opacity-[0.18] blur-[100px]"></div>
-        <div class="absolute top-[8%] left-[25%] w-[65vw] max-w-[550px] h-[400px] rounded-full bg-[#b9b9f9] opacity-[0.15] blur-[120px]"></div>
-        <div class="absolute top-[-5%] left-[65%] w-[50vw] max-w-[400px] h-[300px] rounded-full bg-[#faf0e6] opacity-[0.1] blur-[90px]"></div>
-      </div>
-    )}
-
-    {isEditorial && (
-      <div 
-        class="fixed inset-0 z-0 pointer-events-none opacity-[0.4] animate-grid-pan" 
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, #cfc4c5 1px, transparent 1px),
-            linear-gradient(to bottom, #cfc4c5 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          backgroundPosition: '0 0'
-        }}
-      ></div>
-    )}
-
-    <div class:list={['relative z-10 flex flex-col min-h-screen w-full', isEditorial ? '' : '']}>
-      <Header client:load isEditorial={isEditorial} currentPath={Astro.url.pathname} />
-      {!isEditorial && <TrendingBar client:load />}
-      {isEditorial ? (
-        <div class="flex-1 flex flex-col w-full mt-20">
-          <slot />
-        </div>
-      ) : (
-        <main class="flex-1">
-          <slot />
-        </main>
-      )}
-      {isEditorial ? <EditorialFooter /> : <SeoFooter />}
+    <!-- Ambient Gradient Mesh Background -->
+    <div class="absolute top-0 inset-x-0 h-[800px] overflow-hidden pointer-events-none z-0 opacity-[0.30]" aria-hidden="true">
+      <div class="absolute top-[-15%] left-[10%] w-[80vw] max-w-[700px] h-[500px] rounded-full bg-[var(--color-primary)] opacity-[0.25] blur-[140px]"></div>
+      <div class="absolute top-[5%] left-[55%] w-[60vw] max-w-[500px] h-[400px] rounded-full bg-[var(--color-secondary)] opacity-[0.18] blur-[120px]"></div>
+      <div class="absolute top-[-10%] left-[40%] w-[55vw] max-w-[450px] h-[350px] rounded-full bg-[var(--color-accent)] opacity-[0.12] blur-[110px]"></div>
     </div>
 
-    {/* Physics Engine for Micro-Interactions */}
+    <div class="relative z-10 flex flex-col min-h-screen w-full">
+      <Header client:load currentPath={Astro.url.pathname} />
+      <TrendingBar client:load />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <EditorialFooter />
+    </div>
+
+    <!-- Physics Engine for Micro-Interactions -->
     <script is:inline>
       (function() {
-        // --- Particle Physics (Gravity & Drag) ---
-        const particles = [];
-        const GRAVITY = 0.6;
-        const DRAG = 0.92;
-        
         if (typeof window !== 'undefined' && !window._physicsAttached) {
           window._physicsAttached = true;
-         // --- Global Sparkle Effect & Top Progress Bar ---
-      
-      document.addEventListener('astro:before-preparation', () => {
-        const bar = document.getElementById('nav-progress');
-        if (bar) {
-          bar.style.transition = 'width 0.3s ease-out, opacity 0.1s';
-          bar.style.opacity = '1';
-          bar.style.width = '30%';
-          bar.setAttribute('aria-valuenow', '30');
-          window._navInterval = setInterval(() => {
-            const current = parseInt(bar.style.width || '30');
-            if (current < 85) {
-              const next = current + 5;
-              bar.style.width = next + '%';
-              bar.setAttribute('aria-valuenow', next.toString());
+
+          // --- Progress Bar for ViewTransitions ---
+          document.addEventListener('astro:before-preparation', () => {
+            const bar = document.getElementById('nav-progress');
+            if (bar) {
+              bar.style.transition = 'width 0.3s ease-out, opacity 0.1s';
+              bar.style.opacity = '1';
+              bar.style.width = '30%';
+              bar.setAttribute('aria-valuenow', '30');
+              window._navInterval = setInterval(() => {
+                const current = parseInt(bar.style.width || '30');
+                if (current < 85) {
+                  const next = current + 5;
+                  bar.style.width = next + '%';
+                  bar.setAttribute('aria-valuenow', next.toString());
+                }
+              }, 200);
             }
-          }, 200);
-        }
-      });
+          });
 
-      document.addEventListener('astro:page-load', () => {
-        const bar = document.getElementById('nav-progress');
-        if (bar) {
-          clearInterval(window._navInterval);
-          bar.style.width = '100%';
-          bar.setAttribute('aria-valuenow', '100');
-          setTimeout(() => {
-            bar.style.opacity = '0';
-            setTimeout(() => {
-              bar.style.transition = 'none';
-              bar.style.width = '0';
-              bar.setAttribute('aria-valuenow', '0');
-            }, 300);
-          }, 300);
-        }
-      });
+          document.addEventListener('astro:page-load', () => {
+            const bar = document.getElementById('nav-progress');
+            if (bar) {
+              clearInterval(window._navInterval);
+              bar.style.width = '100%';
+              bar.setAttribute('aria-valuenow', '100');
+              setTimeout(() => {
+                bar.style.opacity = '0';
+                setTimeout(() => {
+                  bar.style.transition = 'none';
+                  bar.style.width = '0';
+                  bar.setAttribute('aria-valuenow', '0');
+                }, 300);
+              }, 300);
+            }
+          });
 
-      document.addEventListener('click', (e) => {
-            // Ignore clicks on links/buttons to prevent blocking them, but still spawn particles
-            const colors = ['#000000', '#000000', '#000000', '#FF6D87', '#1482A3'];
-
-
-            // 2. Sparkle Rays (High Energy Burst)
+          // --- Sparkle Click Effect ---
+          document.addEventListener('click', (e) => {
+            const colors = ['var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)'];
             const spark = document.createElement('div');
             spark.className = 'click-sparkle';
             spark.style.left = e.clientX + 'px';
             spark.style.top = e.clientY + 'px';
             document.body.appendChild(spark);
             
-            // Create 5 rays in a burst
-            for(let i = 0; i < 5; i++) {
+            for (let i = 0; i < 5; i++) {
               const ray = document.createElement('div');
               ray.className = 'sparkle-ray';
               ray.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
               ray.style.setProperty('--rot', `${(i * 72)}deg`);
               spark.appendChild(ray);
             }
-
             setTimeout(() => spark.remove(), 400);
-
           }, true);
 
+          // --- Spring Physics for Magnetic Buttons ---
           let magneticBtns = new Set();
           let isRunning = false;
           let rafId = null;
 
           function startPhysics() {
-            if (!isRunning) {
-              isRunning = true;
-              physicsLoop();
-            }
+            if (!isRunning) { isRunning = true; physicsLoop(); }
           }
-
           function stopPhysics() {
             isRunning = false;
-            if (rafId) {
-              cancelAnimationFrame(rafId);
-              rafId = null;
-            }
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
           }
 
-          // Physics Loop for Magnetic Buttons
           function physicsLoop() {
             if (!isRunning) return;
-            
             let anyMoving = false;
-            // Update Springs (Magnetic Buttons)
             magneticBtns.forEach(btn => {
               if (!btn._spring) return;
               const s = btn._spring;
-              
-              // Hooke's Law: F = -kx - cv
               const ax = (s.targetX - s.x) * s.stiffness;
               const ay = (s.targetY - s.y) * s.stiffness;
-              
-              s.vx += ax;
-              s.vy += ay;
-              s.vx *= s.damping;
-              s.vy *= s.damping;
-              s.x += s.vx;
-              s.y += s.vy;
-              
+              s.vx += ax; s.vy += ay;
+              s.vx *= s.damping; s.vy *= s.damping;
+              s.x += s.vx; s.y += s.vy;
               const isMoving = Math.abs(s.vx) > 0.01 || Math.abs(s.targetX - s.x) > 0.01 ||
                   Math.abs(s.vy) > 0.01 || Math.abs(s.targetY - s.y) > 0.01;
-              
               if (isMoving) {
                 btn.style.transform = `translate(${s.x}px, ${s.y}px)`;
                 anyMoving = true;
               }
             });
-
-            if (anyMoving) {
-              rafId = requestAnimationFrame(physicsLoop);
-            } else {
-              stopPhysics();
-            }
+            if (anyMoving) { rafId = requestAnimationFrame(physicsLoop); }
+            else { stopPhysics(); }
           }
 
-          // --- Spring Physics for Magnetic Buttons ---
           const applyMagnetic = () => {
             const btns = document.querySelectorAll('.magnetic-btn');
             btns.forEach(btn => {
               if (btn._magneticAttached) return;
               btn._magneticAttached = true;
               magneticBtns.add(btn);
-              
-              // Initialize spring state
-              btn._spring = {
-                x: 0, y: 0,
-                vx: 0, vy: 0,
-                targetX: 0, targetY: 0,
-                stiffness: 0.15, // Tension
-                damping: 0.75    // Friction
-              };
-
+              btn._spring = { x: 0, y: 0, vx: 0, vy: 0, targetX: 0, targetY: 0, stiffness: 0.15, damping: 0.75 };
               btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                btn._spring.targetX = x * 0.3;
-                btn._spring.targetY = y * 0.3;
+                btn._spring.targetX = (e.clientX - rect.left - rect.width / 2) * 0.3;
+                btn._spring.targetY = (e.clientY - rect.top - rect.height / 2) * 0.3;
                 startPhysics();
               });
-              
               btn.addEventListener('mouseleave', () => {
-                btn._spring.targetX = 0;
-                btn._spring.targetY = 0;
+                btn._spring.targetX = 0; btn._spring.targetY = 0;
                 startPhysics();
               });
             });
@@ -403,6 +269,34 @@ const isEditorial = theme === 'editorial';
         }
       })();
     </script>
+
+    <!-- Splash Loader Script -->
+    <script>
+      let loaderHidden = false;
+      let fallbackTimeout = 0;
+      
+      const hideLoader = () => {
+        if (loaderHidden) return;
+        loaderHidden = true;
+        if (fallbackTimeout) clearTimeout(fallbackTimeout);
+        const loader = document.getElementById('global-splash-loader');
+        if (loader) {
+          setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.pointerEvents = 'none';
+            setTimeout(() => {
+              document.body.classList.remove('loading-locked');
+              window.removeEventListener('load', hideLoader);
+              document.removeEventListener('astro:page-load', hideLoader);
+            }, 500);
+          }, 600);
+        }
+      };
+      window.addEventListener('load', hideLoader);
+      document.addEventListener('astro:page-load', hideLoader);
+      fallbackTimeout = window.setTimeout(hideLoader, 3000);
+    </script>
+
     <style is:global>
       .click-sparkle {
         position: fixed;
@@ -412,28 +306,25 @@ const isEditorial = theme === 'editorial';
       }
       .sparkle-ray {
         position: absolute;
-        width: 6px;
-        height: 14px;
+        width: 4px;
+        height: 10px;
         border-radius: 2px;
         top: 50%;
         left: 50%;
         transform-origin: 50% 100%;
-        animation: burst 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        animation: burst 0.35s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
       }
       @keyframes burst {
         0% {
           transform: translate(-50%, -100%) rotate(var(--rot)) translateY(-4px) scale(1);
-          opacity: 1;
+          opacity: 0.8;
         }
-        40% {
-          opacity: 1;
-        }
+        40% { opacity: 0.8; }
         100% {
-          transform: translate(-50%, -100%) rotate(var(--rot)) translateY(-28px) scale(0);
+          transform: translate(-50%, -100%) rotate(var(--rot)) translateY(-24px) scale(0);
           opacity: 0;
         }
       }
     </style>
-    <PaperAirplaneAd client:load />
   </body>
 </html>

@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import { Bookmark, Copy, Check, Share2, Wand2 } from 'lucide-react';
-import { Badge } from '../ui/Badge';
-import { motion } from 'framer-motion';
-import { springs } from '../../lib/motion';
+import { Copy, Check, Flame, Share2, Wand2 } from 'lucide-react';
 
 export interface Prompt {
   id: string;
-  /** Original prompt ID — set on duplicated items for infinite scroll */
   realId?: string;
   slug: string;
   title: string;
@@ -19,9 +15,7 @@ export interface Prompt {
   save_count: number;
   copy_count?: number;
   created_at?: string;
-  /** Trend category — Girls, Boys, Couples, Creators */
   category?: string;
-  /** Trend subcategory — e.g. Soft Girl, CEO, Anime */
   subcategory?: string;
   creator?: {
     name: string;
@@ -59,7 +53,6 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
   const [isHovered, setIsHovered] = useState(false);
   const [copied, setCopied] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const optimizedUrl = getOptimizedImageUrl(prompt.image_url);
   const isAboveFold = index !== undefined && index < 6;
@@ -73,54 +66,44 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={springs.gentle}
-      className="group relative w-full flex flex-col mb-6 break-inside-avoid"
+    <div 
+      className="group relative w-full flex flex-col mb-4 break-inside-avoid"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <motion.a 
+      <a 
         href={`/prompt/${prompt.slug}`} 
-        whileHover={{ y: -8, rotate: -2, boxShadow: "12px 12px 0px #FF6D87" }}
-        whileTap={{ scale: 0.95, y: 0, rotate: 0, boxShadow: "4px 4px 0px #000000" }}
-        transition={springs.bouncy}
-        className="block relative w-full overflow-hidden bg-[#FAEFED] border-4 border-black shadow-[6px_6px_0px_#000000] transition-colors duration-300"
+        className="block relative w-full overflow-hidden rounded-2xl bg-[var(--color-bg-surface)] border border-[var(--color-border)] transition-all duration-300 no-underline cursor-pointer group-hover:border-[var(--color-border-hover)] group-hover:shadow-[0_0_24px_rgba(225,29,72,0.08)]"
       >
+        {/* Image */}
         {prompt.image_url && !imageError ? (
-          <div className="relative w-full min-h-[160px] bg-white overflow-hidden">
+          <div className="relative w-full overflow-hidden" style={{ aspectRatio: '3/4', minHeight: '180px' }}>
             <img 
               src={optimizedUrl} 
               alt={prompt.title} 
               width={400}
-              height={300}
-              className="w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-105"
+              height={533}
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               loading={isAboveFold ? "eager" : "lazy"}
               {...(isAboveFold ? { fetchPriority: "high" } as any : {})}
               onError={() => setImageError(true)}
             />
           </div>
         ) : (
-          <div className="w-full aspect-[3/4] flex items-center justify-center bg-gray-100 border-b-4 border-black">
-            <span className="text-black/40 font-black text-xs font-mono uppercase tracking-widest">No image</span>
+          <div className="w-full flex items-center justify-center bg-[var(--color-bg-surface-hover)]" style={{ aspectRatio: '3/4' }}>
+            <span className="text-[var(--color-text-muted)] text-xs font-mono uppercase tracking-widest">No image</span>
           </div>
         )}
         
-        {/* Overlay gradient for better icon visibility */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}></div>
+        {/* Hover Overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent rounded-2xl transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'} pointer-events-none`}></div>
         
-        {/* Top actions */}
+        {/* Create Me CTA (Primary action on hover) */}
         <div className={`absolute top-3 right-3 transition-all duration-300 transform ${isHovered ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'}`}>
-          <button 
-            onClick={(e) => { e.preventDefault(); onSave?.(prompt.id); }}
-            className="px-4 py-2 bg-[#FF6D87] text-black border-2 border-black font-black uppercase hover:bg-[#1482A3] hover:text-white transition-all duration-300 shadow-[4px_4px_0px_#000] hover:shadow-[2px_2px_0px_#000] hover:translate-y-[2px] hover:translate-x-[2px] focus:outline-none focus:ring-2 focus:ring-black"
-            aria-label={isSaved ? "Remove from saved prompts" : "Save prompt"}
-            aria-pressed={isSaved}
-          >
-            {isSaved ? 'Saved' : 'Save'}
-          </button>
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[var(--color-primary)] text-white text-[12px] font-bold shadow-[0_4px_16px_var(--color-primary-glow)] cursor-pointer">
+            <Flame className="w-3.5 h-3.5" />
+            Create Me
+          </span>
         </div>
 
         {/* Bottom Actions */}
@@ -128,51 +111,60 @@ export const PromptCard: React.FC<PromptCardProps> = ({ prompt, isSaved = false,
           <button
             onClick={handleCopy}
             aria-label="Copy Prompt"
-            className="flex items-center gap-2 px-4 py-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white rounded-full text-sm font-bold hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-[2px_2px_0_#000] hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-black/50 border border-white/15 text-white rounded-full text-[12px] font-semibold hover:bg-black/70 transition-all duration-200 cursor-pointer"
           >
-            {copied ? <Check className="w-4 h-4 text-[var(--color-success-green)]" aria-hidden="true" /> : <Copy className="w-4 h-4" aria-hidden="true" />}
-            {copied ? 'Copied!' : 'Copy Prompt'}
+            {copied ? <Check className="w-3.5 h-3.5 text-[var(--color-success)]" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}
+            {copied ? 'Copied!' : 'Copy'}
           </button>
           
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             <a 
               href={`/tools/prompt-enhancer?q=${encodeURIComponent(prompt.prompt_text)}`}
               onClick={(e) => e.stopPropagation()}
-              className="w-10 h-10 rounded-full bg-[#1482A3]/90 backdrop-blur-md border border-white/20 text-white flex items-center justify-center hover:bg-[#1482A3] hover:border-white/40 transition-all duration-300 shadow-[2px_2px_0_#000] hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
+              className="w-9 h-9 rounded-full bg-black/50 border border-white/15 text-white flex items-center justify-center hover:bg-[var(--color-accent)]/30 hover:border-[var(--color-accent)]/40 transition-all duration-200 cursor-pointer"
               aria-label="Enhance prompt"
               title="1-Click Enhance"
             >
-               <Wand2 className="w-4 h-4" aria-hidden="true" />
+               <Wand2 className="w-3.5 h-3.5" aria-hidden="true" />
             </a>
             <button 
               onClick={(e) => { e.preventDefault(); }}
-              className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white flex items-center justify-center hover:bg-black/80 hover:border-white/20 transition-all duration-300 shadow-[2px_2px_0_#000] hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF6D87]"
+              className="w-9 h-9 rounded-full bg-black/50 border border-white/15 text-white flex items-center justify-center hover:bg-black/70 transition-all duration-200 cursor-pointer"
               aria-label="Share prompt"
             >
-               <Share2 className="w-4 h-4" aria-hidden="true" />
+               <Share2 className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </div>
         </div>
-      </motion.a>
 
-      {/* Meta data section */}
-      <div className="pt-3 px-1">
-        <h3 className="text-[16px] font-black text-black leading-[1.3] line-clamp-2 mb-2 group-hover:text-[#FF6D87] transition-colors duration-300">
+        {/* Category badge */}
+        {prompt.category && (
+          <div className="absolute top-3 left-3">
+            <span className="badge-pill !bg-black/40 !border-white/15 !text-white/90 text-[10px]">
+              {prompt.category}
+            </span>
+          </div>
+        )}
+      </a>
+
+      {/* Meta */}
+      <div className="pt-2.5 px-0.5">
+        <h3 className="text-[14px] font-semibold text-[var(--color-text)] leading-snug line-clamp-2 mb-1.5 group-hover:text-[var(--color-primary)] transition-colors duration-200 font-[Epilogue]">
           {prompt.title}
         </h3>
         
         {prompt.creator ? (
-          <div className="flex items-center gap-2 mt-2">
-            <img src={prompt.creator.avatar} alt={prompt.creator.name} className="w-6 h-6 object-cover border-2 border-black" width={24} height={24} />
-            <span className="text-[13px] font-bold text-gray-700 hover:text-black transition-colors cursor-pointer">{prompt.creator.name}</span>
+          <div className="flex items-center gap-2 mt-1">
+            <img src={prompt.creator.avatar} alt={prompt.creator.name} className="w-5 h-5 rounded-full object-cover" width={20} height={20} />
+            <span className="text-[12px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors cursor-pointer font-[Epilogue]">{prompt.creator.name}</span>
           </div>
         ) : (
-          <p className="text-[12px] text-gray-500 font-bold flex items-center gap-1.5 uppercase">
-            <span className="w-2 h-2 bg-[#1482A3] border border-black shadow-[1px_1px_0px_#000]"></span>
+          <p className="text-[11px] text-[var(--color-text-muted)] font-medium flex items-center gap-1.5 font-[Epilogue]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]"></span>
             {prompt.copy_count ? prompt.copy_count.toLocaleString() : prompt.save_count.toLocaleString()} copies
           </p>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };

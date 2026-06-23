@@ -19,7 +19,7 @@ export const InteractiveLibrary: React.FC<InteractiveLibraryProps> = ({ prompts,
   return (
     <div className="flex flex-col gap-6 relative">
       {/* Horizontal filter bar — sticky below header */}
-      <div className="sticky top-[var(--header-height)] z-30 bg-[var(--color-background-primary)]/95 backdrop-blur-xl py-3 -mx-4 px-4 border-b border-white/[0.06]">
+      <div className="sticky top-[var(--header-height)] z-30 bg-[var(--color-background-primary)] py-3 -mx-4 px-4 border-b border-[var(--color-border)]">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
           <CategoryFilter
             categories={styles}

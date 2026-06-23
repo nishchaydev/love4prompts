@@ -44,7 +44,7 @@ export const EmailCapture: React.FC = () => {
 
   return (
     <div className="w-full max-w-[720px] mx-auto px-4 mb-12 relative z-10">
-      <div className="bg-[var(--color-primary-surface)] border border-[var(--color-border-warm)] rounded-2xl p-6 sm:p-7 flex flex-col gap-3 relative overflow-hidden backdrop-blur-md">
+      <div className="bg-[var(--color-primary-surface)] border border-[var(--color-border-warm)] rounded-2xl p-6 sm:p-7 flex flex-col gap-3 relative overflow-hidden">
         {status === 'success' ? (
           <div className="flex flex-col items-center justify-center text-center py-4 animate-fade-in">
             <span className="text-base sm:text-lg font-bold text-[#10b981] flex items-center gap-2">

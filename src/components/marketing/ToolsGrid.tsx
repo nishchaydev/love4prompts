@@ -131,7 +131,7 @@ export const ToolsGrid: React.FC = () => {
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
               transition={springs.bouncy}
-              className="group flex flex-col justify-between text-left bg-[var(--color-background-card)]/40 hover:bg-[var(--color-background-elevated)]/60 border border-[var(--color-border)] hover:border-[var(--color-border-warm)] rounded-3xl p-6 gap-6 hover:shadow-[0_8px_30px_var(--color-primary-glow)] no-underline relative overflow-hidden backdrop-blur-xl"
+              className="group flex flex-col justify-between text-left bg-[var(--color-background-card)] hover:bg-[var(--color-background-elevated)] border border-[var(--color-border)] hover:border-[var(--color-border-warm)] rounded-3xl p-6 gap-6 hover:shadow-[0_8px_30px_var(--color-primary-glow)] no-underline relative overflow-hidden"
             >
               {/* Inner card content */}
               <div className="flex flex-col gap-4">
