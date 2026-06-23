@@ -750,7 +750,7 @@ function StackedWindowCards() {
   const [order, setOrder] = useState<number[]>(() => HERO_DECK.map((_, i) => i));
 
   useEffect(() => {
-    // Shuffle the full TRENDS list and take a randomized selection to populate the deck on the client side.
+    // Shuffle the full TRENDS list to populate the deck on the client side.
     const shuffled = [...TRENDS].sort(() => Math.random() - 0.5);
     setDeck(shuffled);
     setOrder(shuffled.map((_, i) => i));
@@ -769,7 +769,7 @@ function StackedWindowCards() {
 
   useEffect(() => {
     if (reduced) return;
-    const ms = 1100;
+    const ms = 3000;
     let timer: number | undefined;
     const tick = () => {
       if (document.hidden) {
@@ -812,7 +812,7 @@ function StackedWindowCards() {
           const fromTop = deck.length - 1 - stackPos;
           const visible = fromTop < visibleOffsets.length;
           const offset = visibleOffsets[fromTop] ?? visibleOffsets[visibleOffsets.length - 1];
-          const scale = 1 - fromTop * 0.025;
+          const scale = Math.max(0.9, 1 - fromTop * 0.025);
           const isTop = fromTop === 0;
           return (
             <button
@@ -833,7 +833,7 @@ function StackedWindowCards() {
                 willChange: "transform",
                 transition: reduced
                   ? "none"
-                  : `transform 900ms ${easing}, opacity 450ms ${easing}, box-shadow 600ms ${easing}`,
+                  : `transform 1200ms ${easing}, opacity 600ms ${easing}, box-shadow 600ms ${easing}`,
               }}
               className="absolute left-1/2 w-full aspect-[4/5] rounded-[1.6rem] shadow-[0_28px_70px_-28px_rgba(0,0,0,0.55)] border border-foreground/10 overflow-hidden cursor-pointer text-left bg-muted hover:shadow-[0_34px_80px_-28px_rgba(0,0,0,0.65)] focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
             >
