@@ -1,4 +1,5 @@
 export const SITE_URL = "https://love4prompts-five.vercel.app";
+export const ASTRO_TOOLS_URL = "https://love4prompts-five.vercel.app";
 export const CREATE_BASE = "https://meigen.ai/create";
 
 export type Trend = {

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, ChevronDown, Flame, Menu, Sparkles, X } from "lucide-react";
 
 import {
+  ASTRO_TOOLS_URL,
   CATEGORIES,
   chatGptUrlFor,
   createUrlFor,
@@ -36,10 +37,10 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const NAV: { label: string; to: string }[] = [
+const NAV: { label: string; to: string; isExternal?: boolean }[] = [
   { label: "Trends", to: "/trends" },
   { label: "Categories", to: "/categories" },
-  { label: "Submit", to: "/submit" },
+  { label: "Tools", to: `${ASTRO_TOOLS_URL}/tools`, isExternal: true },
   { label: "About", to: "/about" },
 ];
 
@@ -414,6 +415,17 @@ function FloatingNav() {
                     </div>
                   )}
                 </li>
+              ) : item.isExternal ? (
+                <li key={item.to}>
+                  <a
+                    href={item.to}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-full text-foreground/70 hover:text-foreground hover:bg-muted transition"
+                  >
+                    {item.label}
+                  </a>
+                </li>
               ) : (
                 <li key={item.to}>
                   <Link
@@ -564,6 +576,18 @@ function FloatingNav() {
                           ))}
                         </ul>
                       )}
+                    </li>
+                  ) : item.isExternal ? (
+                    <li key={item.to}>
+                      <a
+                        href={item.to}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-4 py-4 rounded-2xl text-2xl font-display font-bold tracking-tight text-foreground hover:bg-muted transition"
+                      >
+                        {item.label}
+                      </a>
                     </li>
                   ) : (
                     <li key={item.to}>
@@ -722,12 +746,20 @@ function Hero() {
 
 function StackedWindowCards() {
   const [reduced] = useReducedMotion();
+  const [deck, setDeck] = useState<Trend[]>(() => HERO_DECK);
   const [order, setOrder] = useState<number[]>(() => HERO_DECK.map((_, i) => i));
+
+  useEffect(() => {
+    // Shuffle the full TRENDS list and take a randomized selection to populate the deck on the client side.
+    const shuffled = [...TRENDS].sort(() => Math.random() - 0.5);
+    setDeck(shuffled);
+    setOrder(shuffled.map((_, i) => i));
+  }, []);
 
   const bringToFront = (idx: number) => {
     setOrder((prev) => {
       if (prev[prev.length - 1] === idx) {
-        openTrend(HERO_DECK[idx]);
+        openTrend(deck[idx]);
         return prev;
       }
       const without = prev.filter((i) => i !== idx);
@@ -746,6 +778,7 @@ function StackedWindowCards() {
       }
       window.requestAnimationFrame(() => {
         setOrder((prev) => {
+          if (prev.length === 0) return prev;
           const [first, ...rest] = prev;
           return [...rest, first];
         });
@@ -774,9 +807,9 @@ function StackedWindowCards() {
         className="relative aspect-[4/5] pointer-events-auto"
         style={{ width: "min(86vw, calc((100svh - 8.5rem) * 0.8), 390px)" }}
       >
-        {HERO_DECK.map((card, i) => {
+        {deck.map((card, i) => {
           const stackPos = order.indexOf(i);
-          const fromTop = HERO_DECK.length - 1 - stackPos;
+          const fromTop = deck.length - 1 - stackPos;
           const visible = fromTop < visibleOffsets.length;
           const offset = visibleOffsets[fromTop] ?? visibleOffsets[visibleOffsets.length - 1];
           const scale = 1 - fromTop * 0.025;
@@ -1242,14 +1275,25 @@ function SubmitCTA() {
 }
 
 function SiteFooter() {
-  const cols: { title: string; links: { label: string; to: string }[] }[] = [
+  const cols: { title: string; links: { label: string; to: string; isExternal?: boolean }[] }[] = [
     {
       title: "Product",
       links: [
         { label: "Trends", to: "/trends" },
         { label: "Categories", to: "/categories" },
         { label: "Library", to: "/library" },
-        { label: "Submit", to: "/submit" },
+      ],
+    },
+    {
+      title: "Tools",
+      links: [
+        { label: "Prompt Enhancer", to: `${ASTRO_TOOLS_URL}/tools/prompt-enhancer`, isExternal: true },
+        { label: "Prompt Builder", to: `${ASTRO_TOOLS_URL}/tools/prompt-maker`, isExternal: true },
+        { label: "Prompt to Image", to: `${ASTRO_TOOLS_URL}/tools/prompt-to-image`, isExternal: true },
+        { label: "LinkedIn Post Generator", to: `${ASTRO_TOOLS_URL}/linkedin-post-generator`, isExternal: true },
+        { label: "Facebook Post Generator", to: `${ASTRO_TOOLS_URL}/facebook-post-generator`, isExternal: true },
+        { label: "Instagram Caption Generator", to: `${ASTRO_TOOLS_URL}/instagram-caption-generator`, isExternal: true },
+        { label: "Chrome Extension", to: `${ASTRO_TOOLS_URL}/extension`, isExternal: true },
       ],
     },
     {
@@ -1280,7 +1324,7 @@ function SiteFooter() {
             A living library of viral AI image trends, built for creators.
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
           {cols.map((c) => (
             <div key={c.title}>
               <div className="text-xs uppercase tracking-[0.2em] text-foreground/50 mb-4">
@@ -1289,9 +1333,23 @@ function SiteFooter() {
               <ul className="space-y-2 text-sm">
                 {c.links.map((l) => (
                   <li key={l.label}>
-                    <Link to={l.to} className="hover:underline text-foreground/75 hover:text-foreground">
-                      {l.label}
-                    </Link>
+                    {l.isExternal ? (
+                      <a
+                        href={l.to}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:underline text-foreground/75 hover:text-foreground"
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link
+                        to={l.to}
+                        className="hover:underline text-foreground/75 hover:text-foreground"
+                      >
+                        {l.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
